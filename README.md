@@ -14,6 +14,7 @@ This mod adds buttons which equip the character's equipment with the best items.
 
 * Fast equip best armor, weapon, and mount
 * Preview of found items
+* Fine-tuning the search by parameter coefficients
 * All items for all characters equip by one click.
 * Equip directly from the store, loot, inventory (you can lock or unlock panels)
 
