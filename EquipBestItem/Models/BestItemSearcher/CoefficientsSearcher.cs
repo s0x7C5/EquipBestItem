@@ -5,7 +5,7 @@ using EquipBestItem.Models.Enums;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
 
-namespace EquipBestItem.Models.BestItemCalculator;
+namespace EquipBestItem.Models.BestItemSearcher;
 
 public class CoefficientsSearcher : SearcherBase
 {

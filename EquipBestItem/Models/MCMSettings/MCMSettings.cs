@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using EquipBestItem.Models.BestItemCalculator;
+using EquipBestItem.Models.BestItemSearcher;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Dropdown;
 using MCM.Abstractions.Settings.Base.Global;

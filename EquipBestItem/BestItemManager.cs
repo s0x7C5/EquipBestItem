@@ -1,28 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EquipBestItem.Models;
-using EquipBestItem.Models.BestItemCalculator;
+using EquipBestItem.Models.BestItemSearcher;
 using EquipBestItem.Models.Entities;
 using EquipBestItem.Models.MCMSettings;
-using Helpers;
-using SandBox.View.Map;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
-using TaleWorlds.Diamond.HelloWorld;
 using TaleWorlds.Library;
 
 namespace EquipBestItem;
 
 public class BestItemManager
 {
-    private readonly ISearcher _calculator;
+    private readonly ISearcher _searcher;
 
     public BestItemManager(CharacterCoefficientsRepository repository)
     {
-        _calculator = Helper.GetEnumerableOfType<SearcherBase>(repository).First(s => s.Name == MCMSettings.Instance?.SearchMethod.SelectedValue);
+        _searcher = Helper.GetEnumerableOfType<SearcherBase>(repository).First(s => s.Name == MCMSettings.Instance?.SearchMethod.SelectedValue);
     }
     
     public void EquipBestItem(SearcherContext context, SPItemVM? item)
@@ -43,17 +38,17 @@ public class BestItemManager
 
         try
         {
-            var bestItemValue = equipment[index].IsEmpty || _calculator.IsSlotItemNotValid(equipment[index], context)
-                ? 0f : _calculator.GetItemValue(equipment[index], context);
+            var bestItemValue = equipment[index].IsEmpty || _searcher.IsSlotItemNotValid(equipment[index], context)
+                ? 0f : _searcher.GetItemValue(equipment[index], context);
 
             var validItems = itemsLists
                 .Where(items => items is not null)
                 .SelectMany(items => items)
-                .Where(item => _calculator.IsValidItem(item, context));
+                .Where(item => _searcher.IsValidItem(item, context));
             
             foreach (var item in validItems)
             {
-                var itemValue = _calculator.GetItemValue(item.ItemRosterElement.EquipmentElement, context);
+                var itemValue = _searcher.GetItemValue(item.ItemRosterElement.EquipmentElement, context);
                 
                 if (bestItemValue >= itemValue) continue;
                 

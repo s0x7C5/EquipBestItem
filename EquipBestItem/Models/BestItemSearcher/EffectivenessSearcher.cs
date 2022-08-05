@@ -2,7 +2,7 @@ using EquipBestItem.Models.Entities;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
 
-namespace EquipBestItem.Models.BestItemCalculator;
+namespace EquipBestItem.Models.BestItemSearcher;
 
 public class EffectivenessSearcher : SearcherBase
 {

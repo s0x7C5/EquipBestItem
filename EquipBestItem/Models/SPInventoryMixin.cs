@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using EquipBestItem.Extensions;
 using EquipBestItem.Layers;
-using EquipBestItem.Models.BestItemCalculator;
 using EquipBestItem.Models.Entities;
 using EquipBestItem.Models.Enums;
 using EquipBestItem.UIExtenderEx;
