@@ -95,6 +95,8 @@ internal static class ModTexts
     
     public const string CultureOption = "{=culture_option}Enable culture";
     
+    public const string UnequipOption = "{=unequip_option}Enable unequip feature";
+    
     public static readonly string Coefficients = new TextObject("{=coefficients}Coefficients").ToString();
     
     public static readonly string Effectiveness = new TextObject("{=effectiveness}Effectiveness").ToString();

@@ -3,7 +3,6 @@ using System.Linq;
 using EquipBestItem.Models;
 using EquipBestItem.Models.BestItemSearcher;
 using EquipBestItem.Models.Entities;
-using EquipBestItem.Models.MCMSettings;
 using TaleWorlds.CampaignSystem.Inventory;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.Core;
@@ -18,14 +17,6 @@ public class BestItemManager
     public BestItemManager(CharacterCoefficientsRepository repository)
     {
         _searcher = Helper.GetEnumerableOfType<SearcherBase>(repository).First(s => s.Name == MCMSettings.Instance?.SearchMethod.SelectedValue);
-    }
-    
-    public void EquipBestItem(SearcherContext context, SPItemVM? item)
-    {
-        if (item is null) return;
-        
-        UnequipItem(context);
-        EquipItem(context, item);
     }
 
     public SPItemVM? GetBestItem(SearcherContext context, params MBBindingList<SPItemVM>?[] itemsLists)
@@ -64,7 +55,7 @@ public class BestItemManager
         return bestItem;
     }
 
-    private static void UnequipItem(SearcherContext context)
+    public static void UnequipItem(SearcherContext context)
     {
         var equipmentIndex = context.EquipmentIndex;
         var character = context.Character;
@@ -88,7 +79,7 @@ public class BestItemManager
         inventoryLogic.AddTransferCommand(unequipCommand);
     }
 
-    private static void EquipItem(SearcherContext context, SPItemVM? item)
+    public static void EquipItem(SearcherContext context, SPItemVM? item)
     {
         if (item is null) return;
 

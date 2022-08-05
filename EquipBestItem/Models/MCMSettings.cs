@@ -5,7 +5,7 @@ using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Dropdown;
 using MCM.Abstractions.Settings.Base.Global;
 
-namespace EquipBestItem.Models.MCMSettings;
+namespace EquipBestItem.Models;
 
 internal class MCMSettings : AttributeGlobalSettings<MCMSettings>
 {
@@ -22,4 +22,7 @@ internal class MCMSettings : AttributeGlobalSettings<MCMSettings>
 
     [SettingPropertyDropdown(ModTexts.CultureOption, RequireRestart = false)]
     public bool IsCultureEnabled { get; set; } = true;
+    
+    [SettingPropertyDropdown(ModTexts.UnequipOption, RequireRestart = false)]
+    public bool IsUnequipFeatureEnabled { get; set; } = true;
 }

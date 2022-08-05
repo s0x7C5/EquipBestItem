@@ -77,7 +77,8 @@ internal class SPInventoryMixin
             EquipmentIndex = equipmentIndex,
             IsInWarSet = IsInWarSet
         };
-        _bestItemManager.EquipBestItem(context, BestItems[(int) equipmentIndex]);
+        BestItemManager.UnequipItem(context);
+        BestItemManager.EquipItem(context, BestItems[(int) equipmentIndex]);
         RefreshEquipmentState();
     }
 
@@ -231,10 +232,19 @@ internal class SPInventoryMixin
                 Character = character,
                 EquipmentIndex = index,
                 IsInWarSet = IsInWarSet
-            };
+            }; 
             
-            var bestItem = _bestItemManager.GetBestItem(context, rightItems, leftItems);
-            _bestItemManager.EquipBestItem(context, bestItem);
+            if (IsLeftPanelLocked && IsRightPanelLocked && (bool) MCMSettings.Instance?.IsUnequipFeatureEnabled)
+                BestItemManager.UnequipItem(context);
+            else
+            {
+                var bestItem = _bestItemManager.GetBestItem(context, rightItems, leftItems);
+                
+                if (bestItem is null) continue;
+                
+                BestItemManager.UnequipItem(context);
+                BestItemManager.EquipItem(context, bestItem);
+            }
         }
     }
 
