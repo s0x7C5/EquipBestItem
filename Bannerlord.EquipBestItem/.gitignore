@@ -1,0 +1,91 @@
+# === OS / Editor / Global ===
+# Папки операционной системы / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.user
+*.userprefs
+*.rsuser
+*.sln.docstates
+
+# === Visual Studio / .NET / C# ===
+# Build results
+/[Bb]in/
+/[Oo]bj/
+/[Dd]ebug/
+/[Rr]elease/
+/x64/
+/x86/
+/[Aa][Rr][Mm]/
+/[Ww][Ii][Nn]32/
+/bld/
+
+# Visual Studio temporary / user-specific files
+*.user
+*.userosscache
+*.suo
+*.vcxproj.user
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.idb
+*.pidb
+*.svd
+*.tmp
+*.tlog
+*.log
+*.vs/
+
+# Auto-generated project/solution files
+*.csproj
+*.csproj.user
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+*.sln
+*.sln.ide
+
+# NuGet, package cache
+*.nuget.props
+*.nuget.targets
+packages/
+*.nupkg
+
+# Rider / IntelliJ / JetBrains IDEs
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries/
+.idea/**/gradle.xml
+.idea/**/libraries/
+.idea/**/deployment.xml
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+/out/
+/*.iws
+*.iml
+*.ipr
+
+# VS Code
+.history/
+.vscode/
+
+# Logs, temp файлы, отладка
+*.log
+*.vsconfig
+*.cache
+build_log.txt
+
+# Если есть артефакты сборки, dll etc.
+*.dll
+*.exe
+*.obj
+*.lib
+*.log
