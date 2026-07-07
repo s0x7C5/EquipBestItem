@@ -41,7 +41,7 @@ public static class LlmPlanParser
             if (directiveDto.Slot is null) continue;
 
             foreach (var slot in ExpandSlots(directiveDto.Slot))
-                directives.Add(new EquipDirective(slot, BuildQuery(directiveDto)));
+                directives.Add(new EquipDirective(slot, BuildQuery(directiveDto, slot)));
         }
 
         if (directives.Count == 0)
@@ -50,9 +50,15 @@ public static class LlmPlanParser
         return new InterpretedPlan(directives, dto.Explanation ?? "");
     }
 
-    private static ItemQuery BuildQuery(DirectiveDto dto)
+    private static ItemQuery BuildQuery(DirectiveDto dto, EquipmentIndex slot)
     {
-        var query = new ItemQuery(ParamWeights.FromDictionary(dto.Weights));
+        var weights = ParamWeights.FromDictionary(dto.Weights);
+
+        // A directive without weights means "just find the best": use the
+        // slot defaults, but let the player's search method setting decide.
+        var query = weights.IsEmpty
+            ? new ItemQuery(Profiles.DefaultWeights.For(slot))
+            : new ItemQuery(weights) { HasExplicitWeights = true };
 
         if (dto.MaxItemWeight is { } maxWeight and > 0f)
             query.MaxItemWeight = maxWeight;

@@ -47,7 +47,7 @@ internal static class ModRuntime
         Services = new ModServices(
             settings,
             new ProfileService(store),
-            new EquipBestService(finder, new WeightedItemScorer(), new EffectivenessItemScorer()),
+            new EquipBestService(finder, new WeightedItemScorer(), new EffectivenessItemScorer(), settings),
             new LlmRequestInterpreter(settings.Ai));
     }
 }

@@ -9,7 +9,10 @@ like *"одень меня в самую лёгкую броню империи"
 - **Equip best** button on every equipment slot; **equip-all** for the current
   character.
 - Per-slot **search weights** (per character, per battle/civilian/stealth set)
-  with negative weights supported (`Weight: -1` = prefer light gear).
+  with negative weights supported (`Weight: -1` = prefer light gear). Zero out
+  a slot's weights to exclude it from searching.
+- Choice of search method in `settings.json`: parameter weights (default) or
+  the game's built-in Effectiveness score.
 - **AI request box**: free text → structured search plan → preview → apply.
   Works with the Anthropic API or any OpenAI-compatible endpoint.
 - Fast: single-pass search with cached item stat vectors.

@@ -24,4 +24,11 @@ public sealed class ItemQuery
 
     /// <summary>Restrict the search to items of a culture (e.g. "empire"). Null disables the constraint.</summary>
     public string? CultureId { get; set; }
+
+    /// <summary>
+    ///     True when the weights were explicitly requested (e.g. spelled out by
+    ///     an AI directive) and must be honored even if the player's search
+    ///     method setting is "effectiveness".
+    /// </summary>
+    public bool HasExplicitWeights { get; set; }
 }

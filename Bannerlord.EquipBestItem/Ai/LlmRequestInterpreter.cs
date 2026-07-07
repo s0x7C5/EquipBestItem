@@ -139,7 +139,8 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "ThrustDamage, SwingDamage, Accuracy, Handling, Weight.");
         builder.AppendLine(
             "Positive weight = maximize, negative = minimize (e.g. Weight: -1 prefers light items). " +
-            "An empty weights object means \"use the game's overall effectiveness\".");
+            "Only spell out weights when the player expressed a preference; an empty weights object " +
+            "means \"just find the best with default balanced weights\".");
         builder.AppendLine(
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
             "weaponClass only makes sense for weapon slots.");

@@ -5,7 +5,16 @@ namespace Bannerlord.EquipBestItem.Settings;
 /// <summary>Mod configuration, stored as settings.json in the mod config directory.</summary>
 public sealed class ModSettings
 {
+    /// <summary>
+    ///     "weights" — score items by the per-slot parameter weights (the mod's
+    ///     main mode). "effectiveness" — use the game's built-in aggregate score.
+    /// </summary>
+    public string SearchMethod { get; set; } = "weights";
+
     public AiSettings Ai { get; set; } = new();
+
+    public bool UseEffectiveness =>
+        string.Equals(SearchMethod, "effectiveness", StringComparison.OrdinalIgnoreCase);
 }
 
 /// <summary>

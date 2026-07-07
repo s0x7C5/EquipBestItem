@@ -51,8 +51,21 @@ Equip Best Item v3 is a ground-up rework built around one idea:
   invalidated on inventory refresh events, not per search.
 - Scoring is a dot product over non-zero weights, normalized by `sum(|w|)`.
   Negative weights penalize (e.g. `Weight: -1` prefers light items).
-- Queries with an empty weight vector fall back to the game's own
-  `ItemObject.Effectiveness` — used as the default for weapon slots.
+
+### Search method selection
+
+The game's built-in `ItemObject.Effectiveness` is a blunt aggregate — the
+whole reason this mod exists is weight-based search. Both are available and
+the player chooses in `settings.json` (`searchMethod`):
+
+- `"weights"` (default) — score by the per-slot weight vectors; every slot
+  ships with balanced defaults (all relevant params at 1.0, as in v2). A slot
+  whose weights the player zeroes out is **excluded** from searching — this
+  replaces the v2 per-slot "lock".
+- `"effectiveness"` — the game's score. Weight windows still matter for the
+  weapon-class pin. Weights explicitly spelled out by an AI directive
+  (`HasExplicitWeights`) override this setting, because the player asked for
+  them in that very request; AI directives without weights follow the setting.
 
 ## The AI interpreter
 
