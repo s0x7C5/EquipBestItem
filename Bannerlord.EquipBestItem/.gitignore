@@ -39,12 +39,10 @@ Thumbs.db
 *.log
 *.vs/
 
-# Auto-generated project/solution files
-*.csproj
+# NuGet-generated project files (the .csproj and .sln themselves are versioned)
 *.csproj.user
 *.csproj.nuget.g.props
 *.csproj.nuget.g.targets
-*.sln
 *.sln.ide
 
 # NuGet, package cache

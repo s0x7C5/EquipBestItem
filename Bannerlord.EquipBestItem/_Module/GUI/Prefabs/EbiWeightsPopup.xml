@@ -1,0 +1,143 @@
+<Prefab>
+    <Window>
+        <Widget DataSource="{ModInventory}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                DoNotAcceptEvents="true">
+            <Children>
+                <Widget DataSource="{SlotSettings}" IsVisible="@IsVisible" WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent">
+                    <Children>
+
+                        <!-- Dim and swallow clicks outside the dialog -->
+                        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                     Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55"/>
+
+                        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="540"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Brush">
+                            <Children>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                           MarginTop="20" MarginBottom="20" MarginLeft="25" MarginRight="25"
+                                           StackLayout.LayoutMethod="VerticalTopToBottom">
+                                    <Children>
+
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                    SuggestedHeight="45" Brush="Popup.Button.Text"
+                                                    Text="@HeaderText"/>
+
+                                        <!-- Weapon class pin (weapon slots only) -->
+                                        <ListPanel IsVisible="@IsWeaponSlot" WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="Fixed" SuggestedHeight="50" MarginTop="5"
+                                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                            <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="60"
+                                                              SuggestedHeight="43" VerticalAlignment="Center"
+                                                              Brush="SPOptions.Dropdown.Left.Button"
+                                                              Command.Click="ExecutePreviousWeaponClass"/>
+                                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                                            SuggestedWidth="330" Brush="Popup.Button.Text"
+                                                            Text="@WeaponClassText"/>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="60"
+                                                              SuggestedHeight="43" VerticalAlignment="Center"
+                                                              Brush="SPOptions.Dropdown.Right.Button"
+                                                              Command.Click="ExecuteNextWeaponClass"/>
+                                            </Children>
+                                        </ListPanel>
+
+                                        <!-- One template row per visible parameter -->
+                                        <ListPanel DataSource="{Rows}" WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="CoverChildren" MarginTop="10"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                            <ItemTemplate>
+                                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                           SuggestedHeight="42"
+                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                    <Children>
+                                                        <TextWidget WidthSizePolicy="Fixed"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    SuggestedWidth="185" Brush="Popup.Button.Text"
+                                                                    Text="@Name"/>
+                                                        <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                                      SuggestedWidth="220" SuggestedHeight="42"
+                                                                      VerticalAlignment="Center" MarginLeft="10"
+                                                                      DoNotUpdateHandleSize="true" Filler="Filler"
+                                                                      Handle="SliderHandle" IsDiscrete="false"
+                                                                      MinValueFloat="-1.0" MaxValueFloat="1.0"
+                                                                      ValueFloat="@Value">
+                                                            <Children>
+                                                                <Widget WidthSizePolicy="StretchToParent"
+                                                                        HeightSizePolicy="Fixed" SuggestedHeight="35"
+                                                                        VerticalAlignment="Center"
+                                                                        Sprite="SPGeneral\SPOptions\standart_slider_canvas"/>
+                                                                <Widget Id="Filler" WidthSizePolicy="Fixed"
+                                                                        HeightSizePolicy="Fixed" SuggestedWidth="220"
+                                                                        SuggestedHeight="35" VerticalAlignment="Center"
+                                                                        ClipContents="true">
+                                                                    <Children>
+                                                                        <Widget WidthSizePolicy="Fixed"
+                                                                                HeightSizePolicy="StretchToParent"
+                                                                                SuggestedWidth="220"
+                                                                                Sprite="SPGeneral\SPOptions\standart_slider_fill"/>
+                                                                    </Children>
+                                                                </Widget>
+                                                                <Widget WidthSizePolicy="StretchToParent"
+                                                                        HeightSizePolicy="Fixed" SuggestedHeight="35"
+                                                                        VerticalAlignment="Center"
+                                                                        Sprite="SPGeneral\SPOptions\standart_slider_frame"/>
+                                                                <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed"
+                                                                             HeightSizePolicy="Fixed"
+                                                                             SuggestedWidth="16" SuggestedHeight="30"
+                                                                             VerticalAlignment="Center"
+                                                                             Brush="SPOptions.Slider.Handle"/>
+                                                            </Children>
+                                                        </SliderWidget>
+                                                        <TextWidget WidthSizePolicy="Fixed"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    SuggestedWidth="75" MarginLeft="10"
+                                                                    Brush="Popup.Button.Text" Text="@ValueText"/>
+                                                    </Children>
+                                                </ListPanel>
+                                            </ItemTemplate>
+                                        </ListPanel>
+
+                                        <!-- Actions -->
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   MarginTop="15" HorizontalAlignment="Center"
+                                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                            <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="200"
+                                                              SuggestedHeight="55" Brush="Popup.Button.Base"
+                                                              Command.Click="ExecuteReset" UpdateChildrenStates="true">
+                                                    <Children>
+                                                        <TextWidget WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Brush="Popup.Button.Text"
+                                                                    Text="@ResetButtonText"/>
+                                                    </Children>
+                                                </ButtonWidget>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="200"
+                                                              SuggestedHeight="55" MarginLeft="20"
+                                                              Brush="Popup.Button.Base" Command.Click="ExecuteClose"
+                                                              UpdateChildrenStates="true">
+                                                    <Children>
+                                                        <TextWidget WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Brush="Popup.Button.Text"
+                                                                    Text="@CloseButtonText"/>
+                                                    </Children>
+                                                </ButtonWidget>
+                                            </Children>
+                                        </ListPanel>
+
+                                    </Children>
+                                </ListPanel>
+                            </Children>
+                        </BrushWidget>
+                    </Children>
+                </Widget>
+            </Children>
+        </Widget>
+    </Window>
+</Prefab>

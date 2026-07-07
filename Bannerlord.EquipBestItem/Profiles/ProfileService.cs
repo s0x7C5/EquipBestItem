@@ -1,0 +1,88 @@
+using System.Collections.Generic;
+using Bannerlord.EquipBestItem.Domain;
+using Bannerlord.EquipBestItem.Persistence;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+
+namespace Bannerlord.EquipBestItem.Profiles;
+
+/// <summary>
+///     Per-character, per-equipment-set, per-slot search preferences with
+///     built-in defaults and JSON persistence.
+/// </summary>
+public sealed class ProfileService
+{
+    private const string FileName = "profiles.json";
+
+    private readonly JsonFileStore _store;
+    private readonly ProfileData _data;
+
+    public ProfileService(JsonFileStore store)
+    {
+        _store = store;
+        _data = _store.Load(FileName, () => new ProfileData());
+    }
+
+    public ItemQuery GetQuery(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        var profile = FindSlotProfile(character, equipment, slot);
+        if (profile is null) return new ItemQuery(DefaultWeights.For(slot));
+
+        var query = new ItemQuery(ParamWeights.FromDictionary(profile.Weights));
+
+        if (System.Enum.TryParse(profile.WeaponClass, true, out WeaponClass weaponClass))
+            query.WeaponClass = weaponClass;
+
+        return query;
+    }
+
+    public void SetWeights(CharacterObject character, Equipment equipment, EquipmentIndex slot, ParamWeights weights)
+    {
+        GetOrCreateSlotProfile(character, equipment, slot).Weights = weights.ToDictionary();
+    }
+
+    public void SetWeaponClass(CharacterObject character, Equipment equipment, EquipmentIndex slot, WeaponClass? weaponClass)
+    {
+        GetOrCreateSlotProfile(character, equipment, slot).WeaponClass = weaponClass?.ToString();
+    }
+
+    public void ResetSlot(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        if (_data.Characters.TryGetValue(character.StringId, out var sets) &&
+            sets.TryGetValue(GetSetKey(equipment), out var slots))
+            slots.Remove(slot.ToString());
+    }
+
+    public void Save()
+    {
+        _store.Save(FileName, _data);
+    }
+
+    private SlotProfileData? FindSlotProfile(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        return _data.Characters.TryGetValue(character.StringId, out var sets) &&
+               sets.TryGetValue(GetSetKey(equipment), out var slots) &&
+               slots.TryGetValue(slot.ToString(), out var profile)
+            ? profile
+            : null;
+    }
+
+    private SlotProfileData GetOrCreateSlotProfile(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        if (!_data.Characters.TryGetValue(character.StringId, out var sets))
+            _data.Characters[character.StringId] = sets = new Dictionary<string, Dictionary<string, SlotProfileData>>();
+
+        var setKey = GetSetKey(equipment);
+        if (!sets.TryGetValue(setKey, out var slots))
+            sets[setKey] = slots = new Dictionary<string, SlotProfileData>();
+
+        var slotKey = slot.ToString();
+        if (!slots.TryGetValue(slotKey, out var profile))
+            slots[slotKey] = profile = new SlotProfileData();
+
+        return profile;
+    }
+
+    private static string GetSetKey(Equipment equipment) =>
+        equipment.IsCivilian ? "civilian" : equipment.IsStealth ? "stealth" : "battle";
+}

@@ -4,20 +4,47 @@
         <tag language="Русский"/>
     </tags>
     <strings>
-        <string id="ebi_default" text="По умолчанию"/>
-        <string id="ebi_lock" text="Отключить"/>
-        <string id="ebi_hint_default" text="Сбросить к значениям по умолчанию"/>
-        <string id="ebi_hint_lock" text="Отключить поиск для данного слота"/>
-        <string id="ebi_hint_checkbox" text="Установить значением по умолчанию"/>
-        <string id="ebi_hint_percent" text="Насколько параметр влияет при поиске предметов"/>
-        <string id="ebi_hint_equip_current" text="Снарядить текущего персонажа"/>
-        <string id="ebi_hint_equip_all" text="Снарядить всех персонажей"/>
-        <string id="ebi_hint_left_panel_unlock" text="Включить поиск в левых предметах"/>
-        <string id="ebi_hint_left_panel_lock" text="Отключить поиск в левых предметах"/>
-        <string id="ebi_hint_right_panel_unlock" text="Включить поиск в правых предметах"/>
-        <string id="ebi_hint_right_panel_lock" text="Отключить поиск в правых предметах"/>
-        <string id="ebi_hint_menu_hide" text="Скрыть панель кнопок"/>
-        <string id="ebi_hint_menu_show" text="Показать панель кнопок"/>
-        <string id="ebi_undefined" text="Определяется слотом"/>
+        <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
+        <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
+        <string id="EbiWeightsHeader" text="Веса поиска: {SLOT}"/>
+        <string id="EbiClassAsEquipped" text="Как в слоте"/>
+        <string id="EbiReset" text="Сброс"/>
+        <string id="EbiClose" text="Закрыть"/>
+        <string id="EbiAiInterpret" text="Спросить ИИ"/>
+        <string id="EbiAiApply" text="Применить"/>
+        <string id="EbiAiThinking" text="Разбираю запрос..."/>
+        <string id="EbiAiReady" text="План готов, нажмите «Применить»."/>
+        <string id="EbiAiApplied" text="Надето предметов: {COUNT}."/>
+        <string id="EbiParamHeadArmor" text="Защита головы"/>
+        <string id="EbiParamBodyArmor" text="Защита тела"/>
+        <string id="EbiParamArmArmor" text="Защита рук"/>
+        <string id="EbiParamLegArmor" text="Защита ног"/>
+        <string id="EbiParamMountArmor" text="Броня лошади"/>
+        <string id="EbiParamChargeDamage" text="Урон наскока"/>
+        <string id="EbiParamHitPoints" text="Здоровье / прочность"/>
+        <string id="EbiParamManeuver" text="Манёвренность"/>
+        <string id="EbiParamSpeed" text="Скорость"/>
+        <string id="EbiParamMaxAmmo" text="Боезапас / прочность"/>
+        <string id="EbiParamThrustSpeed" text="Скорость укола"/>
+        <string id="EbiParamSwingSpeed" text="Скорость удара"/>
+        <string id="EbiParamMissileSpeed" text="Скорость снаряда"/>
+        <string id="EbiParamMissileDamage" text="Урон снаряда"/>
+        <string id="EbiParamWeaponLength" text="Длина"/>
+        <string id="EbiParamThrustDamage" text="Колющий урон"/>
+        <string id="EbiParamSwingDamage" text="Рубящий урон"/>
+        <string id="EbiParamAccuracy" text="Точность"/>
+        <string id="EbiParamHandling" text="Удобство"/>
+        <string id="EbiParamWeight" text="Вес"/>
+        <string id="EbiSlotWeapon1" text="Оружие 1"/>
+        <string id="EbiSlotWeapon2" text="Оружие 2"/>
+        <string id="EbiSlotWeapon3" text="Оружие 3"/>
+        <string id="EbiSlotWeapon4" text="Оружие 4"/>
+        <string id="EbiSlotHead" text="Шлем"/>
+        <string id="EbiSlotBody" text="Доспех"/>
+        <string id="EbiSlotLeg" text="Сапоги"/>
+        <string id="EbiSlotGloves" text="Перчатки"/>
+        <string id="EbiSlotCape" text="Плащ"/>
+        <string id="EbiSlotHorse" text="Лошадь"/>
+        <string id="EbiSlotHarness" text="Сбруя"/>
     </strings>
 </base>

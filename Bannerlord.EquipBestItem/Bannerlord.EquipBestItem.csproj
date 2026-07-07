@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>3.0.0</Version>
+        <TargetFramework>net472</TargetFramework>
+        <Platforms>x64</Platforms>
+        <LangVersion>11.0</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+
+        <ModuleId>Bannerlord.EquipBestItem</ModuleId>
+        <ModuleName>Equip Best Item</ModuleName>
+        <ModuleUrl>https://www.nexusmods.com/mountandblade2bannerlord/mods/369</ModuleUrl>
+        <GameVersion>v1.4.6</GameVersion>
+
+        <AssemblyName>Bannerlord.EquipBestItem</AssemblyName>
+        <RootNamespace>Bannerlord.EquipBestItem</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Net.Http" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bannerlord.ReferenceAssemblies" Version="1.4.6.115628" PrivateAssets="all" />
+        <!-- UIExtenderEx and Harmony ship inside this module's bin folder, so players need no extra mods -->
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" PrivateAssets="all" />
+        <PackageReference Include="Lib.Harmony" Version="2.3.6" PrivateAssets="all" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" IncludeAssets="compile" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+        <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+        <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    </ItemGroup>
+
+    <!-- Stage the module layout (SubModule.xml with substituted tokens, GUI assets, DLL) into bin/Module -->
+    <Target Name="StageModule" AfterTargets="Build">
+        <PropertyGroup>
+            <StageDir>$(OutputPath)Module\$(ModuleId)\</StageDir>
+        </PropertyGroup>
+        <ItemGroup>
+            <ModuleFiles Include="_Module\**\*" Exclude="_Module\SubModule.xml" />
+        </ItemGroup>
+        <ItemGroup>
+            <RuntimeLibs Include="$(OutputPath)*.dll" />
+        </ItemGroup>
+        <Copy SourceFiles="@(ModuleFiles)" DestinationFiles="@(ModuleFiles->'$(StageDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(RuntimeLibs)" DestinationFolder="$(StageDir)bin\Win64_Shipping_Client\" SkipUnchangedFiles="true" />
+        <WriteLinesToFile File="$(StageDir)SubModule.xml" Overwrite="true"
+                          Lines="$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\_Module\SubModule.xml').Replace('$moduleid$','$(ModuleId)').Replace('$modulename$','$(ModuleName)').Replace('$version$','$(Version)').Replace('$moduleurl$','$(ModuleUrl)').Replace('$gameversion$','$(GameVersion)'))" />
+    </Target>
+
+    <!-- Optionally deploy to the game folder when BANNERLORD_GAME_DIR is set -->
+    <Target Name="DeployModule" AfterTargets="StageModule" Condition="'$(BANNERLORD_GAME_DIR)' != ''">
+        <ItemGroup>
+            <StagedFiles Include="$(OutputPath)Module\**\*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(StagedFiles)" DestinationFiles="@(StagedFiles->'$(BANNERLORD_GAME_DIR)\Modules\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    </Target>
+
+</Project>

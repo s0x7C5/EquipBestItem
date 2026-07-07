@@ -1,0 +1,67 @@
+<Prefab>
+    <Window>
+        <Widget DataSource="{ModInventory}" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                SuggestedWidth="560" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="115">
+            <Children>
+                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                           StackLayout.LayoutMethod="VerticalTopToBottom">
+                    <Children>
+
+                        <!-- AI request row: free text in, structured equip plan out -->
+                        <ListPanel DataSource="{Ai}" IsVisible="@IsConfigured" WidthSizePolicy="StretchToParent"
+                                   HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                            <Children>
+                                <BrushWidget UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                             SuggestedWidth="330" SuggestedHeight="50" VerticalAlignment="Center"
+                                             Brush="SaveLoad.Search.Button">
+                                    <Children>
+                                        <EditableTextWidget UpdateChildrenStates="true" WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent" MarginTop="10"
+                                                            MarginBottom="10" MarginLeft="10" MarginRight="10"
+                                                            Brush="SaveLoad.Search.InputText" Text="@PromptText"/>
+                                    </Children>
+                                </BrushWidget>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="105" SuggestedHeight="50"
+                                              MarginLeft="5" VerticalAlignment="Center" Brush="ButtonBrush2"
+                                              Command.Click="ExecuteInterpret" IsDisabled="@IsBusy"
+                                              UpdateChildrenStates="true">
+                                    <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Brush="Popup.Button.Text" Text="@InterpretButtonText"/>
+                                    </Children>
+                                </ButtonWidget>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="105" SuggestedHeight="50"
+                                              MarginLeft="5" VerticalAlignment="Center" Brush="ButtonBrush1"
+                                              Command.Click="ExecuteApply" IsEnabled="@CanApply"
+                                              UpdateChildrenStates="true">
+                                    <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Brush="Popup.Button.Text" Text="@ApplyButtonText"/>
+                                    </Children>
+                                </ButtonWidget>
+                            </Children>
+                        </ListPanel>
+
+                        <!-- Status line + equip-all -->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                            <Children>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
+                                              VerticalAlignment="Center"
+                                              Brush="EquipBestItem.EquipCurrentCharacterButton"
+                                              Command.Click="ExecuteEquipAllBest"/>
+                                <TextWidget DataSource="{Ai}" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
+                                            SuggestedWidth="500" MarginLeft="10" VerticalAlignment="Center"
+                                            Brush="Popup.Button.Text" Text="@StatusText"/>
+                            </Children>
+                        </ListPanel>
+
+                    </Children>
+                </ListPanel>
+            </Children>
+        </Widget>
+    </Window>
+</Prefab>

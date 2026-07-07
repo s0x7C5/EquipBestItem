@@ -1,32 +1,49 @@
 # Equip Best Item
 
-This is a Mount & Blade II: Bannerlord mod.
-
-## What does this mod do
-
-This mod adds buttons which equip the character's equipment with the best items.
-
-## Requirements
-
-`Bannerlord.UIExtenderEx`, `Bannerlord.ButterLib`, `Bannerlord.MBOptionScreen`
+A Mount & Blade II: Bannerlord mod that equips your characters with the best
+items in one click — and, if you want, understands plain-language requests
+like *"одень меня в самую лёгкую броню империи"* via an LLM.
 
 ## Features
 
-* Fast equip best armor, weapon, and mount
-* Preview of found items
-* Fine-tuning the search by parameter coefficients
-* All items for all characters equip by one click.
-* Equip directly from the store, loot, inventory (you can lock or unlock panels)
-
-## Used
-
-`Bannerlord.Module.Template` was used for development
+- **Equip best** button on every equipment slot; **equip-all** for the current
+  character.
+- Per-slot **search weights** (per character, per battle/civilian/stealth set)
+  with negative weights supported (`Weight: -1` = prefer light gear).
+- **AI request box**: free text → structured search plan → preview → apply.
+  Works with the Anthropic API or any OpenAI-compatible endpoint.
+- Fast: single-pass search with cached item stat vectors.
+- Self-contained: no dependency on other mods (UIExtenderEx and Harmony ship
+  inside the module).
 
 ## Installation
 
-You can download the mod at [NexusMods](https://www.nexusmods.com/mountandblade2bannerlord/mods/369)
-and follow instructions.
+1. Copy `Bannerlord.EquipBestItem` into your game's `Modules` folder
+   (or download from [NexusMods](https://www.nexusmods.com/mountandblade2bannerlord/mods/369)).
+2. Enable it in the launcher.
+
+### Enabling the AI assistant (optional)
+
+1. Set an environment variable `EBI_AI_API_KEY` with your API key.
+2. Optionally edit
+   `Documents/Mount and Blade II Bannerlord/Configs/EquipBestItem/settings.json`
+   (provider `anthropic` or `openai`, endpoint, model).
+3. The request box appears in the inventory when a key is configured.
+
+## Building
+
+```
+dotnet build Bannerlord.EquipBestItem.sln
+```
+
+Reference assemblies come from NuGet — the game itself is not required to
+compile. If the `BANNERLORD_GAME_DIR` environment variable is set, the built
+module is deployed into the game's `Modules` folder automatically.
+
+## Architecture
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## License
 
-[MIT License](LICENSE)
+[MIT License](LICENSE.txt)

@@ -4,20 +4,47 @@
         <tag language="English"/>
     </tags>
     <strings>
-        <string id="ebi_default" text="Default"/>
-        <string id="ebi_lock" text="Lock"/>
-        <string id="ebi_hint_default" text="Reset to default values"/>
-        <string id="ebi_hint_lock" text="Disable search for this slot"/>
-        <string id="ebi_hint_checkbox" text="Set to default value"/>
-        <string id="ebi_hint_percent" text="How much does the parameter affect the value of the item"/>
-        <string id="ebi_hint_equip_current" text="Equip current character"/>
-        <string id="ebi_hint_equip_all" text="Equip all characters"/>
-        <string id="ebi_hint_left_panel_unlock" text="Enable search in the left-hand items"/>
-        <string id="ebi_hint_left_panel_lock" text="Disable search in left-hand items"/>
-        <string id="ebi_hint_right_panel_unlock" text="Enable search in right-hand items"/>
-        <string id="ebi_hint_right_panel_lock" text="Disable search in right-hand items"/>
-        <string id="ebi_hint_menu_hide" text="Hide buttons panel"/>
-        <string id="ebi_hint_menu_show" text="Show buttons panel"/>
-        <string id="ebi_undefined" text="Defined by the slot"/>
+        <string id="EbiNothingBetter" text="No better item found."/>
+        <string id="EbiEquippedCount" text="Equipped {COUNT} item(s)."/>
+        <string id="EbiWeightsHeader" text="Search weights: {SLOT}"/>
+        <string id="EbiClassAsEquipped" text="As equipped"/>
+        <string id="EbiReset" text="Reset"/>
+        <string id="EbiClose" text="Close"/>
+        <string id="EbiAiInterpret" text="Ask AI"/>
+        <string id="EbiAiApply" text="Apply"/>
+        <string id="EbiAiThinking" text="Interpreting request..."/>
+        <string id="EbiAiReady" text="Plan ready, press Apply."/>
+        <string id="EbiAiApplied" text="Equipped {COUNT} item(s)."/>
+        <string id="EbiParamHeadArmor" text="Head armor"/>
+        <string id="EbiParamBodyArmor" text="Body armor"/>
+        <string id="EbiParamArmArmor" text="Arm armor"/>
+        <string id="EbiParamLegArmor" text="Leg armor"/>
+        <string id="EbiParamMountArmor" text="Mount armor"/>
+        <string id="EbiParamChargeDamage" text="Charge damage"/>
+        <string id="EbiParamHitPoints" text="Hit points"/>
+        <string id="EbiParamManeuver" text="Maneuver"/>
+        <string id="EbiParamSpeed" text="Speed"/>
+        <string id="EbiParamMaxAmmo" text="Ammo / durability"/>
+        <string id="EbiParamThrustSpeed" text="Thrust speed"/>
+        <string id="EbiParamSwingSpeed" text="Swing speed"/>
+        <string id="EbiParamMissileSpeed" text="Missile speed"/>
+        <string id="EbiParamMissileDamage" text="Missile damage"/>
+        <string id="EbiParamWeaponLength" text="Length"/>
+        <string id="EbiParamThrustDamage" text="Thrust damage"/>
+        <string id="EbiParamSwingDamage" text="Swing damage"/>
+        <string id="EbiParamAccuracy" text="Accuracy"/>
+        <string id="EbiParamHandling" text="Handling"/>
+        <string id="EbiParamWeight" text="Weight"/>
+        <string id="EbiSlotWeapon1" text="Weapon 1"/>
+        <string id="EbiSlotWeapon2" text="Weapon 2"/>
+        <string id="EbiSlotWeapon3" text="Weapon 3"/>
+        <string id="EbiSlotWeapon4" text="Weapon 4"/>
+        <string id="EbiSlotHead" text="Helmet"/>
+        <string id="EbiSlotBody" text="Body armor"/>
+        <string id="EbiSlotLeg" text="Boots"/>
+        <string id="EbiSlotGloves" text="Gloves"/>
+        <string id="EbiSlotCape" text="Cape"/>
+        <string id="EbiSlotHorse" text="Mount"/>
+        <string id="EbiSlotHarness" text="Harness"/>
     </strings>
 </base>

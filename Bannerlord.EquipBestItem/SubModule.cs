@@ -1,27 +1,26 @@
-﻿using Bannerlord.UIExtenderEx;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
+using System;
+using Bannerlord.UIExtenderEx;
 using TaleWorlds.MountAndBlade;
 
+namespace Bannerlord.EquipBestItem;
 
-namespace Bannerlord.EquipBestItem
+public sealed class SubModule : MBSubModuleBase
 {
-    public class SubModule : MBSubModuleBase
+    protected override void OnSubModuleLoad()
     {
-        protected override void OnSubModuleLoad()
-        {
-            base.OnSubModuleLoad();
+        base.OnSubModuleLoad();
 
-            try
-            {
-                var uiExtender = UIExtender.Create("Bannerlord.EquipBestItem");
-                uiExtender.Register(typeof(SubModule).Assembly);
-                uiExtender.Enable();
-            }
-            catch (MBException exception)
-            {
-                Helper.ShowMessage($"EquipBestItem failed to apply UIExtender patches {exception.Message}", Colors.Red);
-            }
+        try
+        {
+            ModRuntime.Initialize();
+
+            var uiExtender = UIExtender.Create("Bannerlord.EquipBestItem");
+            uiExtender.Register(typeof(SubModule).Assembly);
+            uiExtender.Enable();
+        }
+        catch (Exception exception)
+        {
+            GameLog.Error($"failed to initialize: {exception.Message}");
         }
     }
 }
