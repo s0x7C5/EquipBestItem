@@ -61,6 +61,9 @@ public static class ItemStatExtractor
         stats[(int)ItemParam.Accuracy] = weapon.Accuracy;
 
         if (weapon.IsShield)
+        {
             stats[(int)ItemParam.HitPoints] = element.GetModifiedMaximumHitPointsForUsage(0);
+            stats[(int)ItemParam.BodyArmor] = weapon.BodyArmor;
+        }
     }
 }

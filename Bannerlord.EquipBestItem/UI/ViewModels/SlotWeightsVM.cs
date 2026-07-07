@@ -21,11 +21,47 @@ public sealed class SlotWeightsVM : ViewModel
     private static readonly ItemParam[] HarnessParams =
         { ItemParam.MountArmor, ItemParam.Weight };
 
+    // Shown when no weapon class is pinned ("as equipped" can be anything).
     private static readonly ItemParam[] WeaponParams =
     {
         ItemParam.ThrustDamage, ItemParam.SwingDamage, ItemParam.ThrustSpeed, ItemParam.SwingSpeed,
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy, ItemParam.MaxAmmo,
         ItemParam.WeaponLength, ItemParam.Handling, ItemParam.HitPoints, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] MeleeParams =
+    {
+        ItemParam.ThrustDamage, ItemParam.SwingDamage, ItemParam.ThrustSpeed, ItemParam.SwingSpeed,
+        ItemParam.WeaponLength, ItemParam.Handling, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] BowParams =
+    {
+        ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
+        ItemParam.ThrustSpeed, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] CrossbowParams =
+    {
+        ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
+        ItemParam.ThrustSpeed, ItemParam.MaxAmmo, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] ThrownParams =
+    {
+        ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
+        ItemParam.WeaponLength, ItemParam.MaxAmmo, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] AmmoParams =
+    {
+        ItemParam.MissileDamage, ItemParam.MaxAmmo, ItemParam.Weight
+    };
+
+    private static readonly ItemParam[] ShieldParams =
+    {
+        ItemParam.HitPoints, ItemParam.BodyArmor, ItemParam.ThrustSpeed,
+        ItemParam.WeaponLength, ItemParam.Weight
     };
 
     private static readonly WeaponClass?[] WeaponClassChoices =
@@ -119,10 +155,7 @@ public sealed class SlotWeightsVM : ViewModel
         var query = _profiles.GetQuery(character, equipment, slot);
         _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponClassChoices, query.WeaponClass));
 
-        var rows = new MBBindingList<ParamRowVM>();
-        foreach (var param in GetParamsForSlot(slot))
-            rows.Add(new ParamRowVM(param, GetParamName(param), query.Weights[param], PersistWeights));
-        Rows = rows;
+        RebuildRows();
 
         HeaderText = new TextObject("{=EbiWeightsHeader}Search weights: {SLOT}")
             .SetTextVariable("SLOT", GetSlotName(slot)).ToString();
@@ -159,26 +192,61 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.SetWeaponClass(_character, _equipment, _slot, WeaponClassChoices[_weaponClassIndex]);
         OnPropertyChanged(nameof(WeaponClassText));
+
+        // Each weapon class exposes its own parameter set.
+        RebuildRows();
     }
 
+    private void RebuildRows()
+    {
+        if (_character is null || _equipment is null) return;
+
+        var query = _profiles.GetQuery(_character, _equipment, _slot);
+
+        var rows = new MBBindingList<ParamRowVM>();
+        foreach (var param in GetVisibleParams())
+            rows.Add(new ParamRowVM(param, GetParamName(param), query.Weights[param], PersistWeights));
+        Rows = rows;
+    }
+
+    /// <summary>
+    ///     Merges the visible sliders into the stored weights instead of
+    ///     replacing them, so values set under another weapon class survive
+    ///     switching back and forth.
+    /// </summary>
     private void PersistWeights()
     {
         if (_character is null || _equipment is null) return;
 
-        var weights = new ParamWeights();
+        var weights = _profiles.GetQuery(_character, _equipment, _slot).Weights;
         foreach (var row in _rows)
             weights[row.Param] = row.Value;
 
         _profiles.SetWeights(_character, _equipment, _slot, weights);
     }
 
-    private static IReadOnlyList<ItemParam> GetParamsForSlot(EquipmentIndex slot)
+    private IReadOnlyList<ItemParam> GetVisibleParams()
     {
-        if (slot >= EquipmentIndex.Weapon0 && slot <= EquipmentIndex.Weapon3) return WeaponParams;
-        if (slot == EquipmentIndex.Horse) return HorseParams;
-        if (slot == EquipmentIndex.HorseHarness) return HarnessParams;
+        if (IsWeaponSlot)
+            return WeaponClassChoices[_weaponClassIndex] is { } weaponClass
+                ? GetParamsForWeaponClass(weaponClass)
+                : WeaponParams;
+
+        if (_slot == EquipmentIndex.Horse) return HorseParams;
+        if (_slot == EquipmentIndex.HorseHarness) return HarnessParams;
         return ArmorParams;
     }
+
+    private static ItemParam[] GetParamsForWeaponClass(WeaponClass weaponClass) => weaponClass switch
+    {
+        TaleWorlds.Core.WeaponClass.Bow => BowParams,
+        TaleWorlds.Core.WeaponClass.Crossbow => CrossbowParams,
+        TaleWorlds.Core.WeaponClass.Arrow or TaleWorlds.Core.WeaponClass.Bolt => AmmoParams,
+        TaleWorlds.Core.WeaponClass.Javelin or TaleWorlds.Core.WeaponClass.ThrowingAxe
+            or TaleWorlds.Core.WeaponClass.ThrowingKnife => ThrownParams,
+        TaleWorlds.Core.WeaponClass.SmallShield or TaleWorlds.Core.WeaponClass.LargeShield => ShieldParams,
+        _ => MeleeParams
+    };
 
     private static string GetParamName(ItemParam param) => param switch
     {
