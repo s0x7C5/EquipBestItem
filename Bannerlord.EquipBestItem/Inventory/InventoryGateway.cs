@@ -47,6 +47,9 @@ public sealed class InventoryGateway
         }
     }
 
+    /// <summary>The screen's transfer engine; the reliable change-event source.</summary>
+    public InventoryLogic? Logic => ActiveInventoryLogic;
+
     private static InventoryLogic? ActiveInventoryLogic =>
         InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic;
 
