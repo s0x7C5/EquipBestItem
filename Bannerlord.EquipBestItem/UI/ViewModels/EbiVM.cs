@@ -1,5 +1,6 @@
 using Bannerlord.EquipBestItem.Inventory;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -91,6 +92,52 @@ public sealed class EbiVM : ViewModel
     [DataSourceProperty]
     public EbiSlotVM SlotHarness { get; }
 
+    [DataSourceProperty]
+    public HintViewModel EquipCurrentHint { get; } = new(new TextObject(
+        "{=EbiHintEquipCurrent}Equip the current character with the best items"));
+
+    [DataSourceProperty]
+    public HintViewModel EquipAllHint { get; } = new(new TextObject(
+        "{=EbiHintEquipAll}Equip all party heroes with the best items"));
+
+    [DataSourceProperty]
+    public HintViewModel LeftPanelLockHint { get; } = new(new TextObject(
+        "{=EbiHintLeftLock}Search in the left panel (merchant, loot). Equipping buys the item."));
+
+    [DataSourceProperty]
+    public HintViewModel RightPanelLockHint { get; } = new(new TextObject(
+        "{=EbiHintRightLock}Search in your inventory"));
+
+    [DataSourceProperty]
+    public bool IsLeftPanelSearched => _services.Settings.SearchLeftPanel;
+
+    [DataSourceProperty]
+    public bool IsLeftPanelLocked => !_services.Settings.SearchLeftPanel;
+
+    [DataSourceProperty]
+    public bool IsRightPanelSearched => _services.Settings.SearchRightPanel;
+
+    [DataSourceProperty]
+    public bool IsRightPanelLocked => !_services.Settings.SearchRightPanel;
+
+    public void ExecuteToggleLeftPanelSearch()
+    {
+        _services.Settings.SearchLeftPanel = !_services.Settings.SearchLeftPanel;
+        _services.PersistSettings();
+        OnPropertyChanged(nameof(IsLeftPanelSearched));
+        OnPropertyChanged(nameof(IsLeftPanelLocked));
+        RecomputeBestItems();
+    }
+
+    public void ExecuteToggleRightPanelSearch()
+    {
+        _services.Settings.SearchRightPanel = !_services.Settings.SearchRightPanel;
+        _services.PersistSettings();
+        OnPropertyChanged(nameof(IsRightPanelSearched));
+        OnPropertyChanged(nameof(IsRightPanelLocked));
+        RecomputeBestItems();
+    }
+
     public void ExecuteEquipAllBest()
     {
         var character = _gateway.CurrentCharacter;
@@ -105,6 +152,26 @@ public sealed class EbiVM : ViewModel
             var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
             if (_services.EquipBest.TryEquipBest(_gateway, query, slot.Slot) is not null)
                 equippedCount++;
+        }
+
+        GameLog.Info(new TextObject("{=EbiEquippedCount}Equipped {COUNT} item(s).")
+            .SetTextVariable("COUNT", equippedCount).ToString());
+    }
+
+    public void ExecuteEquipAllCharacters()
+    {
+        var equippedCount = 0;
+        foreach (var character in _gateway.GetEquippableHeroes())
+        {
+            var equipment = _gateway.GetEquipmentFor(character);
+            if (equipment is null) continue;
+
+            foreach (var slot in _slots)
+            {
+                var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
+                if (_services.EquipBest.TryEquipBest(_gateway, query, slot.Slot, character, equipment) is not null)
+                    equippedCount++;
+            }
         }
 
         GameLog.Info(new TextObject("{=EbiEquippedCount}Equipped {COUNT} item(s).")

@@ -36,8 +36,14 @@ public sealed class EquipBestService
     /// <summary>Search only — used to preview the best item on the slot buttons.</summary>
     public SPItemVM? FindBest(InventoryGateway gateway, ItemQuery query, EquipmentIndex slot)
     {
-        var character = gateway.CurrentCharacter;
-        var equipment = gateway.ActiveEquipment;
+        return FindBest(gateway, query, slot, gateway.CurrentCharacter, gateway.ActiveEquipment);
+    }
+
+    /// <summary>Search for an arbitrary hero — used by "equip all characters".</summary>
+    public SPItemVM? FindBest(
+        InventoryGateway gateway, ItemQuery query, EquipmentIndex slot,
+        CharacterObject? character, Equipment? equipment)
+    {
         if (character is null || equipment is null) return null;
 
         var useWeights = !_settings.UseEffectiveness || query.HasExplicitWeights;
@@ -46,7 +52,12 @@ public sealed class EquipBestService
         var context = new SearchContext(character, equipment, slot, query);
         var scorer = useWeights ? (IItemScorer)_weightedScorer : _effectivenessScorer;
 
-        return _finder.FindBest(context, scorer, gateway.LeftItems, gateway.RightItems);
+        // The player chooses which panels participate: searching the left
+        // (merchant/loot) side means "buy out everything better".
+        var leftItems = _settings.SearchLeftPanel ? gateway.LeftItems : null;
+        var rightItems = _settings.SearchRightPanel ? gateway.RightItems : null;
+
+        return _finder.FindBest(context, scorer, leftItems, rightItems);
     }
 
     /// <summary>Equips a previously found item into the slot.</summary>
@@ -61,10 +72,18 @@ public sealed class EquipBestService
     /// <returns>The display name of the equipped item, or null when nothing better was found.</returns>
     public string? TryEquipBest(InventoryGateway gateway, ItemQuery query, EquipmentIndex slot)
     {
-        var best = FindBest(gateway, query, slot);
+        return TryEquipBest(gateway, query, slot, gateway.CurrentCharacter, gateway.ActiveEquipment);
+    }
+
+    /// <returns>The display name of the equipped item, or null when nothing better was found.</returns>
+    public string? TryEquipBest(
+        InventoryGateway gateway, ItemQuery query, EquipmentIndex slot,
+        CharacterObject? character, Equipment? equipment)
+    {
+        var best = FindBest(gateway, query, slot, character, equipment);
         if (best is null) return null;
 
-        Equip(gateway, best, slot);
+        gateway.Equip(best, slot, character!);
         return best.ItemRosterElement.EquipmentElement.GetModifiedItemName()?.ToString();
     }
 

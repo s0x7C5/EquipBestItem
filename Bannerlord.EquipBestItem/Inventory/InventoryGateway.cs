@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Inventory;
@@ -22,13 +23,30 @@ public sealed class InventoryGateway
         _vm = vm;
     }
 
-    public Equipment? ActiveEquipment =>
+    public Equipment? ActiveEquipment => GetEquipmentFor(CurrentCharacter);
+
+    /// <summary>The character's equipment set matching the shown mode (battle/civilian/stealth).</summary>
+    public Equipment? GetEquipmentFor(CharacterObject? character) =>
         (SPInventoryVM.EquipmentModes)_vm.EquipmentMode switch
         {
-            SPInventoryVM.EquipmentModes.Civilian => CurrentCharacter?.FirstCivilianEquipment,
-            SPInventoryVM.EquipmentModes.Stealth => CurrentCharacter?.FirstStealthEquipment,
-            _ => CurrentCharacter?.FirstBattleEquipment
+            SPInventoryVM.EquipmentModes.Civilian => character?.FirstCivilianEquipment,
+            SPInventoryVM.EquipmentModes.Stealth => character?.FirstStealthEquipment,
+            _ => character?.FirstBattleEquipment
         };
+
+    /// <summary>Party heroes whose equipment the player may change.</summary>
+    public IEnumerable<CharacterObject> GetEquippableHeroes()
+    {
+        var roster = ActiveInventoryLogic?.RightMemberRoster?.GetTroopRoster();
+        if (roster is null) yield break;
+
+        for (var i = 0; i < roster.Count; i++)
+        {
+            var character = roster[i].Character;
+            if (character is { IsHero: true } && character.HeroObject.CanHeroEquipmentBeChanged())
+                yield return character;
+        }
+    }
 
     public MBBindingList<SPItemVM>? LeftItems => _vm.LeftItemListVM;
 

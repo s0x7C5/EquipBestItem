@@ -5,6 +5,10 @@
     </tags>
     <strings>
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
+        <string id="EbiHintEquipCurrent" text="Снарядить текущего персонажа лучшими предметами"/>
+        <string id="EbiHintEquipAll" text="Снарядить всех героев отряда лучшими предметами"/>
+        <string id="EbiHintLeftLock" text="Искать в левой панели (магазин, добыча). Экипировка купит предмет."/>
+        <string id="EbiHintRightLock" text="Искать в своём инвентаре"/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
         <string id="EbiWeightsHeader" text="Веса поиска: {SLOT}"/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>

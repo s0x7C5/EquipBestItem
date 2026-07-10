@@ -48,7 +48,8 @@ internal static class ModRuntime
             settings,
             new ProfileService(store),
             new EquipBestService(finder, new WeightedItemScorer(), new EffectivenessItemScorer(), settings),
-            new LlmRequestInterpreter(settings.Ai));
+            new LlmRequestInterpreter(settings.Ai),
+            () => store.Save("settings.json", settings));
     }
 }
 
@@ -59,12 +60,14 @@ internal sealed class ModServices
         ModSettings settings,
         ProfileService profiles,
         EquipBestService equipBest,
-        IRequestInterpreter interpreter)
+        IRequestInterpreter interpreter,
+        Action persistSettings)
     {
         Settings = settings;
         Profiles = profiles;
         EquipBest = equipBest;
         Interpreter = interpreter;
+        PersistSettings = persistSettings;
     }
 
     internal ModSettings Settings { get; }
@@ -74,4 +77,6 @@ internal sealed class ModServices
     internal EquipBestService EquipBest { get; }
 
     internal IRequestInterpreter Interpreter { get; }
+
+    internal Action PersistSettings { get; }
 }

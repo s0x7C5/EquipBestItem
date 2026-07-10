@@ -12,7 +12,11 @@ public sealed class CenterPanelPatch : PrefabExtensionInsertPatch
 {
     public override InsertType Type => InsertType.Child;
 
-    public override int Index => 1;
+    /// <summary>
+    ///     Appended after the native children: later siblings render on top and
+    ///     receive input first, otherwise the panel buttons are unclickable.
+    /// </summary>
+    public override int Index => 6;
 
     [PrefabExtensionFileName]
     public string File => "EbiCenterPanel";

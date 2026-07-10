@@ -44,20 +44,79 @@
                             </Children>
                         </ListPanel>
 
-                        <!-- Status line + equip-all -->
-                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4"
-                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                        <!-- Action buttons: equip current, equip all, panel search toggles -->
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginTop="4"
+                                   HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
                             <Children>
+
                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
                                               HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
                                               VerticalAlignment="Center"
                                               Brush="EquipBestItem.EquipCurrentCharacterButton"
-                                              Command.Click="ExecuteEquipAllBest"/>
-                                <TextWidget DataSource="{Ai}" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
-                                            SuggestedWidth="500" MarginLeft="10" VerticalAlignment="Center"
-                                            Brush="Popup.Button.Text" Text="@StatusText"/>
+                                              Command.Click="ExecuteEquipAllBest">
+                                    <Children>
+                                        <HintWidget DoNotAcceptEvents="true" DataSource="{EquipCurrentHint}"
+                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                    </Children>
+                                </ButtonWidget>
+
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
+                                              MarginLeft="8" VerticalAlignment="Center"
+                                              Brush="EquipBestItem.EquipAllCharactersButton"
+                                              Command.Click="ExecuteEquipAllCharacters">
+                                    <Children>
+                                        <HintWidget DoNotAcceptEvents="true" DataSource="{EquipAllHint}"
+                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                    </Children>
+                                </ButtonWidget>
+
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36"
+                                              MarginLeft="24" VerticalAlignment="Center"
+                                              Command.Click="ExecuteToggleLeftPanelSearch">
+                                    <Children>
+                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsLeftPanelSearched"
+                                                     Brush="EquipBestItem.LockPanelButton.Opened"/>
+                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsLeftPanelLocked"
+                                                     Brush="EquipBestItem.LockPanelButton.Closed"/>
+                                        <HintWidget DoNotAcceptEvents="true" DataSource="{LeftPanelLockHint}"
+                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                    </Children>
+                                </ButtonWidget>
+
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                              HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36"
+                                              MarginLeft="8" VerticalAlignment="Center"
+                                              Command.Click="ExecuteToggleRightPanelSearch">
+                                    <Children>
+                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsRightPanelSearched"
+                                                     Brush="EquipBestItem.LockPanelButton.Opened"/>
+                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsRightPanelLocked"
+                                                     Brush="EquipBestItem.LockPanelButton.Closed"/>
+                                        <HintWidget DoNotAcceptEvents="true" DataSource="{RightPanelLockHint}"
+                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                    </Children>
+                                </ButtonWidget>
+
                             </Children>
                         </ListPanel>
+
+                        <!-- AI status line -->
+                        <TextWidget DataSource="{Ai}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                    MarginTop="2" Brush="Popup.Button.Text" Text="@StatusText"/>
 
                     </Children>
                 </ListPanel>

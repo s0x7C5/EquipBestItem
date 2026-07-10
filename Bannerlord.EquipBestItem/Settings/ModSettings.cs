@@ -11,6 +11,16 @@ public sealed class ModSettings
     /// </summary>
     public string SearchMethod { get; set; } = "weights";
 
+    /// <summary>
+    ///     Search candidates in the left panel (merchant, loot, stash). Off by
+    ///     default so "equip best" does not silently buy out shops; toggled
+    ///     from the inventory UI.
+    /// </summary>
+    public bool SearchLeftPanel { get; set; }
+
+    /// <summary>Search candidates in the player inventory panel.</summary>
+    public bool SearchRightPanel { get; set; } = true;
+
     public AiSettings Ai { get; set; } = new();
 
     public bool UseEffectiveness =>
