@@ -6,7 +6,6 @@
     <strings>
         <string id="EbiNothingBetter" text="No better item found."/>
         <string id="EbiEquippedCount" text="Equipped {COUNT} item(s)."/>
-        <string id="EbiWeightsHeader" text="Search weights: {SLOT}"/>
         <string id="EbiClassAsEquipped" text="As equipped"/>
         <string id="ebi_default" text="Default"/>
         <string id="ebi_lock" text="Lock"/>

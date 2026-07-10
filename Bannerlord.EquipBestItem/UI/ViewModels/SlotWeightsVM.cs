@@ -154,7 +154,8 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string WeaponClassText => WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-        ? GameTexts.FindText("str_inventory_weapon", ((int)weaponClass).ToString()).ToString()
+        // The game's tooltip uses the enum NAME as the text variation.
+        ? GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString()
         : new TextObject("{=EbiClassAsEquipped}As equipped").ToString();
 
     public void Open(CharacterObject character, Equipment equipment, EquipmentIndex slot)
@@ -168,8 +169,7 @@ public sealed class SlotWeightsVM : ViewModel
 
         RebuildRows();
 
-        HeaderText = new TextObject("{=EbiWeightsHeader}Search weights: {SLOT}")
-            .SetTextVariable("SLOT", GetSlotName(slot)).ToString();
+        HeaderText = GetSlotName(slot);
 
         OnPropertyChanged(nameof(IsWeaponSlot));
         OnPropertyChanged(nameof(WeaponClassText));

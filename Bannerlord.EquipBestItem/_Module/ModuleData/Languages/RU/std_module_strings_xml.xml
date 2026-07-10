@@ -6,7 +6,6 @@
     <strings>
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
-        <string id="EbiWeightsHeader" text="Веса поиска: {SLOT}"/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>
         <string id="ebi_default" text="По умолчанию"/>
         <string id="ebi_lock" text="Отключить"/>
