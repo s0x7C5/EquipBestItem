@@ -1,4 +1,4 @@
-<!-- Equip-best button for the Weapon1 slot (legacy geometry: 14x14, top-left).
+<!-- Equip-best button for the Weapon1 slot (14x14, top-right, mirrored).
      Two stacked variants of the same button:
      - with the tooltip wrapper, shown when there is an item to preview; the
        transparent slot-sized wrapper makes the game anchor the native
@@ -22,15 +22,14 @@
                             <EbiFoundItemTooltipWidget DataSource="{BestItem}" IsRightSide="true"
                                                        DoNotAcceptEvents="true" WidthSizePolicy="Fixed"
                                                        HeightSizePolicy="Fixed" SuggestedWidth="14"
-                                                       SuggestedHeight="14" MarginTop="5" MarginLeft="5"
-                                                       HorizontalAlignment="Left" VerticalAlignment="Top">
+                                                       SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="5">
                                 <Children>
                                     <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
                                                           Command.Click="ExecuteEquip"
                                                           Command.AlternateClick="ExecuteOpenSettings"
                                                           WidthSizePolicy="StretchToParent"
                                                           HeightSizePolicy="StretchToParent"
-                                                          Brush="EquipBestItem.SlotButton"/>
+                                                          Brush="EquipBestItem.SlotButton.Flipped"/>
                                 </Children>
                             </EbiFoundItemTooltipWidget>
                         </Children>
@@ -42,9 +41,8 @@
                             <EbiEquipButtonWidget IsDisabled="@IsButtonDisabled" Command.Click="ExecuteEquip"
                                                   Command.AlternateClick="ExecuteOpenSettings"
                                                   WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                                  SuggestedWidth="14" SuggestedHeight="14" MarginTop="5"
-                                                  MarginLeft="5" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                                  Brush="EquipBestItem.SlotButton"/>
+                                                  SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="5"
+                                                  Brush="EquipBestItem.SlotButton.Flipped"/>
                         </Children>
                     </Widget>
 
