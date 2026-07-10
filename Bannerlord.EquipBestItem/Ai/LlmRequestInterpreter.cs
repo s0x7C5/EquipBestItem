@@ -10,13 +10,18 @@ using Newtonsoft.Json.Linq;
 namespace Bannerlord.EquipBestItem.Ai;
 
 /// <summary>
-///     Interprets player requests with an LLM over HTTP. Supports the Anthropic
-///     Messages API and any OpenAI-compatible chat completions endpoint.
+///     Interprets player requests with an LLM over HTTP. The primary path is
+///     any OpenAI-compatible endpoint (auto-detected local Ollama / LM Studio /
+///     Player2, or an explicit one like OpenRouter); the Anthropic Messages API
+///     is available via provider "anthropic". Requests are tuned for small
+///     local models: temperature 0, JSON response format and few-shot examples.
 /// </summary>
 public sealed class LlmRequestInterpreter : IRequestInterpreter
 {
     private const string AnthropicDefaultEndpoint = "https://api.anthropic.com/v1/messages";
+    private const string AnthropicDefaultModel = "claude-haiku-4-5";
     private const string OpenAiDefaultEndpoint = "https://api.openai.com/v1/chat/completions";
+    private const string OpenAiDefaultModel = "gpt-4o-mini";
 
     private static readonly HttpClient HttpClient = new();
 
@@ -31,12 +36,16 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         string request, InterpretationContext context, CancellationToken cancellationToken)
     {
         var apiKey = _settings.ResolveApiKey();
-        if (apiKey.Length == 0)
-            throw new InvalidOperationException(
-                $"No AI API key. Set the {_settings.ApiKeyEnvironmentVariable} environment variable " +
-                "or the ai.apiKey value in settings.json.");
+        var isAnthropic =
+            string.Equals(_settings.Provider, "anthropic", StringComparison.OrdinalIgnoreCase) &&
+            !_settings.UsesAutoDetectedBackend;
 
-        var isAnthropic = string.Equals(_settings.Provider, "anthropic", StringComparison.OrdinalIgnoreCase);
+        // Local backends (explicit or auto-detected) work without a key.
+        var isKeyless = _settings.UsesAutoDetectedBackend || _settings.IsLocalEndpoint;
+        if (apiKey.Length == 0 && !isKeyless)
+            throw new InvalidOperationException(
+                $"No AI API key. Set the {_settings.ApiKeyEnvironmentVariable} environment variable, " +
+                "the ai.apiKey value in settings.json, or run a local backend (Ollama / LM Studio / Player2).");
 
         using var httpRequest = isAnthropic
             ? BuildAnthropicRequest(request, context, apiKey)
@@ -58,11 +67,13 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
     private HttpRequestMessage BuildAnthropicRequest(string request, InterpretationContext context, string apiKey)
     {
         var endpoint = _settings.Endpoint.Length > 0 ? _settings.Endpoint : AnthropicDefaultEndpoint;
+        var model = _settings.Model.Length > 0 ? _settings.Model : AnthropicDefaultModel;
 
         var payload = new JObject
         {
-            ["model"] = _settings.Model,
+            ["model"] = model,
             ["max_tokens"] = _settings.MaxTokens,
+            ["temperature"] = 0,
             ["system"] = BuildSystemPrompt(context),
             ["messages"] = new JArray(new JObject
             {
@@ -82,22 +93,41 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
 
     private HttpRequestMessage BuildOpenAiRequest(string request, InterpretationContext context, string apiKey)
     {
-        var endpoint = _settings.Endpoint.Length > 0 ? _settings.Endpoint : OpenAiDefaultEndpoint;
+        string endpoint;
+        string model;
+
+        if (_settings.UsesAutoDetectedBackend)
+        {
+            endpoint = _settings.AutoDetectedEndpoint!;
+            model = _settings.AutoDetectedModel!;
+        }
+        else
+        {
+            endpoint = _settings.Endpoint.Length > 0 ? _settings.Endpoint : OpenAiDefaultEndpoint;
+            model = _settings.Model.Length > 0 ? _settings.Model : OpenAiDefaultModel;
+        }
 
         var payload = new JObject
         {
-            ["model"] = _settings.Model,
+            ["model"] = model,
             ["max_tokens"] = _settings.MaxTokens,
+            ["temperature"] = 0,
             ["messages"] = new JArray(
                 new JObject { ["role"] = "system", ["content"] = BuildSystemPrompt(context) },
                 new JObject { ["role"] = "user", ["content"] = request })
         };
 
+        if (_settings.UseJsonResponseFormat)
+            payload["response_format"] = new JObject { ["type"] = "json_object" };
+
         var httpRequest = new HttpRequestMessage(HttpMethod.Post, endpoint)
         {
             Content = new StringContent(payload.ToString(Formatting.None), Encoding.UTF8, "application/json")
         };
-        httpRequest.Headers.Add("Authorization", $"Bearer {apiKey}");
+
+        if (apiKey.Length > 0)
+            httpRequest.Headers.Add("Authorization", $"Bearer {apiKey}");
+
         return httpRequest;
     }
 
@@ -144,6 +174,11 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine(
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
             "weaponClass only makes sense for weapon slots.");
+        builder.AppendLine();
+        builder.AppendLine("Examples:");
+        builder.AppendLine("""User: "одень меня в самую лёгкую броню империи" -> {"explanation":"Ищу самую лёгкую имперскую броню.","directives":[{"slot":"AllArmor","weights":{"Weight":-1.0},"culture":"empire"}]}""");
+        builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"Bow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
+        builder.AppendLine("""User: "просто одень получше" -> {"explanation":"Подбираю лучшее по всем слотам.","directives":[{"slot":"All","weights":{}}]}""");
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");

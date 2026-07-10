@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Bannerlord.EquipBestItem.Settings;
 
@@ -29,17 +30,26 @@ public sealed class ModSettings
 
 /// <summary>
 ///     LLM connection used by the natural-language request interpreter.
-///     The API key is read from an environment variable by default so that the
-///     config file can be shared safely; an inline key overrides it if set.
+///
+///     Zero-config path: leave everything empty — a local OpenAI-compatible
+///     backend (Ollama, LM Studio, Player2) is auto-detected at startup and
+///     needs no key. Explicit endpoints: any OpenAI-compatible server
+///     (Ollama "http://localhost:11434/v1/chat/completions", OpenRouter
+///     "https://openrouter.ai/api/v1/chat/completions", ...) with provider
+///     "openai", or the Anthropic API with provider "anthropic". Cloud
+///     providers read the key from the environment variable by default so the
+///     config file stays safe to share.
 /// </summary>
 public sealed class AiSettings
 {
-    public string Provider { get; set; } = "anthropic";
+    /// <summary>"openai" (any OpenAI-compatible endpoint) or "anthropic".</summary>
+    public string Provider { get; set; } = "openai";
 
-    /// <summary>Empty = the provider's default endpoint.</summary>
+    /// <summary>Empty = auto-detected local backend, or the provider's default endpoint.</summary>
     public string Endpoint { get; set; } = "";
 
-    public string Model { get; set; } = "claude-haiku-4-5";
+    /// <summary>Empty = the auto-detected backend's model, or the provider default.</summary>
+    public string Model { get; set; } = "";
 
     public string ApiKeyEnvironmentVariable { get; set; } = "EBI_AI_API_KEY";
 
@@ -48,6 +58,29 @@ public sealed class AiSettings
     public int TimeoutSeconds { get; set; } = 30;
 
     public int MaxTokens { get; set; } = 1024;
+
+    /// <summary>
+    ///     Ask OpenAI-compatible backends for a guaranteed-JSON response
+    ///     (response_format json_object). Disable if a backend rejects it.
+    /// </summary>
+    public bool UseJsonResponseFormat { get; set; } = true;
+
+    /// <summary>Filled by the startup probe; never persisted.</summary>
+    [JsonIgnore]
+    public string? AutoDetectedEndpoint { get; internal set; }
+
+    [JsonIgnore]
+    public string? AutoDetectedModel { get; internal set; }
+
+    /// <summary>True when nothing is configured and a local backend answered the probe.</summary>
+    [JsonIgnore]
+    public bool UsesAutoDetectedBackend =>
+        AutoDetectedEndpoint is not null && Endpoint.Length == 0 && ResolveApiKey().Length == 0;
+
+    [JsonIgnore]
+    public bool IsLocalEndpoint =>
+        Endpoint.IndexOf("localhost", StringComparison.OrdinalIgnoreCase) >= 0 ||
+        Endpoint.Contains("127.0.0.1");
 
     public string ResolveApiKey()
     {
@@ -58,5 +91,7 @@ public sealed class AiSettings
             : Environment.GetEnvironmentVariable(ApiKeyEnvironmentVariable) ?? "";
     }
 
-    public bool IsConfigured => ResolveApiKey().Length > 0;
+    /// <summary>Local endpoints and auto-detected backends work without a key.</summary>
+    public bool IsConfigured =>
+        ResolveApiKey().Length > 0 || (Endpoint.Length > 0 && IsLocalEndpoint) || UsesAutoDetectedBackend;
 }

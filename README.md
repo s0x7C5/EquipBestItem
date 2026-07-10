@@ -27,11 +27,33 @@ like *"одень меня в самую лёгкую броню империи"
 
 ### Enabling the AI assistant (optional)
 
-1. Set an environment variable `EBI_AI_API_KEY` with your API key.
-2. Optionally edit
-   `Documents/Mount and Blade II Bannerlord/Configs/EquipBestItem/settings.json`
-   (provider `anthropic` or `openai`, endpoint, model).
-3. The request box appears in the inventory when a key is configured.
+The request box appears in the inventory as soon as a backend is available.
+Three ways, easiest first:
+
+**Zero-config (local model).** Run [Ollama](https://ollama.com)
+(`ollama pull qwen3:4b`), LM Studio or Player2 before starting the game —
+the mod auto-detects a backend on its default port (11434 / 1234 / 4315)
+and uses its first model. No keys, no files, nothing leaves your PC.
+
+**OpenRouter (cloud, one key for many models).** Set the `EBI_AI_API_KEY`
+environment variable and edit
+`Documents/Mount and Blade II Bannerlord/Configs/EquipBestItem/settings.json`:
+
+```json
+"ai": { "provider": "openai",
+        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+        "model": "anthropic/claude-haiku-4.5" }
+```
+
+**Anthropic API.** Set `EBI_AI_API_KEY` and:
+
+```json
+"ai": { "provider": "anthropic", "model": "claude-haiku-4-5" }
+```
+
+Any other OpenAI-compatible server works the same way via `endpoint`.
+Settings are read at game start. If a backend rejects the JSON response
+format request, set `"useJsonResponseFormat": false`.
 
 ## Building
 
