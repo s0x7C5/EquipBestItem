@@ -4,19 +4,27 @@ using TaleWorlds.Core;
 namespace Bannerlord.EquipBestItem.Profiles;
 
 /// <summary>
-///     Built-in starting weights per slot, mirroring the v2 defaults: every
-///     parameter relevant to the slot participates equally until the player
-///     tunes it. A slot whose weights are all zeroed by the player is
-///     excluded from searching.
+///     Built-in starting weights, mirroring the v2 defaults: every parameter
+///     relevant to the slot — or to the pinned weapon class — participates
+///     equally until the player tunes it. A slot whose weights are all zeroed
+///     by the player is excluded from searching.
 /// </summary>
 public static class DefaultWeights
 {
-    public static ParamWeights For(EquipmentIndex slot)
+    public static ParamWeights For(EquipmentIndex slot) => For(slot, null);
+
+    public static ParamWeights For(EquipmentIndex slot, WeaponClass? weaponClass)
     {
         var weights = new ParamWeights();
 
         if (slot >= EquipmentIndex.Weapon0 && slot <= EquipmentIndex.Weapon3)
         {
+            if (weaponClass is { } pinned)
+            {
+                FillForWeaponClass(weights, pinned);
+                return weights;
+            }
+
             weights[ItemParam.ThrustDamage] = 1f;
             weights[ItemParam.SwingDamage] = 1f;
             weights[ItemParam.ThrustSpeed] = 1f;
@@ -63,5 +71,58 @@ public static class DefaultWeights
         }
 
         return weights;
+    }
+
+    /// <summary>
+    ///     The parameters that matter for a weapon class, matching the sets the
+    ///     weights popup shows for it (minus Weight, which stays neutral).
+    /// </summary>
+    private static void FillForWeaponClass(ParamWeights weights, WeaponClass weaponClass)
+    {
+        switch (weaponClass)
+        {
+            case WeaponClass.Bow:
+                weights[ItemParam.MissileDamage] = 1f;
+                weights[ItemParam.MissileSpeed] = 1f;
+                weights[ItemParam.Accuracy] = 1f;
+                weights[ItemParam.ThrustSpeed] = 1f;
+                break;
+            case WeaponClass.Crossbow:
+                weights[ItemParam.MissileDamage] = 1f;
+                weights[ItemParam.MissileSpeed] = 1f;
+                weights[ItemParam.Accuracy] = 1f;
+                weights[ItemParam.ThrustSpeed] = 1f;
+                weights[ItemParam.MaxAmmo] = 1f;
+                break;
+            case WeaponClass.Arrow:
+            case WeaponClass.Bolt:
+                weights[ItemParam.MissileDamage] = 1f;
+                weights[ItemParam.MaxAmmo] = 1f;
+                break;
+            case WeaponClass.Javelin:
+            case WeaponClass.ThrowingAxe:
+            case WeaponClass.ThrowingKnife:
+                weights[ItemParam.MissileDamage] = 1f;
+                weights[ItemParam.MissileSpeed] = 1f;
+                weights[ItemParam.Accuracy] = 1f;
+                weights[ItemParam.WeaponLength] = 1f;
+                weights[ItemParam.MaxAmmo] = 1f;
+                break;
+            case WeaponClass.SmallShield:
+            case WeaponClass.LargeShield:
+                weights[ItemParam.HitPoints] = 1f;
+                weights[ItemParam.BodyArmor] = 1f;
+                weights[ItemParam.ThrustSpeed] = 1f;
+                weights[ItemParam.WeaponLength] = 1f;
+                break;
+            default: // melee: swords, axes, maces, polearms, daggers
+                weights[ItemParam.ThrustDamage] = 1f;
+                weights[ItemParam.SwingDamage] = 1f;
+                weights[ItemParam.ThrustSpeed] = 1f;
+                weights[ItemParam.SwingSpeed] = 1f;
+                weights[ItemParam.WeaponLength] = 1f;
+                weights[ItemParam.Handling] = 1f;
+                break;
+        }
     }
 }

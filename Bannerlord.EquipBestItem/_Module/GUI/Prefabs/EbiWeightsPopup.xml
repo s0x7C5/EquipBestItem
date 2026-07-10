@@ -12,8 +12,15 @@
                         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                 Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55"/>
 
+                        <!-- The wrapper is 30px wider than the frame on every side so the
+                             close cross, which sticks out of the frame corner, still lies
+                             inside its ancestors' bounds — Gauntlet hit-testing never
+                             reaches a child outside its parent's rect. -->
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="600"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Children>
                         <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="540"
-                                     HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Brush">
+                                     HorizontalAlignment="Center" MarginTop="30" MarginBottom="30" Brush="Frame1Brush">
                             <Children>
                                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                            MarginTop="20" MarginBottom="20" MarginLeft="25" MarginRight="25"
@@ -156,14 +163,16 @@
 
                                     </Children>
                                 </ListPanel>
-
-                                <!-- Close cross, top-right of the frame -->
-                                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70"
-                                              SuggestedHeight="70" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                              PositionXOffset="30" PositionYOffset="-30" Command.Click="ExecuteClose"
-                                              Brush="Popup.CloseButton"/>
                             </Children>
                         </BrushWidget>
+
+                        <!-- Close cross: anchored to the wrapper corner, which puts it
+                             half outside the frame yet fully hit-testable. -->
+                        <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70"
+                                      SuggestedHeight="70" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                      Command.Click="ExecuteClose" Brush="Popup.CloseButton"/>
+                            </Children>
+                        </Widget>
                     </Children>
                 </Widget>
             </Children>

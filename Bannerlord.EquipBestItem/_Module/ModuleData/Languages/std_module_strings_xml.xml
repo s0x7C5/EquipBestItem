@@ -16,9 +16,7 @@
         <string id="EbiHintLeftLock" text="Search in the left panel (merchant, loot). Equipping buys the item."/>
         <string id="EbiHintRightLock" text="Search in your inventory"/>
         <string id="EbiAiInterpret" text="Ask AI"/>
-        <string id="EbiAiApply" text="Apply"/>
         <string id="EbiAiThinking" text="Interpreting request..."/>
-        <string id="EbiAiReady" text="Plan ready, press Apply."/>
-        <string id="EbiAiApplied" text="Equipped {COUNT} item(s)."/>
+        <string id="EbiAiTimeout" text="The AI did not respond in time."/>
     </strings>
 </base>

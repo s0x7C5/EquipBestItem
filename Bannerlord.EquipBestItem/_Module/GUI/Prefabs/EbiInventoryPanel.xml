@@ -12,7 +12,7 @@
                                    HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
                             <Children>
                                 <BrushWidget UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                             SuggestedWidth="330" SuggestedHeight="50" VerticalAlignment="Center"
+                                             SuggestedWidth="440" SuggestedHeight="50" VerticalAlignment="Center"
                                              Brush="SaveLoad.Search.Button">
                                     <Children>
                                         <EditableTextWidget UpdateChildrenStates="true" WidthSizePolicy="StretchToParent"
@@ -29,16 +29,6 @@
                                     <Children>
                                         <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                                                     Brush="Popup.Button.Text" Text="@InterpretButtonText"/>
-                                    </Children>
-                                </ButtonWidget>
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="105" SuggestedHeight="50"
-                                              MarginLeft="5" VerticalAlignment="Center" Brush="ButtonBrush1"
-                                              Command.Click="ExecuteApply" IsEnabled="@CanApply"
-                                              UpdateChildrenStates="true">
-                                    <Children>
-                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Brush="Popup.Button.Text" Text="@ApplyButtonText"/>
                                     </Children>
                                 </ButtonWidget>
                             </Children>

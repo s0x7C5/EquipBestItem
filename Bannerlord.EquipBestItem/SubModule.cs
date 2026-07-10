@@ -23,4 +23,10 @@ public sealed class SubModule : MBSubModuleBase
             GameLog.Error($"failed to initialize: {exception.Message}");
         }
     }
+
+    protected override void OnApplicationTick(float dt)
+    {
+        base.OnApplicationTick(dt);
+        MainThread.Drain();
+    }
 }

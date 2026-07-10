@@ -278,7 +278,7 @@ public sealed class SlotWeightsVM : ViewModel
     ///     The game's own item stat strings (their values end with ": ", hence
     ///     the trim), so every language the game ships is supported for free.
     /// </summary>
-    private static string GetParamName(ItemParam param) => (param switch
+    internal static string GetParamName(ItemParam param) => (param switch
     {
         ItemParam.HeadArmor => new TextObject("{=EUzxzL9s}Head Armor: "),
         ItemParam.BodyArmor => new TextObject("{=bLWyjOdS}Body Armor: "),
@@ -303,7 +303,7 @@ public sealed class SlotWeightsVM : ViewModel
         _ => new TextObject(param.ToString())
     }).ToString().TrimEnd(':', ' ');
 
-    private static string GetSlotName(EquipmentIndex slot)
+    internal static string GetSlotName(EquipmentIndex slot)
     {
         if (slot >= EquipmentIndex.Weapon0 && slot <= EquipmentIndex.Weapon3)
         {

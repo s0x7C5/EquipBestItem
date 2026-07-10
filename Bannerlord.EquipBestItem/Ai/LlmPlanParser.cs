@@ -54,10 +54,17 @@ public static class LlmPlanParser
     {
         var weights = ParamWeights.FromDictionary(dto.Weights);
 
+        WeaponClass? pinnedClass =
+            Enum.TryParse(dto.WeaponClass, true, out WeaponClass weaponClass) &&
+            weaponClass != WeaponClass.Undefined
+                ? weaponClass
+                : null;
+
         // A directive without weights means "just find the best": use the
-        // slot defaults, but let the player's search method setting decide.
+        // slot (or pinned class) defaults, but let the player's search
+        // method setting decide.
         var query = weights.IsEmpty
-            ? new ItemQuery(Profiles.DefaultWeights.For(slot))
+            ? new ItemQuery(Profiles.DefaultWeights.For(slot, pinnedClass))
             : new ItemQuery(weights) { HasExplicitWeights = true };
 
         if (dto.MaxItemWeight is { } maxWeight and > 0f)
@@ -66,10 +73,7 @@ public static class LlmPlanParser
         if (!string.IsNullOrEmpty(dto.Culture))
             query.CultureId = dto.Culture;
 
-        if (Enum.TryParse(dto.WeaponClass, true, out WeaponClass weaponClass) &&
-            weaponClass != WeaponClass.Undefined)
-            query.WeaponClass = weaponClass;
-
+        query.WeaponClass = pinnedClass;
         return query;
     }
 

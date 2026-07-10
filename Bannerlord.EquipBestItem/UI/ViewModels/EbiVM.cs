@@ -32,8 +32,8 @@ public sealed class EbiVM : ViewModel
         // just changed what "best" means, so the previews follow live.
         SlotSettings = new SlotWeightsVM(services.Profiles, RecomputeBestItems);
         Ai = new AiPromptVM(
-            services.Interpreter, services.EquipBest, gateway,
-            services.Settings.Ai.IsConfigured);
+            services.Interpreter, services.Profiles, gateway,
+            RecomputeBestItems, services.Settings.Ai.IsConfigured);
 
         EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings);
 

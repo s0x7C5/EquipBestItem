@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Bannerlord.EquipBestItem.Ai;
+using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Inventory;
+using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
@@ -13,17 +16,19 @@ using TaleWorlds.Localization;
 namespace Bannerlord.EquipBestItem.UI.ViewModels;
 
 /// <summary>
-///     Free-text request box: the interpreter turns the text into a plan on a
-///     background thread, the player applies the plan with a second click on
-///     the main thread — so game state is never mutated off-thread.
+///     Free-text request box. The interpreter turns the text into a plan on a
+///     background thread; the plan is then applied automatically on the main
+///     thread (via <see cref="MainThread" />) — it rewrites the affected slot
+///     filters the same way the manual sliders do and recomputes the previews.
+///     The status line reports exactly which slots changed and how.
 /// </summary>
 public sealed class AiPromptVM : ViewModel
 {
     private readonly IRequestInterpreter _interpreter;
-    private readonly EquipBestService _equipBest;
+    private readonly ProfileService _profiles;
     private readonly InventoryGateway _gateway;
+    private readonly Action _onApplied;
 
-    private InterpretedPlan? _plan;
     private CancellationTokenSource? _pendingRequest;
 
     private string _promptText = "";
@@ -32,13 +37,15 @@ public sealed class AiPromptVM : ViewModel
 
     public AiPromptVM(
         IRequestInterpreter interpreter,
-        EquipBestService equipBest,
+        ProfileService profiles,
         InventoryGateway gateway,
+        Action onApplied,
         bool isConfigured)
     {
         _interpreter = interpreter;
-        _equipBest = equipBest;
+        _profiles = profiles;
         _gateway = gateway;
+        _onApplied = onApplied;
         IsConfigured = isConfigured;
     }
 
@@ -48,10 +55,6 @@ public sealed class AiPromptVM : ViewModel
     [DataSourceProperty]
     public string InterpretButtonText { get; } =
         new TextObject("{=EbiAiInterpret}Ask AI").ToString();
-
-    [DataSourceProperty]
-    public string ApplyButtonText { get; } =
-        new TextObject("{=EbiAiApply}Apply").ToString();
 
     [DataSourceProperty]
     public string PromptText
@@ -89,9 +92,6 @@ public sealed class AiPromptVM : ViewModel
         }
     }
 
-    [DataSourceProperty]
-    public bool CanApply => _plan is not null && !_isBusy;
-
     public void ExecuteInterpret()
     {
         var request = _promptText?.Trim() ?? "";
@@ -109,10 +109,8 @@ public sealed class AiPromptVM : ViewModel
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();
 
-        _plan = null;
         IsBusy = true;
         StatusText = new TextObject("{=EbiAiThinking}Interpreting request...").ToString();
-        OnPropertyChanged(nameof(CanApply));
 
         Task.Run(async () =>
         {
@@ -121,40 +119,97 @@ public sealed class AiPromptVM : ViewModel
                 var plan = await _interpreter.InterpretAsync(request, context, cancellation.Token);
                 if (cancellation.IsCancellationRequested) return;
 
-                // Property updates are picked up by Gauntlet on the next frame;
-                // no game state is touched from this thread.
-                _plan = plan;
-                StatusText = plan.Explanation.Length > 0
-                    ? plan.Explanation
-                    : new TextObject("{=EbiAiReady}Plan ready, press Apply.").ToString();
-            }
-            catch (Exception exception) when (exception is not OperationCanceledException)
-            {
-                StatusText = exception.Message;
-            }
-            finally
-            {
-                if (!cancellation.IsCancellationRequested)
+                // Filters and previews touch game state, so the plan is
+                // applied on the main thread on the next frame.
+                MainThread.Post(() =>
                 {
-                    IsBusy = false;
-                    OnPropertyChanged(nameof(CanApply));
-                }
+                    if (cancellation.IsCancellationRequested) return;
+                    try
+                    {
+                        ApplyPlan(plan, character, equipment);
+                    }
+                    catch (Exception exception)
+                    {
+                        StatusText = exception.Message;
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                });
+            }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+            {
+                // Superseded by a newer request or the screen closed; whoever
+                // cancelled owns the UI state.
+            }
+            catch (Exception exception)
+            {
+                // Includes the interpreter's own timeout, which surfaces as an
+                // OperationCanceledException while our token is NOT cancelled.
+                StatusText = exception is OperationCanceledException
+                    ? new TextObject("{=EbiAiTimeout}The AI did not respond in time.").ToString()
+                    : exception.Message;
+                IsBusy = false;
             }
         });
     }
 
-    public void ExecuteApply()
+    /// <summary>
+    ///     Writes each directive into the slot's filter — the same path the
+    ///     manual sliders use — then recomputes the slot-button previews.
+    ///     Runs on the main thread only.
+    /// </summary>
+    private void ApplyPlan(InterpretedPlan plan, CharacterObject character, Equipment equipment)
     {
-        var plan = _plan;
-        if (plan is null || _isBusy) return;
+        var changes = new List<string>();
 
-        var equippedCount = 0;
         foreach (var directive in plan.Directives)
-            if (_equipBest.TryEquipBest(_gateway, directive.Query, directive.Slot) is not null)
-                equippedCount++;
+        {
+            // Directives without explicit weights fall back to the slot
+            // defaults. (culture/maxItemWeight have no filter field yet, so
+            // they are not persisted here.)
+            if (directive.Query.HasExplicitWeights)
+                _profiles.SetWeights(character, equipment, directive.Slot, directive.Query.Weights);
+            else
+                _profiles.ResetSlot(character, equipment, directive.Slot);
 
-        StatusText = new TextObject("{=EbiAiApplied}Equipped {COUNT} item(s).")
-            .SetTextVariable("COUNT", equippedCount).ToString();
+            _profiles.SetWeaponClass(character, equipment, directive.Slot, directive.Query.WeaponClass);
+            changes.Add(DescribeChange(directive));
+        }
+
+        _profiles.Save();
+        _onApplied();
+
+        var summary = string.Join("; ", changes);
+        StatusText = plan.Explanation.Length > 0 ? $"{plan.Explanation} {summary}" : summary;
+    }
+
+    /// <summary>"Helm: Head Armor +1, Weight -0.5" in the game's language.</summary>
+    private static string DescribeChange(EquipDirective directive)
+    {
+        var parts = new List<string>();
+
+        if (directive.Query.HasExplicitWeights)
+        {
+            for (var i = 0; i < ItemParams.Count; i++)
+            {
+                var param = (ItemParam)i;
+                var value = directive.Query.Weights[param];
+                if (value != 0f)
+                    parts.Add(SlotWeightsVM.GetParamName(param) + " " +
+                              value.ToString("+0.##;-0.##", CultureInfo.InvariantCulture));
+            }
+        }
+        else
+        {
+            parts.Add(new TextObject("{=ebi_default}Default").ToString());
+        }
+
+        if (directive.Query.WeaponClass is { } weaponClass)
+            parts.Add(GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString());
+
+        return $"{SlotWeightsVM.GetSlotName(directive.Slot)}: {string.Join(", ", parts)}";
     }
 
     public override void OnFinalize()

@@ -28,11 +28,18 @@ public sealed class ProfileService
         var profile = FindSlotProfile(character, equipment, slot);
         if (profile is null) return new ItemQuery(DefaultWeights.For(slot));
 
-        var query = new ItemQuery(ParamWeights.FromDictionary(profile.Weights));
+        WeaponClass? pinnedClass =
+            System.Enum.TryParse(profile.WeaponClass, true, out WeaponClass weaponClass) ? weaponClass : null;
 
-        if (System.Enum.TryParse(profile.WeaponClass, true, out WeaponClass weaponClass))
-            query.WeaponClass = weaponClass;
+        // Null weights = never customized (only a weapon class was pinned):
+        // fall back to that class's defaults. An empty dictionary is different —
+        // it is a locked slot (the player zeroed everything).
+        var weights = profile.Weights is null
+            ? DefaultWeights.For(slot, pinnedClass)
+            : ParamWeights.FromDictionary(profile.Weights);
 
+        var query = new ItemQuery(weights);
+        if (pinnedClass is { } pinned) query.WeaponClass = pinned;
         return query;
     }
 

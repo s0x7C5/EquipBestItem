@@ -16,9 +16,7 @@
         <string id="EbiHintLeftLock" text="Искать в левой панели (магазин, добыча). Экипировка купит предмет."/>
         <string id="EbiHintRightLock" text="Искать в своём инвентаре"/>
         <string id="EbiAiInterpret" text="Спросить ИИ"/>
-        <string id="EbiAiApply" text="Применить"/>
         <string id="EbiAiThinking" text="Разбираю запрос..."/>
-        <string id="EbiAiReady" text="План готов, нажмите «Применить»."/>
-        <string id="EbiAiApplied" text="Надето предметов: {COUNT}."/>
+        <string id="EbiAiTimeout" text="ИИ не ответил вовремя."/>
     </strings>
 </base>
