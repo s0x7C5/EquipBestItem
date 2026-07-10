@@ -1,22 +1,22 @@
 using System;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
-using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
-using TaleWorlds.Localization;
 
 namespace Bannerlord.EquipBestItem.UI.ViewModels;
 
 /// <summary>
-///     Per-slot button state: the best item found for the slot (null hides the
-///     button and its tooltip). Left click equips exactly the previewed item,
-///     right click opens the slot's search settings.
+///     Per-slot button state. The button is visible only when a better item
+///     was found; left click equips exactly the previewed item, right click
+///     opens the slot's search settings. The tooltip shows the found item, or
+///     the currently equipped one when the button is revealed with Alt.
 /// </summary>
 public sealed class EbiSlotVM : ViewModel
 {
     private readonly Action<EbiSlotVM> _equip;
     private readonly Action<EquipmentIndex> _openSettings;
 
+    private SPItemVM? _foundItem;
     private SPItemVM? _bestItem;
     private bool _isButtonDisabled = true;
 
@@ -25,15 +25,13 @@ public sealed class EbiSlotVM : ViewModel
         Slot = slot;
         _equip = equip;
         _openSettings = openSettings;
-        Hint = new HintViewModel(new TextObject(
-            "{=EbiSlotButtonHint}Equip the best item. Right click opens the search settings."));
     }
 
     internal EquipmentIndex Slot { get; }
 
-    [DataSourceProperty]
-    public HintViewModel Hint { get; }
+    internal SPItemVM? FoundItem => _foundItem;
 
+    /// <summary>Feeds the native comparison tooltip on hover.</summary>
     [DataSourceProperty]
     public SPItemVM? BestItem
     {
@@ -58,13 +56,18 @@ public sealed class EbiSlotVM : ViewModel
         }
     }
 
-    internal void SetBest(SPItemVM? item)
+    internal void SetBest(SPItemVM? found, SPItemVM? equipped)
     {
-        BestItem = item;
-        IsButtonDisabled = item is null;
+        _foundItem = found;
+        BestItem = found ?? equipped;
+        IsButtonDisabled = found is null;
     }
 
-    public void ExecuteEquip() => _equip(this);
+    public void ExecuteEquip()
+    {
+        if (_foundItem is not null)
+            _equip(this);
+    }
 
     public void ExecuteOpenSettings() => _openSettings(Slot);
 }

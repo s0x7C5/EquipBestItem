@@ -5,7 +5,6 @@
     </tags>
     <strings>
         <string id="EbiNothingBetter" text="No better item found."/>
-        <string id="EbiSlotButtonHint" text="Equip the best item. Right click opens the search settings."/>
         <string id="EbiEquippedCount" text="Equipped {COUNT} item(s)."/>
         <string id="EbiWeightsHeader" text="Search weights: {SLOT}"/>
         <string id="EbiClassAsEquipped" text="As equipped"/>

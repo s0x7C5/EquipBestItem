@@ -80,7 +80,7 @@ public sealed class SlotWeightsVM : ViewModel
     };
 
     private readonly ProfileService _profiles;
-    private readonly Action _onClosed;
+    private readonly Action _onChanged;
 
     private CharacterObject? _character;
     private Equipment? _equipment;
@@ -90,10 +90,10 @@ public sealed class SlotWeightsVM : ViewModel
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
 
-    public SlotWeightsVM(ProfileService profiles, Action onClosed)
+    public SlotWeightsVM(ProfileService profiles, Action onChanged)
     {
         _profiles = profiles;
-        _onClosed = onClosed;
+        _onChanged = onChanged;
     }
 
     [DataSourceProperty]
@@ -171,7 +171,6 @@ public sealed class SlotWeightsVM : ViewModel
     {
         IsVisible = false;
         _profiles.Save();
-        _onClosed();
     }
 
     public void ExecuteReset()
@@ -180,6 +179,7 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.ResetSlot(_character, _equipment, _slot);
         Open(_character, _equipment, _slot);
+        _onChanged();
     }
 
     public void ExecutePreviousWeaponClass() => CycleWeaponClass(-1);
@@ -198,6 +198,7 @@ public sealed class SlotWeightsVM : ViewModel
 
         // Each weapon class exposes its own parameter set.
         RebuildRows();
+        _onChanged();
     }
 
     private void RebuildRows()
@@ -226,6 +227,9 @@ public sealed class SlotWeightsVM : ViewModel
             weights[row.Param] = row.Value;
 
         _profiles.SetWeights(_character, _equipment, _slot, weights);
+
+        // Live preview: the slot buttons re-search as the sliders move.
+        _onChanged();
     }
 
     private IReadOnlyList<ItemParam> GetVisibleParams()

@@ -50,6 +50,23 @@ public sealed class InventoryGateway
     /// <summary>The screen's transfer engine; the reliable change-event source.</summary>
     public InventoryLogic? Logic => ActiveInventoryLogic;
 
+    /// <summary>The item VM currently shown in an equipped slot.</summary>
+    public SPItemVM? GetEquippedItemVM(EquipmentIndex slot) => slot switch
+    {
+        EquipmentIndex.Weapon0 => _vm.CharacterWeapon1Slot,
+        EquipmentIndex.Weapon1 => _vm.CharacterWeapon2Slot,
+        EquipmentIndex.Weapon2 => _vm.CharacterWeapon3Slot,
+        EquipmentIndex.Weapon3 => _vm.CharacterWeapon4Slot,
+        EquipmentIndex.Head => _vm.CharacterHelmSlot,
+        EquipmentIndex.Body => _vm.CharacterTorsoSlot,
+        EquipmentIndex.Leg => _vm.CharacterBootSlot,
+        EquipmentIndex.Gloves => _vm.CharacterGloveSlot,
+        EquipmentIndex.Cape => _vm.CharacterCloakSlot,
+        EquipmentIndex.Horse => _vm.CharacterMountSlot,
+        EquipmentIndex.HorseHarness => _vm.CharacterMountArmorSlot,
+        _ => null
+    };
+
     private static InventoryLogic? ActiveInventoryLogic =>
         InventoryScreenHelper.GetActiveInventoryState()?.InventoryLogic;
 

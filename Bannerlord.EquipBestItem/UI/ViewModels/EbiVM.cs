@@ -23,8 +23,8 @@ public sealed class EbiVM : ViewModel
         _services = services;
         _gateway = gateway;
 
-        // Recompute the slot buttons when the weights popup closes: the
-        // player has just changed what "best" means.
+        // Recompute the slot buttons on every weights change: the player has
+        // just changed what "best" means, so the previews follow live.
         SlotSettings = new SlotWeightsVM(services.Profiles, RecomputeBestItems);
         Ai = new AiPromptVM(
             services.Interpreter, services.EquipBest, gateway,
@@ -138,21 +138,23 @@ public sealed class EbiVM : ViewModel
         {
             if (character is null || equipment is null)
             {
-                slot.SetBest(null);
+                slot.SetBest(null, null);
                 continue;
             }
 
             var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
-            slot.SetBest(_services.EquipBest.FindBest(_gateway, query, slot.Slot));
+            slot.SetBest(
+                _services.EquipBest.FindBest(_gateway, query, slot.Slot),
+                _gateway.GetEquippedItemVM(slot.Slot));
         }
     }
 
     private void EquipFound(EbiSlotVM slot)
     {
-        if (slot.BestItem is null) return;
+        if (slot.FoundItem is null) return;
 
-        _services.EquipBest.Equip(_gateway, slot.BestItem, slot.Slot);
-        // The transfer triggers an inventory refresh, which recomputes buttons.
+        _services.EquipBest.Equip(_gateway, slot.FoundItem, slot.Slot);
+        // The transfer fires InventoryLogic.AfterTransfer, which recomputes buttons.
     }
 
     private void OpenSettings(EquipmentIndex slot)
