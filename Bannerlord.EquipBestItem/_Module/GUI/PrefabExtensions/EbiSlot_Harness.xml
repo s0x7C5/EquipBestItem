@@ -1,27 +1,53 @@
 <!-- Equip-best button for the Harness slot (legacy geometry: 14x14, top-left).
-     The transparent wrapper stretches over the whole slot so the game anchors
-     the native comparison tooltip beside the slot (it positions the tooltip
-     relative to the hovered widget's PARENT), not on top of the button.
-     IsRightSide matches the native slot so the tooltip opens away from it. -->
+     Two stacked variants of the same button:
+     - with the tooltip wrapper, shown when there is an item to preview; the
+       transparent slot-sized wrapper makes the game anchor the native
+       comparison tooltip beside the slot (it positions the tooltip relative
+       to the hovered widget's PARENT), IsRightSide matching the native slot;
+     - without the wrapper, shown otherwise: normally hidden, revealed with
+       Alt so the search settings stay reachable (e.g. to pin a weapon class
+       on an empty slot), and hover cannot leave a stale tooltip because no
+       tooltip widget is above it. -->
 <Children>
     <Widget DataSource="{ModInventory}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
             HeightSizePolicy="StretchToParent">
         <Children>
-            <Widget DataSource="{SlotHarness}" IsVisible="@HasTooltipItem" DoNotAcceptEvents="true"
-                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+            <Widget DataSource="{SlotHarness}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                    HeightSizePolicy="StretchToParent">
                 <Children>
-                    <EbiFoundItemTooltipWidget DataSource="{BestItem}" IsRightSide="false" DoNotAcceptEvents="true"
-                                               WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14"
-                                               SuggestedHeight="14" MarginTop="5" MarginLeft="5"
-                                               HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                    <Widget IsVisible="@HasTooltipItem" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                            HeightSizePolicy="StretchToParent">
                         <Children>
-                            <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
-                                                  Command.Click="ExecuteEquip"
+                            <EbiFoundItemTooltipWidget DataSource="{BestItem}" IsRightSide="false"
+                                                       DoNotAcceptEvents="true" WidthSizePolicy="Fixed"
+                                                       HeightSizePolicy="Fixed" SuggestedWidth="14"
+                                                       SuggestedHeight="14" MarginTop="5" MarginLeft="5"
+                                                       HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Children>
+                                    <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
+                                                          Command.Click="ExecuteEquip"
+                                                          Command.AlternateClick="ExecuteOpenSettings"
+                                                          WidthSizePolicy="StretchToParent"
+                                                          HeightSizePolicy="StretchToParent"
+                                                          Brush="EquipBestItem.SlotButton"/>
+                                </Children>
+                            </EbiFoundItemTooltipWidget>
+                        </Children>
+                    </Widget>
+
+                    <Widget IsVisible="@HasNoTooltipItem" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                            HeightSizePolicy="StretchToParent">
+                        <Children>
+                            <EbiEquipButtonWidget IsDisabled="@IsButtonDisabled" Command.Click="ExecuteEquip"
                                                   Command.AlternateClick="ExecuteOpenSettings"
-                                                  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                  WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                  SuggestedWidth="14" SuggestedHeight="14" MarginTop="5"
+                                                  MarginLeft="5" HorizontalAlignment="Left" VerticalAlignment="Top"
                                                   Brush="EquipBestItem.SlotButton"/>
                         </Children>
-                    </EbiFoundItemTooltipWidget>
+                    </Widget>
+
                 </Children>
             </Widget>
         </Children>

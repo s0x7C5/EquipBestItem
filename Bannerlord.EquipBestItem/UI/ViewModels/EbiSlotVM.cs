@@ -71,8 +71,16 @@ public sealed class EbiSlotVM : ViewModel
             if (value == _hasTooltipItem) return;
             _hasTooltipItem = value;
             OnPropertyChangedWithValue(value);
+            OnPropertyChanged(nameof(HasNoTooltipItem));
         }
     }
+
+    /// <summary>
+    ///     Bindings cannot negate, so the tooltip-less button variant (kept
+    ///     reachable via Alt to pin a weapon class on an empty slot) binds this.
+    /// </summary>
+    [DataSourceProperty]
+    public bool HasNoTooltipItem => !_hasTooltipItem;
 
     internal void SetBest(SPItemVM? found, SPItemVM? equipped)
     {
