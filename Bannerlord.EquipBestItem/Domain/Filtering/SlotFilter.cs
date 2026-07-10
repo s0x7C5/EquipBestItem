@@ -16,10 +16,28 @@ public sealed class SlotFilter : IItemFilter
         if (slot >= EquipmentIndex.Weapon0 && slot <= EquipmentIndex.Weapon3)
             return item.ItemType >= EquipmentIndex.Weapon0 && item.ItemType <= EquipmentIndex.Weapon3;
 
+        if (slot == EquipmentIndex.Horse)
+            return item.ItemType == EquipmentIndex.Horse && IsSameMountFamily(item, context);
+
         if (slot == EquipmentIndex.HorseHarness)
             return item.ItemType == EquipmentIndex.HorseHarness && IsHarnessCompatible(item, context);
 
         return item.ItemType == slot;
+    }
+
+    /// <summary>
+    ///     Only offer mounts of the same family as the equipped one: a horse is
+    ///     replaced by a horse, a camel by a camel. An empty slot accepts any mount.
+    /// </summary>
+    private static bool IsSameMountFamily(SPItemVM item, in SearchContext context)
+    {
+        var current = context.Equipment[EquipmentIndex.Horse];
+        if (current.IsEmpty) return true;
+
+        var currentFamily = current.Item?.HorseComponent?.Monster?.FamilyType;
+        var candidateFamily = item.ItemRosterElement.EquipmentElement.Item?.HorseComponent?.Monster?.FamilyType;
+
+        return currentFamily is not null && currentFamily == candidateFamily;
     }
 
     /// <summary>
