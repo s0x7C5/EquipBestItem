@@ -4,6 +4,7 @@ using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -97,12 +98,20 @@ public sealed class SlotWeightsVM : ViewModel
     }
 
     [DataSourceProperty]
-    public string ResetButtonText { get; } =
-        new TextObject("{=EbiReset}Reset").ToString();
+    public string DefaultButtonText { get; } =
+        new TextObject("{=ebi_default}Default").ToString();
 
     [DataSourceProperty]
-    public string CloseButtonText { get; } =
-        new TextObject("{=EbiClose}Close").ToString();
+    public string LockButtonText { get; } =
+        new TextObject("{=ebi_lock}Lock").ToString();
+
+    [DataSourceProperty]
+    public HintViewModel DefaultButtonHint { get; } =
+        new(new TextObject("{=ebi_hint_default}Reset to default values"));
+
+    [DataSourceProperty]
+    public HintViewModel LockButtonHint { get; } =
+        new(new TextObject("{=ebi_hint_lock}Disable search for this slot"));
 
     [DataSourceProperty]
     public bool IsVisible
@@ -145,7 +154,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string WeaponClassText => WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-        ? weaponClass.ToString()
+        ? GameTexts.FindText("str_inventory_weapon", ((int)weaponClass).ToString()).ToString()
         : new TextObject("{=EbiClassAsEquipped}As equipped").ToString();
 
     public void Open(CharacterObject character, Equipment equipment, EquipmentIndex slot)
@@ -179,6 +188,16 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.ResetSlot(_character, _equipment, _slot);
         Open(_character, _equipment, _slot);
+        _onChanged();
+    }
+
+    /// <summary>Zeroes every weight: an all-zero slot is excluded from searching.</summary>
+    public void ExecuteLock()
+    {
+        if (_character is null || _equipment is null) return;
+
+        _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
+        RebuildRows();
         _onChanged();
     }
 
@@ -255,44 +274,53 @@ public sealed class SlotWeightsVM : ViewModel
         _ => MeleeParams
     };
 
-    private static string GetParamName(ItemParam param) => param switch
+    /// <summary>
+    ///     The game's own item stat strings (their values end with ": ", hence
+    ///     the trim), so every language the game ships is supported for free.
+    /// </summary>
+    private static string GetParamName(ItemParam param) => (param switch
     {
-        ItemParam.HeadArmor => new TextObject("{=EbiParamHeadArmor}Head armor").ToString(),
-        ItemParam.BodyArmor => new TextObject("{=EbiParamBodyArmor}Body armor").ToString(),
-        ItemParam.ArmArmor => new TextObject("{=EbiParamArmArmor}Arm armor").ToString(),
-        ItemParam.LegArmor => new TextObject("{=EbiParamLegArmor}Leg armor").ToString(),
-        ItemParam.MountArmor => new TextObject("{=EbiParamMountArmor}Mount armor").ToString(),
-        ItemParam.ChargeDamage => new TextObject("{=EbiParamChargeDamage}Charge damage").ToString(),
-        ItemParam.HitPoints => new TextObject("{=EbiParamHitPoints}Hit points").ToString(),
-        ItemParam.Maneuver => new TextObject("{=EbiParamManeuver}Maneuver").ToString(),
-        ItemParam.Speed => new TextObject("{=EbiParamSpeed}Speed").ToString(),
-        ItemParam.MaxAmmo => new TextObject("{=EbiParamMaxAmmo}Ammo / durability").ToString(),
-        ItemParam.ThrustSpeed => new TextObject("{=EbiParamThrustSpeed}Thrust speed").ToString(),
-        ItemParam.SwingSpeed => new TextObject("{=EbiParamSwingSpeed}Swing speed").ToString(),
-        ItemParam.MissileSpeed => new TextObject("{=EbiParamMissileSpeed}Missile speed").ToString(),
-        ItemParam.MissileDamage => new TextObject("{=EbiParamMissileDamage}Missile damage").ToString(),
-        ItemParam.WeaponLength => new TextObject("{=EbiParamWeaponLength}Length").ToString(),
-        ItemParam.ThrustDamage => new TextObject("{=EbiParamThrustDamage}Thrust damage").ToString(),
-        ItemParam.SwingDamage => new TextObject("{=EbiParamSwingDamage}Swing damage").ToString(),
-        ItemParam.Accuracy => new TextObject("{=EbiParamAccuracy}Accuracy").ToString(),
-        ItemParam.Handling => new TextObject("{=EbiParamHandling}Handling").ToString(),
-        ItemParam.Weight => new TextObject("{=EbiParamWeight}Weight").ToString(),
-        _ => param.ToString()
-    };
+        ItemParam.HeadArmor => new TextObject("{=EUzxzL9s}Head Armor: "),
+        ItemParam.BodyArmor => new TextObject("{=bLWyjOdS}Body Armor: "),
+        ItemParam.ArmArmor => new TextObject("{=cf61cce254c7dca65be9bebac7fb9bf5}Arm Armor: "),
+        ItemParam.LegArmor => new TextObject("{=U8VHRdwF}Leg Armor: "),
+        ItemParam.MountArmor => new TextObject("{=bLWyjOdS}Body Armor: "),
+        ItemParam.ChargeDamage => new TextObject("{=c7638a0869219ae845de0f660fd57a9d}Charge Damage: "),
+        ItemParam.HitPoints => new TextObject("{=aCkzVUCR}Hit Points: "),
+        ItemParam.Maneuver => new TextObject("{=3025020b83b218707499f0de3135ed0a}Maneuver: "),
+        ItemParam.Speed => new TextObject("{=74dc1908cb0b990e80fb977b5a0ef10d}Speed: "),
+        ItemParam.MaxAmmo => new TextObject("{=05fdfc6e238429753ef282f2ce97c1f8}Stack Amount: "),
+        ItemParam.ThrustSpeed => new TextObject("{=VPYazFVH}Thrust Speed: "),
+        ItemParam.SwingSpeed => new TextObject("{=nfQhamAF}Swing Speed: "),
+        ItemParam.MissileSpeed => new TextObject("{=YukbQgHJ}Missile Speed: "),
+        ItemParam.MissileDamage => new TextObject("{=c9c5dfed2ca6bcb7a73d905004c97b23}Damage: "),
+        ItemParam.WeaponLength => new TextObject("{=XUtiwiYP}Length: "),
+        ItemParam.ThrustDamage => new TextObject("{=7sUhWG0E}Thrust Damage: "),
+        ItemParam.SwingDamage => new TextObject("{=fMmlUHyz}Swing Damage: "),
+        ItemParam.Accuracy => new TextObject("{=xEWwbGVK}Accuracy: "),
+        ItemParam.Handling => new TextObject("{=YOSEIvyf}Handling: "),
+        ItemParam.Weight => new TextObject("{=YvwQL9aa}Weight: "),
+        _ => new TextObject(param.ToString())
+    }).ToString().TrimEnd(':', ' ');
 
-    private static string GetSlotName(EquipmentIndex slot) => slot switch
+    private static string GetSlotName(EquipmentIndex slot)
     {
-        EquipmentIndex.Weapon0 => new TextObject("{=EbiSlotWeapon1}Weapon 1").ToString(),
-        EquipmentIndex.Weapon1 => new TextObject("{=EbiSlotWeapon2}Weapon 2").ToString(),
-        EquipmentIndex.Weapon2 => new TextObject("{=EbiSlotWeapon3}Weapon 3").ToString(),
-        EquipmentIndex.Weapon3 => new TextObject("{=EbiSlotWeapon4}Weapon 4").ToString(),
-        EquipmentIndex.Head => new TextObject("{=EbiSlotHead}Helmet").ToString(),
-        EquipmentIndex.Body => new TextObject("{=EbiSlotBody}Body armor").ToString(),
-        EquipmentIndex.Leg => new TextObject("{=EbiSlotLeg}Boots").ToString(),
-        EquipmentIndex.Gloves => new TextObject("{=EbiSlotGloves}Gloves").ToString(),
-        EquipmentIndex.Cape => new TextObject("{=EbiSlotCape}Cape").ToString(),
-        EquipmentIndex.Horse => new TextObject("{=EbiSlotHorse}Mount").ToString(),
-        EquipmentIndex.HorseHarness => new TextObject("{=EbiSlotHarness}Harness").ToString(),
-        _ => slot.ToString()
-    };
+        if (slot >= EquipmentIndex.Weapon0 && slot <= EquipmentIndex.Weapon3)
+        {
+            var number = slot - EquipmentIndex.Weapon0 + 1;
+            return $"{new TextObject("{=2RIyK1bp}Weapons")} {number}";
+        }
+
+        return (slot switch
+        {
+            EquipmentIndex.Head => new TextObject("{=bg6x6Hbv}Helm"),
+            EquipmentIndex.Body => new TextObject("{=ahiBhAqU}Armor"),
+            EquipmentIndex.Leg => new TextObject("{=Xx9EbSwG}Boot"),
+            EquipmentIndex.Gloves => new TextObject("{=3ZRTekjS}Glove"),
+            EquipmentIndex.Cape => new TextObject("{=QAv3upYr}Cloak"),
+            EquipmentIndex.Horse => new TextObject("{=mountnoun}Mount"),
+            EquipmentIndex.HorseHarness => new TextObject("{=0GZ19XHb}Harness"),
+            _ => new TextObject(slot.ToString())
+        }).ToString();
+    }
 }

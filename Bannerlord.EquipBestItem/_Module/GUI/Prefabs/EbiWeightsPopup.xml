@@ -110,7 +110,8 @@
                                             </ItemTemplate>
                                         </ListPanel>
 
-                                        <!-- Actions -->
+                                        <!-- Actions: Default restores the built-in weights, Lock zeroes
+                                             them all which excludes the slot from searching -->
                                         <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                                    MarginTop="15" HorizontalAlignment="Center"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
@@ -120,22 +121,34 @@
                                                               SuggestedHeight="55" Brush="Popup.Button.Base"
                                                               Command.Click="ExecuteReset" UpdateChildrenStates="true">
                                                     <Children>
+                                                        <HintWidget DoNotAcceptEvents="true"
+                                                                    DataSource="{DefaultButtonHint}"
+                                                                    WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                                    Command.HoverEnd="ExecuteEndHint"/>
                                                         <TextWidget WidthSizePolicy="StretchToParent"
                                                                     HeightSizePolicy="StretchToParent"
                                                                     Brush="Popup.Button.Text"
-                                                                    Text="@ResetButtonText"/>
+                                                                    Text="@DefaultButtonText"/>
                                                     </Children>
                                                 </ButtonWidget>
                                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
                                                               HeightSizePolicy="Fixed" SuggestedWidth="200"
                                                               SuggestedHeight="55" MarginLeft="20"
-                                                              Brush="Popup.Button.Base" Command.Click="ExecuteClose"
+                                                              Brush="Popup.Button.Base" Command.Click="ExecuteLock"
                                                               UpdateChildrenStates="true">
                                                     <Children>
+                                                        <HintWidget DoNotAcceptEvents="true"
+                                                                    DataSource="{LockButtonHint}"
+                                                                    WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                                    Command.HoverEnd="ExecuteEndHint"/>
                                                         <TextWidget WidthSizePolicy="StretchToParent"
                                                                     HeightSizePolicy="StretchToParent"
                                                                     Brush="Popup.Button.Text"
-                                                                    Text="@CloseButtonText"/>
+                                                                    Text="@LockButtonText"/>
                                                     </Children>
                                                 </ButtonWidget>
                                             </Children>
@@ -143,6 +156,12 @@
 
                                     </Children>
                                 </ListPanel>
+
+                                <!-- Close cross, top-right of the frame -->
+                                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70"
+                                              SuggestedHeight="70" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                              PositionXOffset="30" PositionYOffset="-30" Command.Click="ExecuteClose"
+                                              Brush="Popup.CloseButton"/>
                             </Children>
                         </BrushWidget>
                     </Children>
