@@ -105,6 +105,10 @@ public sealed class InventoryGateway
             character);
 
         logic.AddTransferCommand(command);
+
+        // Equipping the last piece of a stack leaves a zero-count row in the
+        // item list; the native screen removes those explicitly.
+        _vm.ExecuteRemoveZeroCounts();
     }
 
     private InventoryLogic.InventorySide GetEquipmentSide() =>
