@@ -127,6 +127,27 @@ public sealed class InventoryGateway
             slot,
             character);
 
+    /// <summary>
+    ///     Wraps an item displaced by a planned batch step as a candidate for
+    ///     the remaining steps. By the time a later command executes, the swap
+    ///     that released this item has already put it into the player inventory.
+    /// </summary>
+    public SPItemVM? CreateReleasedItemVM(EquipmentElement element)
+    {
+        var logic = ActiveInventoryLogic;
+        if (logic is null || element.IsEmpty || element.Item is null) return null;
+
+        return new SPItemVM(
+            logic,
+            CharacterObject.PlayerCharacter?.IsFemale ?? false,
+            true,
+            InventoryScreenHelper.GetActiveInventoryState()?.InventoryMode ?? default,
+            new ItemRosterElement(element, 1),
+            InventoryLogic.InventorySide.PlayerInventory,
+            0,
+            null);
+    }
+
     private InventoryLogic.InventorySide GetEquipmentSide() =>
         (SPInventoryVM.EquipmentModes)_vm.EquipmentMode switch
         {

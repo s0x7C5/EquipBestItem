@@ -5,6 +5,7 @@ using Bannerlord.EquipBestItem.Settings;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace Bannerlord.EquipBestItem.Inventory;
 
@@ -41,10 +42,16 @@ public sealed class EquipBestService
     }
 
     /// <summary>Search for an arbitrary hero — used by "equip all characters".</summary>
+    /// <param name="extraCandidates">
+    ///     Items not (yet) present in the panels, e.g. ones displaced by
+    ///     earlier steps of a planned batch. Always searched regardless of the
+    ///     panel toggles: they belong to the player.
+    /// </param>
     public SPItemVM? FindBest(
         InventoryGateway gateway, ItemQuery query, EquipmentIndex slot,
         CharacterObject? character, Equipment? equipment,
-        Func<SPItemVM, bool>? exclude = null)
+        Func<SPItemVM, bool>? exclude = null,
+        MBBindingList<SPItemVM>? extraCandidates = null)
     {
         if (character is null || equipment is null) return null;
 
@@ -59,7 +66,7 @@ public sealed class EquipBestService
         var leftItems = _settings.SearchLeftPanel ? gateway.LeftItems : null;
         var rightItems = _settings.SearchRightPanel ? gateway.RightItems : null;
 
-        return _finder.FindBest(context, scorer, exclude, leftItems, rightItems);
+        return _finder.FindBest(context, scorer, exclude, leftItems, rightItems, extraCandidates);
     }
 
     /// <summary>Equips a previously found item into the slot.</summary>
