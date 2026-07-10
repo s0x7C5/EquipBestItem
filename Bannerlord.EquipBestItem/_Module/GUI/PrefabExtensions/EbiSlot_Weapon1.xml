@@ -22,7 +22,7 @@
                             <EbiFoundItemTooltipWidget DataSource="{BestItem}" IsRightSide="true"
                                                        DoNotAcceptEvents="true" WidthSizePolicy="Fixed"
                                                        HeightSizePolicy="Fixed" SuggestedWidth="14"
-                                                       SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="5">
+                                                       SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="4" MarginRight="9">
                                 <Children>
                                     <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
                                                           Command.Click="ExecuteEquip"
@@ -41,7 +41,7 @@
                             <EbiEquipButtonWidget IsDisabled="@IsButtonDisabled" Command.Click="ExecuteEquip"
                                                   Command.AlternateClick="ExecuteOpenSettings"
                                                   WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                                  SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="5"
+                                                  SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="4" MarginRight="9"
                                                   Brush="EquipBestItem.SlotButton.Flipped"/>
                         </Children>
                     </Widget>
