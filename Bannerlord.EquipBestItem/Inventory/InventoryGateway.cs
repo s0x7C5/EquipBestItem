@@ -93,23 +93,39 @@ public sealed class InventoryGateway
         var logic = ActiveInventoryLogic;
         if (logic is null) return;
 
-        var equipmentSide = GetEquipmentSide();
-
-        var command = TransferCommand.Transfer(
-            1,
-            item.InventorySide,
-            equipmentSide,
-            item.ItemRosterElement,
-            item.ItemType,
-            slot,
-            character);
-
-        logic.AddTransferCommand(command);
+        logic.AddTransferCommand(BuildEquipCommand(item, slot, character));
 
         // Equipping the last piece of a stack leaves a zero-count row in the
         // item list; the native screen removes those explicitly.
         _vm.ExecuteRemoveZeroCounts();
     }
+
+    /// <summary>
+    ///     Executes many equips as one transfer batch, the way the native
+    ///     "buy all" does: the game refreshes the item lists and fires
+    ///     AfterTransfer once for the whole batch instead of per item, which
+    ///     keeps "equip all characters" from freezing large inventories.
+    /// </summary>
+    public void EquipBatch(IReadOnlyList<TransferCommand> commands)
+    {
+        if (commands.Count == 0) return;
+
+        var logic = ActiveInventoryLogic;
+        if (logic is null) return;
+
+        logic.AddTransferCommands(commands);
+        _vm.ExecuteRemoveZeroCounts();
+    }
+
+    public TransferCommand BuildEquipCommand(SPItemVM item, EquipmentIndex slot, CharacterObject character) =>
+        TransferCommand.Transfer(
+            1,
+            item.InventorySide,
+            GetEquipmentSide(),
+            item.ItemRosterElement,
+            item.ItemType,
+            slot,
+            character);
 
     private InventoryLogic.InventorySide GetEquipmentSide() =>
         (SPInventoryVM.EquipmentModes)_vm.EquipmentMode switch

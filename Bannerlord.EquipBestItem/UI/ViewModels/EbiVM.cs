@@ -1,4 +1,8 @@
+using System.Collections.Generic;
 using Bannerlord.EquipBestItem.Inventory;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
@@ -141,27 +145,31 @@ public sealed class EbiVM : ViewModel
     public void ExecuteEquipAllBest()
     {
         var character = _gateway.CurrentCharacter;
-        var equipment = _gateway.ActiveEquipment;
-        if (character is null || equipment is null) return;
+        if (character is null) return;
 
-        // Re-search sequentially instead of equipping the previews: each equip
-        // changes the inventory, and two slots may want the same single item.
-        var equippedCount = 0;
-        foreach (var slot in _slots)
-        {
-            var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
-            if (_services.EquipBest.TryEquipBest(_gateway, query, slot.Slot) is not null)
-                equippedCount++;
-        }
-
-        GameLog.Info(new TextObject("{=EbiEquippedCount}Equipped {COUNT} item(s).")
-            .SetTextVariable("COUNT", equippedCount).ToString());
+        EquipAllFor(new[] { character });
     }
 
     public void ExecuteEquipAllCharacters()
     {
-        var equippedCount = 0;
-        foreach (var character in _gateway.GetEquippableHeroes())
+        EquipAllFor(_gateway.GetEquippableHeroes());
+    }
+
+    /// <summary>
+    ///     Plans every equip up front and executes them as ONE transfer batch —
+    ///     per-command transfers make the game rebuild the trade UI for each
+    ///     item, which visibly freezes large inventories. A claims map keeps
+    ///     two slots or heroes from planning the same physical item.
+    /// </summary>
+    private void EquipAllFor(IEnumerable<CharacterObject> characters)
+    {
+        var commands = new List<TransferCommand>();
+        var claimedCounts = new Dictionary<SPItemVM, int>();
+
+        bool IsExhausted(SPItemVM item) =>
+            claimedCounts.TryGetValue(item, out var claimed) && claimed >= item.ItemCount;
+
+        foreach (var character in characters)
         {
             var equipment = _gateway.GetEquipmentFor(character);
             if (equipment is null) continue;
@@ -169,13 +177,20 @@ public sealed class EbiVM : ViewModel
             foreach (var slot in _slots)
             {
                 var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
-                if (_services.EquipBest.TryEquipBest(_gateway, query, slot.Slot, character, equipment) is not null)
-                    equippedCount++;
+                var found = _services.EquipBest.FindBest(
+                    _gateway, query, slot.Slot, character, equipment, IsExhausted);
+                if (found is null) continue;
+
+                claimedCounts.TryGetValue(found, out var claimed);
+                claimedCounts[found] = claimed + 1;
+                commands.Add(_gateway.BuildEquipCommand(found, slot.Slot, character));
             }
         }
 
+        _gateway.EquipBatch(commands);
+
         GameLog.Info(new TextObject("{=EbiEquippedCount}Equipped {COUNT} item(s).")
-            .SetTextVariable("COUNT", equippedCount).ToString());
+            .SetTextVariable("COUNT", commands.Count).ToString());
     }
 
     /// <summary>Called when inventory contents or the shown character change.</summary>

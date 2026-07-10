@@ -1,3 +1,4 @@
+using System;
 using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Domain.Scoring;
 using Bannerlord.EquipBestItem.Settings;
@@ -42,7 +43,8 @@ public sealed class EquipBestService
     /// <summary>Search for an arbitrary hero — used by "equip all characters".</summary>
     public SPItemVM? FindBest(
         InventoryGateway gateway, ItemQuery query, EquipmentIndex slot,
-        CharacterObject? character, Equipment? equipment)
+        CharacterObject? character, Equipment? equipment,
+        Func<SPItemVM, bool>? exclude = null)
     {
         if (character is null || equipment is null) return null;
 
@@ -57,7 +59,7 @@ public sealed class EquipBestService
         var leftItems = _settings.SearchLeftPanel ? gateway.LeftItems : null;
         var rightItems = _settings.SearchRightPanel ? gateway.RightItems : null;
 
-        return _finder.FindBest(context, scorer, leftItems, rightItems);
+        return _finder.FindBest(context, scorer, exclude, leftItems, rightItems);
     }
 
     /// <summary>Equips a previously found item into the slot.</summary>

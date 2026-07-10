@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Bannerlord.EquipBestItem.Domain.Filtering;
 using Bannerlord.EquipBestItem.Domain.Scoring;
@@ -25,6 +26,19 @@ public sealed class BestItemFinder
         IItemScorer scorer,
         params MBBindingList<SPItemVM>?[] candidateLists)
     {
+        return FindBest(context, scorer, null, candidateLists);
+    }
+
+    /// <param name="exclude">
+    ///     Transient rejection hook, e.g. items already claimed while planning
+    ///     a batch equip for several characters.
+    /// </param>
+    public SPItemVM? FindBest(
+        in SearchContext context,
+        IItemScorer scorer,
+        Func<SPItemVM, bool>? exclude,
+        params MBBindingList<SPItemVM>?[] candidateLists)
+    {
         var bestScore = GetCurrentSlotScore(context, scorer);
         SPItemVM? best = null;
 
@@ -35,7 +49,8 @@ public sealed class BestItemFinder
             for (var i = 0; i < list.Count; i++)
             {
                 var item = list[i];
-                if (item is null || !PassesAllFilters(item, context)) continue;
+                if (item is null || exclude?.Invoke(item) == true) continue;
+                if (!PassesAllFilters(item, context)) continue;
 
                 var score = scorer.Score(item.ItemRosterElement.EquipmentElement, context);
                 if (score <= bestScore) continue;
