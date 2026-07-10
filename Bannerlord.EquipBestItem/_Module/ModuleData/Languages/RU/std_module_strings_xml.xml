@@ -5,6 +5,7 @@
     </tags>
     <strings>
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
+        <string id="EbiSlotButtonHint" text="Надеть лучший предмет. ПКМ — настройки поиска."/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
         <string id="EbiWeightsHeader" text="Веса поиска: {SLOT}"/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>

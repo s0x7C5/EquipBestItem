@@ -2,6 +2,7 @@ using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Domain.Scoring;
 using Bannerlord.EquipBestItem.Settings;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 using TaleWorlds.Core;
 
 namespace Bannerlord.EquipBestItem.Inventory;
@@ -32,8 +33,8 @@ public sealed class EquipBestService
         _settings = settings;
     }
 
-    /// <returns>The display name of the equipped item, or null when nothing better was found.</returns>
-    public string? TryEquipBest(InventoryGateway gateway, ItemQuery query, EquipmentIndex slot)
+    /// <summary>Search only — used to preview the best item on the slot buttons.</summary>
+    public SPItemVM? FindBest(InventoryGateway gateway, ItemQuery query, EquipmentIndex slot)
     {
         var character = gateway.CurrentCharacter;
         var equipment = gateway.ActiveEquipment;
@@ -45,10 +46,25 @@ public sealed class EquipBestService
         var context = new SearchContext(character, equipment, slot, query);
         var scorer = useWeights ? (IItemScorer)_weightedScorer : _effectivenessScorer;
 
-        var best = _finder.FindBest(context, scorer, gateway.LeftItems, gateway.RightItems);
+        return _finder.FindBest(context, scorer, gateway.LeftItems, gateway.RightItems);
+    }
+
+    /// <summary>Equips a previously found item into the slot.</summary>
+    public void Equip(InventoryGateway gateway, SPItemVM item, EquipmentIndex slot)
+    {
+        var character = gateway.CurrentCharacter;
+        if (character is null) return;
+
+        gateway.Equip(item, slot, character);
+    }
+
+    /// <returns>The display name of the equipped item, or null when nothing better was found.</returns>
+    public string? TryEquipBest(InventoryGateway gateway, ItemQuery query, EquipmentIndex slot)
+    {
+        var best = FindBest(gateway, query, slot);
         if (best is null) return null;
 
-        gateway.Equip(best, slot, character);
+        Equip(gateway, best, slot);
         return best.ItemRosterElement.EquipmentElement.GetModifiedItemName()?.ToString();
     }
 

@@ -30,6 +30,12 @@ public sealed class SPInventoryVMMixin : BaseViewModelMixin<SPInventoryVM>
             new Action<InventoryEquipmentTypeChangedEvent>(OnEquipmentTypeChanged));
     }
 
+    public override void OnRefresh()
+    {
+        base.OnRefresh();
+        ModInventory.OnInventoryChanged();
+    }
+
     public override void OnFinalize()
     {
         if (ViewModel is not null)

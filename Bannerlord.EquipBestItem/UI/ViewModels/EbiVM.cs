@@ -1,4 +1,3 @@
-using System.Globalization;
 using Bannerlord.EquipBestItem.Inventory;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -8,30 +7,49 @@ namespace Bannerlord.EquipBestItem.UI.ViewModels;
 
 /// <summary>
 ///     Root view model of the mod, exposed on the inventory screen as
-///     "ModInventory". Slot buttons identify themselves with the native
-///     drop tags ("Equipment_5"), so one prefab patch serves all slots.
+///     "ModInventory". Holds one <see cref="EbiSlotVM" /> per searchable slot;
+///     best items are recomputed synchronously on inventory change events —
+///     the cached single-pass search is fast enough to not need the async
+///     update dance the legacy version had.
 /// </summary>
 public sealed class EbiVM : ViewModel
 {
-    private static readonly EquipmentIndex[] SearchableSlots =
-    {
-        EquipmentIndex.Weapon0, EquipmentIndex.Weapon1, EquipmentIndex.Weapon2, EquipmentIndex.Weapon3,
-        EquipmentIndex.Head, EquipmentIndex.Cape, EquipmentIndex.Body, EquipmentIndex.Gloves, EquipmentIndex.Leg,
-        EquipmentIndex.Horse, EquipmentIndex.HorseHarness
-    };
-
     private readonly ModServices _services;
     private readonly InventoryGateway _gateway;
+    private readonly EbiSlotVM[] _slots;
 
     internal EbiVM(ModServices services, InventoryGateway gateway)
     {
         _services = services;
         _gateway = gateway;
 
-        SlotSettings = new SlotWeightsVM(services.Profiles);
+        // Recompute the slot buttons when the weights popup closes: the
+        // player has just changed what "best" means.
+        SlotSettings = new SlotWeightsVM(services.Profiles, RecomputeBestItems);
         Ai = new AiPromptVM(
             services.Interpreter, services.EquipBest, gateway,
             services.Settings.Ai.IsConfigured);
+
+        EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings);
+
+        SlotWeapon0 = Create(EquipmentIndex.Weapon0);
+        SlotWeapon1 = Create(EquipmentIndex.Weapon1);
+        SlotWeapon2 = Create(EquipmentIndex.Weapon2);
+        SlotWeapon3 = Create(EquipmentIndex.Weapon3);
+        SlotHead = Create(EquipmentIndex.Head);
+        SlotCape = Create(EquipmentIndex.Cape);
+        SlotBody = Create(EquipmentIndex.Body);
+        SlotGloves = Create(EquipmentIndex.Gloves);
+        SlotLeg = Create(EquipmentIndex.Leg);
+        SlotHorse = Create(EquipmentIndex.Horse);
+        SlotHarness = Create(EquipmentIndex.HorseHarness);
+
+        _slots = new[]
+        {
+            SlotWeapon0, SlotWeapon1, SlotWeapon2, SlotWeapon3,
+            SlotHead, SlotCape, SlotBody, SlotGloves, SlotLeg,
+            SlotHorse, SlotHarness
+        };
     }
 
     [DataSourceProperty]
@@ -40,32 +58,38 @@ public sealed class EbiVM : ViewModel
     [DataSourceProperty]
     public SlotWeightsVM SlotSettings { get; }
 
-    public void ExecuteEquipBest(string dropTag)
-    {
-        if (!TryParseSlot(dropTag, out var slot)) return;
+    [DataSourceProperty]
+    public EbiSlotVM SlotWeapon0 { get; }
 
-        var character = _gateway.CurrentCharacter;
-        var equipment = _gateway.ActiveEquipment;
-        if (character is null || equipment is null) return;
+    [DataSourceProperty]
+    public EbiSlotVM SlotWeapon1 { get; }
 
-        var query = _services.Profiles.GetQuery(character, equipment, slot);
-        var equippedName = _services.EquipBest.TryEquipBest(_gateway, query, slot);
+    [DataSourceProperty]
+    public EbiSlotVM SlotWeapon2 { get; }
 
-        if (equippedName is null)
-            GameLog.Info(new TextObject("{=EbiNothingBetter}No better item found.").ToString());
-    }
+    [DataSourceProperty]
+    public EbiSlotVM SlotWeapon3 { get; }
 
-    public void ExecuteOpenSlotSettings(string dropTag)
-    {
-        if (!TryParseSlot(dropTag, out var slot)) return;
-        if (slot == EquipmentIndex.ExtraWeaponSlot) return;
+    [DataSourceProperty]
+    public EbiSlotVM SlotHead { get; }
 
-        var character = _gateway.CurrentCharacter;
-        var equipment = _gateway.ActiveEquipment;
-        if (character is null || equipment is null) return;
+    [DataSourceProperty]
+    public EbiSlotVM SlotCape { get; }
 
-        SlotSettings.Open(character, equipment, slot);
-    }
+    [DataSourceProperty]
+    public EbiSlotVM SlotBody { get; }
+
+    [DataSourceProperty]
+    public EbiSlotVM SlotGloves { get; }
+
+    [DataSourceProperty]
+    public EbiSlotVM SlotLeg { get; }
+
+    [DataSourceProperty]
+    public EbiSlotVM SlotHorse { get; }
+
+    [DataSourceProperty]
+    public EbiSlotVM SlotHarness { get; }
 
     public void ExecuteEquipAllBest()
     {
@@ -73,11 +97,13 @@ public sealed class EbiVM : ViewModel
         var equipment = _gateway.ActiveEquipment;
         if (character is null || equipment is null) return;
 
+        // Re-search sequentially instead of equipping the previews: each equip
+        // changes the inventory, and two slots may want the same single item.
         var equippedCount = 0;
-        foreach (var slot in SearchableSlots)
+        foreach (var slot in _slots)
         {
-            var query = _services.Profiles.GetQuery(character, equipment, slot);
-            if (_services.EquipBest.TryEquipBest(_gateway, query, slot) is not null)
+            var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
+            if (_services.EquipBest.TryEquipBest(_gateway, query, slot.Slot) is not null)
                 equippedCount++;
         }
 
@@ -92,6 +118,8 @@ public sealed class EbiVM : ViewModel
 
         if (SlotSettings.IsVisible)
             SlotSettings.ExecuteClose();
+
+        RecomputeBestItems();
     }
 
     public override void OnFinalize()
@@ -101,18 +129,38 @@ public sealed class EbiVM : ViewModel
         base.OnFinalize();
     }
 
-    private static bool TryParseSlot(string dropTag, out EquipmentIndex slot)
+    private void RecomputeBestItems()
     {
-        slot = EquipmentIndex.None;
+        var character = _gateway.CurrentCharacter;
+        var equipment = _gateway.ActiveEquipment;
 
-        const string prefix = "Equipment_";
-        if (dropTag is null || !dropTag.StartsWith(prefix)) return false;
+        foreach (var slot in _slots)
+        {
+            if (character is null || equipment is null)
+            {
+                slot.SetBest(null);
+                continue;
+            }
 
-        if (!int.TryParse(dropTag.Substring(prefix.Length), NumberStyles.Integer,
-                CultureInfo.InvariantCulture, out var index))
-            return false;
+            var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
+            slot.SetBest(_services.EquipBest.FindBest(_gateway, query, slot.Slot));
+        }
+    }
 
-        slot = (EquipmentIndex)index;
-        return true;
+    private void EquipFound(EbiSlotVM slot)
+    {
+        if (slot.BestItem is null) return;
+
+        _services.EquipBest.Equip(_gateway, slot.BestItem, slot.Slot);
+        // The transfer triggers an inventory refresh, which recomputes buttons.
+    }
+
+    private void OpenSettings(EquipmentIndex slot)
+    {
+        var character = _gateway.CurrentCharacter;
+        var equipment = _gateway.ActiveEquipment;
+        if (character is null || equipment is null) return;
+
+        SlotSettings.Open(character, equipment, slot);
     }
 }

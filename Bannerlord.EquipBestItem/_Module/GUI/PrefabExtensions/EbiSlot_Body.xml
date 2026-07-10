@@ -1,0 +1,32 @@
+<!-- Equip-best button for the Body slot. Geometry mirrors the legacy mod:
+     a 14x14 button in the top-left corner of the slot. The tooltip wrapper
+     feeds the found item to the native comparison tooltip on hover. -->
+<Children>
+    <Widget DataSource="{ModInventory}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+            SuggestedWidth="14" SuggestedHeight="14" MarginTop="5" MarginLeft="5" HorizontalAlignment="Left">
+        <Children>
+            <Widget DataSource="{SlotBody}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                    HeightSizePolicy="StretchToParent">
+                <Children>
+                    <EbiFoundItemTooltipWidget DataSource="{BestItem}" DoNotAcceptEvents="true"
+                                               WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                        <Children>
+                            <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
+                                                  Command.Click="ExecuteEquip"
+                                                  Command.AlternateClick="ExecuteOpenSettings"
+                                                  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                  Brush="EquipBestItem.SlotButton">
+                                <Children>
+                                    <HintWidget DoNotAcceptEvents="true" DataSource="{Hint}"
+                                                WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                Command.HoverBegin="ExecuteBeginHint"
+                                                Command.HoverEnd="ExecuteEndHint"/>
+                                </Children>
+                            </EbiEquipButtonWidget>
+                        </Children>
+                    </EbiFoundItemTooltipWidget>
+                </Children>
+            </Widget>
+        </Children>
+    </Widget>
+</Children>

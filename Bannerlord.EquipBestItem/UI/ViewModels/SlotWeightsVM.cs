@@ -80,6 +80,7 @@ public sealed class SlotWeightsVM : ViewModel
     };
 
     private readonly ProfileService _profiles;
+    private readonly Action _onClosed;
 
     private CharacterObject? _character;
     private Equipment? _equipment;
@@ -89,9 +90,10 @@ public sealed class SlotWeightsVM : ViewModel
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
 
-    public SlotWeightsVM(ProfileService profiles)
+    public SlotWeightsVM(ProfileService profiles, Action onClosed)
     {
         _profiles = profiles;
+        _onClosed = onClosed;
     }
 
     [DataSourceProperty]
@@ -169,6 +171,7 @@ public sealed class SlotWeightsVM : ViewModel
     {
         IsVisible = false;
         _profiles.Save();
+        _onClosed();
     }
 
     public void ExecuteReset()

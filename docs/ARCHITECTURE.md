@@ -86,11 +86,21 @@ plan application is always user-initiated.
 The old version built Gauntlet XML in ~20 C# classes. v3 uses only static,
 parameterized prefabs:
 
-- `GUI/PrefabExtensions/EbiSlotButtons.xml` is inserted into the **native
-  `InventoryEquippedItemSlot` prefab once** — the game instantiates that prefab
-  for all twelve slots, and the snippet reads the slot identity from the native
-  `*DropTag` template parameter (`Equipment_0` … `Equipment_11`). One patch
-  instead of twelve.
+- `GUI/PrefabExtensions/EbiSlot_*.xml` — one snippet per equipped slot (the
+  banner slot is skipped), inserted at the native slot instantiation sites in
+  `Inventory.xml` (matched by their unique `Parameter.DropTag`). Eleven files
+  that differ only in the bound per-slot view model name: bindings cannot be
+  parameterized, and each button must feed **its** found item to the native
+  comparison tooltip. The button (legacy UX): visible only when a better item
+  exists, hover previews the found item via the game's own tooltip
+  (`EbiFoundItemTooltipWidget : InventoryItemButtonWidget`), left click equips
+  the previewed item, right click opens the search settings, holding Alt
+  reveals hidden buttons so settings stay reachable.
+- Best items are recomputed **synchronously** on inventory change events
+  (refresh, character switch, equipment set switch, weights popup close). The
+  legacy version did this on a background task because its scoring was slow;
+  with cached stat vectors a full 11-slot recompute is a few milliseconds, so
+  the async complexity and its UI races are gone.
 - `GUI/Prefabs/EbiWeightsPopup.xml` renders the weight sliders with a single
   `<ItemTemplate>` bound to `MBBindingList<ParamRowVM>` — rows come from data,
   not from code.
