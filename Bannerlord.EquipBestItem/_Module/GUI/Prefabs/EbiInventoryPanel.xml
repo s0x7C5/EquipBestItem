@@ -1,115 +1,183 @@
 <Prefab>
     <Window>
-        <Widget DataSource="{ModInventory}" WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren"
-                SuggestedWidth="560" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="115">
+        <Widget DataSource="{ModInventory}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                DoNotAcceptEvents="true">
             <Children>
-                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="VerticalTopToBottom">
+
+                <!-- Two plaques at the top of the center panel, flanking the
+                     character name (legacy placement). Built exactly like the
+                     game's InventoryEquippedItemControls: a fixed-size
+                     background (the brush sprite's own 146x69, so nothing
+                     stretches) holding 35x35 toolbox_icon_bed sockets with a
+                     button inset by 3px in each. -->
+
+                <!-- Left plaque: lock for the left (merchant/loot) panel + equip all heroes.
+                     The background is drawn for three sockets but holds two, so it is
+                     pushed one socket-width past the edge and the sockets are laid out
+                     evenly on the visible part. -->
+                <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="146"
+                             SuggestedHeight="69" HorizontalAlignment="Left" MarginTop="82"
+                             PositionXOffset="-43"
+                             Brush="Inventory.EquipedItemControls.Background.HorizontalFlip">
                     <Children>
-
-                        <!-- AI request row: free text in, structured equip plan out -->
-                        <ListPanel DataSource="{Ai}" IsVisible="@IsConfigured" WidthSizePolicy="StretchToParent"
-                                   HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
-                            <Children>
-                                <BrushWidget UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                             SuggestedWidth="440" SuggestedHeight="50" VerticalAlignment="Center"
-                                             Brush="SaveLoad.Search.Button">
-                                    <Children>
-                                        <EditableTextWidget UpdateChildrenStates="true" WidthSizePolicy="StretchToParent"
-                                                            HeightSizePolicy="StretchToParent" MarginTop="10"
-                                                            MarginBottom="10" MarginLeft="10" MarginRight="10"
-                                                            Brush="SaveLoad.Search.InputText" Text="@PromptText"/>
-                                    </Children>
-                                </BrushWidget>
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="105" SuggestedHeight="50"
-                                              MarginLeft="5" VerticalAlignment="Center" Brush="ButtonBrush2"
-                                              Command.Click="ExecuteInterpret" IsDisabled="@IsBusy"
-                                              UpdateChildrenStates="true">
-                                    <Children>
-                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Brush="Popup.Button.Text" Text="@InterpretButtonText"/>
-                                    </Children>
-                                </ButtonWidget>
-                            </Children>
-                        </ListPanel>
-
-                        <!-- Action buttons: equip current, equip all, panel search toggles -->
-                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginTop="4"
-                                   HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                   HorizontalAlignment="Right" MarginRight="18" VerticalAlignment="Center"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
                             <Children>
 
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
-                                              VerticalAlignment="Center"
-                                              Brush="EquipBestItem.EquipCurrentCharacterButton"
-                                              Command.Click="ExecuteEquipAllBest">
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35"
+                                        SuggestedHeight="35" VerticalAlignment="Center"
+                                        Sprite="Inventory\toolbox_icon_bed">
                                     <Children>
-                                        <HintWidget DoNotAcceptEvents="true" DataSource="{EquipCurrentHint}"
-                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                      MarginLeft="6" MarginRight="6" MarginTop="6" MarginBottom="6"
+                                                      UpdateChildrenStates="true"
+                                                      Command.Click="ExecuteToggleLeftPanelSearch">
+                                            <Children>
+                                                <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                             HeightSizePolicy="StretchToParent"
+                                                             IsVisible="@IsLeftPanelSearched"
+                                                             Brush="EquipBestItem.LockPanelButton.Opened"/>
+                                                <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                             HeightSizePolicy="StretchToParent"
+                                                             IsVisible="@IsLeftPanelLocked"
+                                                             Brush="EquipBestItem.LockPanelButton.Closed"/>
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{LeftPanelLockHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                            </Children>
+                                        </ButtonWidget>
                                     </Children>
-                                </ButtonWidget>
+                                </Widget>
 
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
-                                              MarginLeft="8" VerticalAlignment="Center"
-                                              Brush="EquipBestItem.EquipAllCharactersButton"
-                                              Command.Click="ExecuteEquipAllCharacters">
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35"
+                                        SuggestedHeight="35" MarginLeft="2" VerticalAlignment="Center"
+                                        Sprite="Inventory\toolbox_icon_bed">
                                     <Children>
-                                        <HintWidget DoNotAcceptEvents="true" DataSource="{EquipAllHint}"
-                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                      MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3"
+                                                      Brush="EquipBestItem.EquipAllCharactersButton"
+                                                      Command.Click="ExecuteEquipAllCharacters">
+                                            <Children>
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{EquipAllHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                            </Children>
+                                        </ButtonWidget>
                                     </Children>
-                                </ButtonWidget>
-
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36"
-                                              MarginLeft="24" VerticalAlignment="Center"
-                                              Command.Click="ExecuteToggleLeftPanelSearch">
-                                    <Children>
-                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
-                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsLeftPanelSearched"
-                                                     Brush="EquipBestItem.LockPanelButton.Opened"/>
-                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
-                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsLeftPanelLocked"
-                                                     Brush="EquipBestItem.LockPanelButton.Closed"/>
-                                        <HintWidget DoNotAcceptEvents="true" DataSource="{LeftPanelLockHint}"
-                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                    Command.HoverEnd="ExecuteEndHint"/>
-                                    </Children>
-                                </ButtonWidget>
-
-                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                              HeightSizePolicy="Fixed" SuggestedWidth="36" SuggestedHeight="36"
-                                              MarginLeft="8" VerticalAlignment="Center"
-                                              Command.Click="ExecuteToggleRightPanelSearch">
-                                    <Children>
-                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
-                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsRightPanelSearched"
-                                                     Brush="EquipBestItem.LockPanelButton.Opened"/>
-                                        <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
-                                                     HeightSizePolicy="StretchToParent" IsVisible="@IsRightPanelLocked"
-                                                     Brush="EquipBestItem.LockPanelButton.Closed"/>
-                                        <HintWidget DoNotAcceptEvents="true" DataSource="{RightPanelLockHint}"
-                                                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                    Command.HoverEnd="ExecuteEndHint"/>
-                                    </Children>
-                                </ButtonWidget>
+                                </Widget>
 
                             </Children>
                         </ListPanel>
-
-                        <!-- AI status line -->
-                        <TextWidget DataSource="{Ai}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                    MarginTop="2" Brush="Popup.Button.Text" Text="@StatusText"/>
-
                     </Children>
-                </ListPanel>
+                </BrushWidget>
+
+                <!-- Right plaque: equip current character + lock for the right panel
+                     + ask AI in the rightmost socket. Without an AI backend the
+                     plaque slides right by one socket (@RightPlaqueOffset),
+                     hiding the unused space just like the left plaque. -->
+                <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="146"
+                             SuggestedHeight="69" HorizontalAlignment="Right" MarginTop="82"
+                             PositionXOffset="@RightPlaqueOffset"
+                             Brush="Inventory.EquipedItemControls.Background">
+                    <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                   HorizontalAlignment="Left" MarginLeft="18" VerticalAlignment="Center"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                            <Children>
+
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35"
+                                        SuggestedHeight="35" VerticalAlignment="Center"
+                                        Sprite="Inventory\toolbox_icon_bed">
+                                    <Children>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                      MarginLeft="3" MarginRight="3" MarginTop="3" MarginBottom="3"
+                                                      Brush="EquipBestItem.EquipCurrentCharacterButton"
+                                                      Command.Click="ExecuteEquipAllBest">
+                                            <Children>
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{EquipCurrentHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                            </Children>
+                                        </ButtonWidget>
+                                    </Children>
+                                </Widget>
+
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35"
+                                        SuggestedHeight="35" MarginLeft="2" VerticalAlignment="Center"
+                                        Sprite="Inventory\toolbox_icon_bed">
+                                    <Children>
+                                        <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                                      MarginLeft="6" MarginRight="6" MarginTop="6" MarginBottom="6"
+                                                      UpdateChildrenStates="true"
+                                                      Command.Click="ExecuteToggleRightPanelSearch">
+                                            <Children>
+                                                <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                             HeightSizePolicy="StretchToParent"
+                                                             IsVisible="@IsRightPanelSearched"
+                                                             Brush="EquipBestItem.LockPanelButton.Opened"/>
+                                                <ImageWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+                                                             HeightSizePolicy="StretchToParent"
+                                                             IsVisible="@IsRightPanelLocked"
+                                                             Brush="EquipBestItem.LockPanelButton.Closed"/>
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{RightPanelLockHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                            </Children>
+                                        </ButtonWidget>
+                                    </Children>
+                                </Widget>
+
+                                <!-- Ask AI: opens the game's native text inquiry; the plan
+                                     lands in the slot filters. Hidden when no backend. -->
+                                <Widget DataSource="{Ai}" IsVisible="@IsConfigured" WidthSizePolicy="CoverChildren"
+                                        HeightSizePolicy="CoverChildren" VerticalAlignment="Center">
+                                    <Children>
+                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="35"
+                                                SuggestedHeight="35" MarginLeft="2"
+                                                Sprite="Inventory\toolbox_icon_bed">
+                                            <Children>
+                                                <ButtonWidget WidthSizePolicy="StretchToParent"
+                                                              HeightSizePolicy="StretchToParent"
+                                                              MarginLeft="3" MarginRight="3" MarginTop="3"
+                                                              MarginBottom="3" Brush="EquipBestItem.AiButton"
+                                                              Command.Click="ExecuteOpenPrompt"
+                                                              IsDisabled="@IsBusy" UpdateChildrenStates="true">
+                                                    <Children>
+                                                        <TextWidget DoNotAcceptEvents="true"
+                                                                    WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Brush="EquipBestItem.AiButton.Text" Text="AI"/>
+                                                        <HintWidget DoNotAcceptEvents="true" DataSource="{AskHint}"
+                                                                    WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                                    </Children>
+                                                </ButtonWidget>
+                                            </Children>
+                                        </Widget>
+                                    </Children>
+                                </Widget>
+
+                            </Children>
+                        </ListPanel>
+                    </Children>
+                </BrushWidget>
+
+                <!-- AI status line: bottom of the center panel -->
+                <TextWidget DataSource="{Ai}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                            VerticalAlignment="Bottom" MarginBottom="115"
+                            Brush="Popup.Button.Text" Text="@StatusText"/>
+
             </Children>
         </Widget>
     </Window>

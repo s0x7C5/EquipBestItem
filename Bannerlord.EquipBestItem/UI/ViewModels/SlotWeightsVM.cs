@@ -80,6 +80,17 @@ public sealed class SlotWeightsVM : ViewModel
         TaleWorlds.Core.WeaponClass.SmallShield, TaleWorlds.Core.WeaponClass.LargeShield
     };
 
+    /// <summary>Every weapon class a slot can pin (the popup's selector, minus "as equipped").</summary>
+    internal static IEnumerable<WeaponClass> PinnableWeaponClasses
+    {
+        get
+        {
+            foreach (var choice in WeaponClassChoices)
+                if (choice is { } weaponClass)
+                    yield return weaponClass;
+        }
+    }
+
     private readonly ProfileService _profiles;
     private readonly Action _onChanged;
 

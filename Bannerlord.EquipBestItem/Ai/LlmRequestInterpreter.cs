@@ -245,26 +245,33 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Only spell out weights when the player expressed a preference; an empty weights object " +
             "means \"just find the best with default balanced weights\".");
         builder.AppendLine(
-            "\"Protection\"/\"armor\"/\"защита\"/\"броня\" maps to the matching *Armor param for that body " +
-            "area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
+            "Words meaning protection/armor (in any language) map to the matching *Armor param for that " +
+            "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
             "mount->MountArmor. Never use Weight to express protection.");
         builder.AppendLine(
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
-            "weaponClass only makes sense for weapon slots. Match the grip exactly: " +
-            "one-handed/одноручный -> OneHanded…, two-handed/двуручный -> TwoHanded…, never swap them; " +
+            "weaponClass only makes sense for weapon slots. Match the grip exactly, whatever the request " +
+            "language: one-handed -> OneHanded…, two-handed -> TwoHanded…, never swap them; " +
             "when the player does not say which, pick the OneHanded… variant.");
         builder.AppendLine(
-            "When the request names one specific piece of gear (helmet/шлем, gloves/перчатки, boots or " +
-            "greaves/поножи, cape/плащ, cuirass/кираса), emit exactly one directive for that piece's slot " +
+            "When the request names one specific piece of gear (a helmet, gloves, boots, a cape, a cuirass — " +
+            "in any language), emit exactly one directive for that piece's slot " +
             "and do not invent directives for slots the player did not mention. If the request also names a " +
             "body area that slot cannot cover, keep the named slot and apply the protection to what it covers.");
+
+        if (context.LanguageGlossary.Length > 0)
+        {
+            builder.AppendLine();
+            builder.AppendLine(context.LanguageGlossary);
+        }
+
         builder.AppendLine();
         builder.AppendLine("Examples:");
-        builder.AppendLine("""User: "одень меня в самую лёгкую броню империи" -> {"explanation":"Ищу самую лёгкую имперскую броню.","directives":[{"slot":"AllArmor","weights":{"Weight":-1.0},"culture":"empire"}]}""");
+        builder.AppendLine("""User: "dress me in the lightest imperial armor" -> {"explanation":"Looking for the lightest imperial armor.","directives":[{"slot":"AllArmor","weights":{"Weight":-1.0},"culture":"empire"}]}""");
         builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"Bow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
-        builder.AppendLine("""User: "найди шлем с лучшей защитой ног" -> {"explanation":"Беру шлем с максимальной защитой (защита ног шлему недоступна).","directives":[{"slot":"Head","weights":{"HeadArmor":1.0}}]}""");
-        builder.AppendLine("""User: "в первый слот оружия поставь одноручный топор" -> {"explanation":"Ищу одноручный топор для первого слота оружия.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
-        builder.AppendLine("""User: "просто одень получше" -> {"explanation":"Подбираю лучшее по всем слотам.","directives":[{"slot":"All","weights":{}}]}""");
+        builder.AppendLine("""User: "find a helmet with the best leg protection" -> {"explanation":"Picking the best-protecting helmet (a helmet cannot protect legs).","directives":[{"slot":"Head","weights":{"HeadArmor":1.0}}]}""");
+        builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
+        builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");

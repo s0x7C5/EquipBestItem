@@ -16,6 +16,7 @@
         <string id="EbiHintLeftLock" text="Search in the left panel (merchant, loot). Equipping buys the item."/>
         <string id="EbiHintRightLock" text="Search in your inventory"/>
         <string id="EbiAiInterpret" text="Ask AI"/>
+        <string id="EbiAiPromptHint" text="Describe the gear you want, in your own words."/>
         <string id="EbiAiThinking" text="Interpreting request..."/>
         <string id="EbiAiTimeout" text="The AI did not respond in time."/>
     </strings>

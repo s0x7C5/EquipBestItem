@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 namespace Bannerlord.EquipBestItem.Ai;
 
 /// <summary>
-///     Turns a free-form player request ("одень меня в самую лёгкую броню
-///     империи") into structured equip directives. Implementations must be
+///     Turns a free-form player request ("dress me in the lightest imperial
+///     armor") into structured equip directives. Implementations must be
 ///     safe to call from a background thread.
 /// </summary>
 public interface IRequestInterpreter

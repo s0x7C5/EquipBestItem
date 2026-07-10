@@ -10,6 +10,7 @@ using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.Core;
+using TaleWorlds.Core.ViewModelCollection.Information;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
@@ -31,7 +32,7 @@ public sealed class AiPromptVM : ViewModel
 
     private CancellationTokenSource? _pendingRequest;
 
-    private string _promptText = "";
+    private string _lastRequest = "";
     private string _statusText = "";
     private bool _isBusy;
 
@@ -53,20 +54,7 @@ public sealed class AiPromptVM : ViewModel
     public bool IsConfigured { get; }
 
     [DataSourceProperty]
-    public string InterpretButtonText { get; } =
-        new TextObject("{=EbiAiInterpret}Ask AI").ToString();
-
-    [DataSourceProperty]
-    public string PromptText
-    {
-        get => _promptText;
-        set
-        {
-            if (value == _promptText) return;
-            _promptText = value;
-            OnPropertyChangedWithValue(value);
-        }
-    }
+    public HintViewModel AskHint { get; } = new(new TextObject("{=EbiAiInterpret}Ask AI"));
 
     [DataSourceProperty]
     public string StatusText
@@ -92,10 +80,33 @@ public sealed class AiPromptVM : ViewModel
         }
     }
 
-    public void ExecuteInterpret()
+    /// <summary>
+    ///     Opens the game's native text inquiry — proper keyboard focus, no
+    ///     inventory hotkeys firing mid-typing — prefilled with the previous
+    ///     request so it is easy to iterate on.
+    /// </summary>
+    public void ExecuteOpenPrompt()
     {
-        var request = _promptText?.Trim() ?? "";
+        if (_isBusy) return;
+
+        InformationManager.ShowTextInquiry(new TextInquiryData(
+            new TextObject("{=EbiAiInterpret}Ask AI").ToString(),
+            new TextObject("{=EbiAiPromptHint}Describe the gear you want, in your own words.").ToString(),
+            true, true,
+            GameTexts.FindText("str_ok").ToString(),
+            GameTexts.FindText("str_cancel").ToString(),
+            Interpret,
+            null,
+            textCondition: text => Tuple.Create(!string.IsNullOrWhiteSpace(text), ""),
+            defaultInputText: _lastRequest));
+    }
+
+    private void Interpret(string requestText)
+    {
+        var request = requestText?.Trim() ?? "";
         if (request.Length == 0 || _isBusy) return;
+
+        _lastRequest = request;
 
         var character = _gateway.CurrentCharacter;
         var equipment = _gateway.ActiveEquipment;
@@ -104,7 +115,8 @@ public sealed class AiPromptVM : ViewModel
         var context = new InterpretationContext(
             character.Name.ToString(),
             equipment.IsCivilian ? "civilian" : equipment.IsStealth ? "stealth" : "battle",
-            CollectNotableSkills(character));
+            CollectNotableSkills(character),
+            PromptGlossary.Text);
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();

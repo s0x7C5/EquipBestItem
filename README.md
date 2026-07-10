@@ -2,19 +2,25 @@
 
 A Mount & Blade II: Bannerlord mod that equips your characters with the best
 items in one click — and, if you want, understands plain-language requests
-like *"одень меня в самую лёгкую броню империи"* via an LLM.
+in any language, like *"dress me in the lightest imperial armor"*, via an LLM.
 
 ## Features
 
 - **Equip best** button on every equipment slot; **equip-all** for the current
-  character.
+  character or for every party hero — planned up front and executed as one
+  transfer batch, so items freed from one hero stay available to the next.
 - Per-slot **search weights** (per character, per battle/civilian/stealth set)
   with negative weights supported (`Weight: -1` = prefer light gear). Zero out
-  a slot's weights to exclude it from searching.
+  a slot's weights (the Lock button) to exclude it from searching. Weapon
+  slots can pin a **weapon class** (bow, one-handed axe, shield, …) — each
+  class brings its own sensible default weights.
 - Choice of search method in `settings.json`: parameter weights (default) or
   the game's built-in Effectiveness score.
-- **AI request box**: free text → structured search plan → preview → apply.
-  Works with the Anthropic API or any OpenAI-compatible endpoint.
+- **AI assistant**: the AI button next to the equip buttons opens the game's
+  native text-input dialog — describe what you want in your own words and
+  the mod rewrites the affected slot filters, recomputes the previews and
+  reports exactly what changed per slot. Works with the Anthropic API or any
+  OpenAI-compatible endpoint, including fully local ones.
 - Fast: single-pass search with cached item stat vectors.
 - Self-contained: no dependency on other mods (UIExtenderEx and Harmony ship
   inside the module).
@@ -27,7 +33,7 @@ like *"одень меня в самую лёгкую броню империи"
 
 ### Enabling the AI assistant (optional)
 
-The request box appears in the inventory as soon as a backend is available.
+The AI button appears in the inventory as soon as a backend is available.
 Three ways, easiest first:
 
 **Zero-config (local model).** Run [Ollama](https://ollama.com)
@@ -52,8 +58,9 @@ environment variable and edit
 ```
 
 Any other OpenAI-compatible server works the same way via `endpoint`.
-Settings are read at game start. If a backend rejects the JSON response
-format request, set `"useJsonResponseFormat": false`.
+Settings are read at game start. Backend quirks (a rejected JSON response
+format, a chat template that drops the system role) are detected and worked
+around automatically on the first request, then remembered for the session.
 
 ## Building
 

@@ -112,6 +112,14 @@ public sealed class EbiVM : ViewModel
     public HintViewModel RightPanelLockHint { get; } = new(new TextObject(
         "{=EbiHintRightLock}Search in your inventory"));
 
+    /// <summary>
+    ///     The right plaque's background fits three sockets; without an AI
+    ///     backend only two are used, so the plaque slides right by one
+    ///     socket-width — mirroring the left plaque's fixed shift.
+    /// </summary>
+    [DataSourceProperty]
+    public float RightPlaqueOffset => _services.Settings.Ai.IsConfigured ? 0f : 43f;
+
     [DataSourceProperty]
     public bool IsLeftPanelSearched => _services.Settings.SearchLeftPanel;
 

@@ -16,6 +16,7 @@
         <string id="EbiHintLeftLock" text="Искать в левой панели (магазин, добыча). Экипировка купит предмет."/>
         <string id="EbiHintRightLock" text="Искать в своём инвентаре"/>
         <string id="EbiAiInterpret" text="Спросить ИИ"/>
+        <string id="EbiAiPromptHint" text="Опишите своими словами, что хотите надеть."/>
         <string id="EbiAiThinking" text="Разбираю запрос..."/>
         <string id="EbiAiTimeout" text="ИИ не ответил вовремя."/>
     </strings>
