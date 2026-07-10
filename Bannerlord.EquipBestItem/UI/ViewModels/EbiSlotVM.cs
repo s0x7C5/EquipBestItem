@@ -19,6 +19,7 @@ public sealed class EbiSlotVM : ViewModel
     private SPItemVM? _foundItem;
     private SPItemVM? _bestItem;
     private bool _isButtonDisabled = true;
+    private bool _hasTooltipItem;
 
     internal EbiSlotVM(EquipmentIndex slot, Action<EbiSlotVM> equip, Action<EquipmentIndex> openSettings)
     {
@@ -56,11 +57,31 @@ public sealed class EbiSlotVM : ViewModel
         }
     }
 
+    /// <summary>
+    ///     True when the tooltip has something real to show. Hovering with an
+    ///     empty item would leave the game's tooltip panel showing its previous
+    ///     content, so the whole button subtree is hidden in that case.
+    /// </summary>
+    [DataSourceProperty]
+    public bool HasTooltipItem
+    {
+        get => _hasTooltipItem;
+        private set
+        {
+            if (value == _hasTooltipItem) return;
+            _hasTooltipItem = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
     internal void SetBest(SPItemVM? found, SPItemVM? equipped)
     {
         _foundItem = found;
-        BestItem = found ?? equipped;
+
+        var tooltipItem = found ?? (string.IsNullOrEmpty(equipped?.StringId) ? null : equipped);
+        BestItem = tooltipItem;
         IsButtonDisabled = found is null;
+        HasTooltipItem = tooltipItem is not null;
     }
 
     public void ExecuteEquip()

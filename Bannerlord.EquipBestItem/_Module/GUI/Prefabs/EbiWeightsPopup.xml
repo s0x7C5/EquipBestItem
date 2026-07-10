@@ -7,9 +7,10 @@
                         HeightSizePolicy="StretchToParent">
                     <Children>
 
-                        <!-- Dim and swallow clicks outside the dialog -->
-                        <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                     Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55"/>
+                        <!-- Dim and swallow clicks outside the dialog. Plain Widget:
+                             BrushWidget ignores the Color attribute and renders the sprite white. -->
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55"/>
 
                         <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="540"
                                      HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Frame1Brush">
@@ -57,36 +58,45 @@
                                                                     HeightSizePolicy="StretchToParent"
                                                                     SuggestedWidth="185" Brush="Popup.Button.Text"
                                                                     Text="@Name"/>
+                                                        <!-- Structure copied from the proven legacy slider markup -->
                                                         <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                                                      SuggestedWidth="220" SuggestedHeight="42"
+                                                                      SuggestedWidth="138" SuggestedHeight="42"
                                                                       VerticalAlignment="Center" MarginLeft="10"
                                                                       DoNotUpdateHandleSize="true" Filler="Filler"
                                                                       Handle="SliderHandle" IsDiscrete="false"
                                                                       MinValueFloat="-1.0" MaxValueFloat="1.0"
                                                                       ValueFloat="@Value">
                                                             <Children>
-                                                                <Widget WidthSizePolicy="StretchToParent"
-                                                                        HeightSizePolicy="Fixed" SuggestedHeight="35"
-                                                                        VerticalAlignment="Center"
+                                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                                        SuggestedWidth="138" SuggestedHeight="38"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center" IsEnabled="false"
                                                                         Sprite="SPGeneral\SPOptions\standart_slider_canvas"/>
                                                                 <Widget Id="Filler" WidthSizePolicy="Fixed"
-                                                                        HeightSizePolicy="Fixed" SuggestedWidth="220"
+                                                                        HeightSizePolicy="Fixed" SuggestedWidth="345"
                                                                         SuggestedHeight="35" VerticalAlignment="Center"
+                                                                        Sprite="SPGeneral\SPOptions\standart_slider_fill"
                                                                         ClipContents="true">
                                                                     <Children>
                                                                         <Widget WidthSizePolicy="Fixed"
-                                                                                HeightSizePolicy="StretchToParent"
-                                                                                SuggestedWidth="220"
+                                                                                HeightSizePolicy="Fixed"
+                                                                                SuggestedWidth="345"
+                                                                                SuggestedHeight="35"
+                                                                                HorizontalAlignment="Left"
+                                                                                VerticalAlignment="Center"
                                                                                 Sprite="SPGeneral\SPOptions\standart_slider_fill"/>
                                                                     </Children>
                                                                 </Widget>
-                                                                <Widget WidthSizePolicy="StretchToParent"
-                                                                        HeightSizePolicy="Fixed" SuggestedHeight="35"
-                                                                        VerticalAlignment="Center"
+                                                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                                        SuggestedWidth="160" SuggestedHeight="65"
+                                                                        HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center" IsEnabled="false"
                                                                         Sprite="SPGeneral\SPOptions\standart_slider_frame"/>
-                                                                <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed"
+                                                                <ImageWidget Id="SliderHandle" DoNotAcceptEvents="true"
+                                                                             WidthSizePolicy="Fixed"
                                                                              HeightSizePolicy="Fixed"
-                                                                             SuggestedWidth="16" SuggestedHeight="30"
+                                                                             SuggestedWidth="14" SuggestedHeight="38"
+                                                                             HorizontalAlignment="Left"
                                                                              VerticalAlignment="Center"
                                                                              Brush="SPOptions.Slider.Handle"/>
                                                             </Children>

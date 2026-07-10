@@ -1,16 +1,19 @@
-<!-- Equip-best button for the Head slot. Geometry mirrors the legacy mod:
-     a 14x14 button in the top-left corner of the slot. The tooltip wrapper
-     feeds the found item (or the equipped one during an Alt reveal) to the
-     native comparison tooltip on hover. -->
+<!-- Equip-best button for the Head slot (legacy geometry: 14x14, top-left).
+     The transparent wrapper stretches over the whole slot so the game anchors
+     the native comparison tooltip beside the slot (it positions the tooltip
+     relative to the hovered widget's PARENT), not on top of the button.
+     IsRightSide matches the native slot so the tooltip opens away from it. -->
 <Children>
-    <Widget DataSource="{ModInventory}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-            SuggestedWidth="14" SuggestedHeight="14" MarginTop="5" MarginLeft="5" HorizontalAlignment="Left">
+    <Widget DataSource="{ModInventory}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
+            HeightSizePolicy="StretchToParent">
         <Children>
-            <Widget DataSource="{SlotHead}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
-                    HeightSizePolicy="StretchToParent">
+            <Widget DataSource="{SlotHead}" IsVisible="@HasTooltipItem" DoNotAcceptEvents="true"
+                    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
                 <Children>
-                    <EbiFoundItemTooltipWidget DataSource="{BestItem}" DoNotAcceptEvents="true"
-                                               WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                    <EbiFoundItemTooltipWidget DataSource="{BestItem}" IsRightSide="false" DoNotAcceptEvents="true"
+                                               WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14"
+                                               SuggestedHeight="14" MarginTop="5" MarginLeft="5"
+                                               HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Children>
                             <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
                                                   Command.Click="ExecuteEquip"
