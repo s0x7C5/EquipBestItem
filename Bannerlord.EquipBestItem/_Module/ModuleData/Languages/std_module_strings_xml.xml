@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Search your own inventory. Also toggled by the lock on the right plaque."/>
         <string id="EbiMcmGroupAi" text="AI assistant"/>
         <string id="EbiMcmAnthropic" text="Use the Anthropic API"/>
-        <string id="EbiMcmAnthropicHint" text="On: Anthropic Messages API. Off: any OpenAI-compatible endpoint (local backends are auto-detected when the endpoint is empty)."/>
+        <string id="EbiMcmAnthropicHint" text="On: Anthropic Messages API. Off: any OpenAI-compatible endpoint (LM Studio, Ollama, OpenRouter, ...)."/>
         <string id="EbiMcmEndpoint" text="Endpoint"/>
-        <string id="EbiMcmEndpointHint" text="Chat completions URL. Empty = auto-detect a local backend (Ollama / LM Studio / Player2) at game start."/>
+        <string id="EbiMcmEndpointHint" text="Chat completions URL, e.g. http://localhost:1234/v1/chat/completions (a bare server address also works)."/>
         <string id="EbiMcmModel" text="Model"/>
         <string id="EbiMcmModelHint" text="Model id. Empty = the auto-detected backend's first model, or the provider default."/>
         <string id="EbiMcmApiKey" text="API key"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="How long to wait for the model. Slow local models may need more than the default 30."/>
         <string id="EbiMcmJsonFormat" text="Request JSON response format"/>
         <string id="EbiMcmJsonFormatHint" text="Ask OpenAI-compatible backends for guaranteed JSON. Backends that reject it are detected and worked around automatically."/>
+        <string id="EbiMcmTest" text="Connection test"/>
+        <string id="EbiMcmTestButton" text="Run"/>
+        <string id="EbiMcmTestHint" text="Requests the server's model list to verify the endpoint (and API key, if set). Fills the model field in when it is empty."/>
+        <string id="EbiAiNoEndpoint" text="Endpoint is empty. Enter the server address (e.g. http://localhost:1234) and run the test again."/>
+        <string id="EbiAiConnectionOk" text="Connection OK: {ENDPOINT} (model: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Connection failed: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Anthropic API is configured; the key is verified on the first request."/>
+        <string id="EbiMakeDefault" text="Make default"/>
+        <string id="EbiHintMakeDefault" text="Save this slot's filter as the default for every hero without their own settings"/>
+        <string id="EbiOnDefault" text="Default values"/>
     </strings>
 </base>

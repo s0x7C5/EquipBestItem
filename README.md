@@ -9,10 +9,12 @@ items in one click.
   character or for every party hero — planned up front and executed as one
   transfer batch, so items freed from one hero stay available to the next.
 - Per-slot **search weights** (per character, per battle/civilian/stealth set)
-  with negative weights supported (`Weight: -1` = prefer light gear). Zero out
-  a slot's weights (the Lock button) to exclude it from searching. Weapon
-  slots can pin a **weapon class** (bow, one-handed axe, shield, …) — each
-  class brings its own sensible default weights.
+  with negative weights supported (`Weight: -1` = prefer light gear), shown
+  as each parameter's share of the total. Zero out a slot's weights (the
+  Lock button) to exclude it from searching. Weapon slots can pin a
+  **weapon class** (bow, one-handed axe, shield, …) — each class brings its
+  own sensible default weights, and **Make default** saves your current
+  filter as the default for every hero you have not customized.
 - Choice of search method: parameter weights (default) or the game's built-in
   Effectiveness score. Configurable — along with the slot button color and
   panel toggles — via
@@ -45,10 +47,13 @@ Skip this section unless you want the AI button — the mod does not need it.
 The button appears in the inventory as soon as a backend is available.
 Three ways, easiest first:
 
-**Zero-config (local model).** Run [Ollama](https://ollama.com)
-(`ollama pull qwen3:4b`), LM Studio or Player2 before starting the game —
-the mod auto-detects a backend on its default port (11434 / 1234 / 4315)
-and uses its first model. No keys, no files, nothing leaves your PC.
+**Local model.** Run [Ollama](https://ollama.com) (`ollama pull qwen3:4b`),
+LM Studio or Player2 with its server enabled, then in MCM → Equip Best Item
+→ AI assistant set **Endpoint** to the server address (e.g.
+`http://localhost:1234` — the chat-completions path is appended
+automatically) and press **Connection test**: it verifies the server and
+fills the model in for you. No keys, nothing leaves your PC. Without MCM,
+set `ai.endpoint` in `settings.json` instead.
 
 **OpenRouter (cloud, one key for many models).** Set the `EBI_AI_API_KEY`
 environment variable and edit

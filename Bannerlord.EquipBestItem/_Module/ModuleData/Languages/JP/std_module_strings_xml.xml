@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="自分の所持品を検索します。右の銘板の錠でも切り替えられます。"/>
         <string id="EbiMcmGroupAi" text="AIアシスタント"/>
         <string id="EbiMcmAnthropic" text="Anthropic APIを使用"/>
-        <string id="EbiMcmAnthropicHint" text="オン：Anthropic Messages API。オフ：OpenAI互換の任意のエンドポイント（エンドポイントが空のときはローカルバックエンドを自動検出）。"/>
+        <string id="EbiMcmAnthropicHint" text="オン: Anthropic Messages API。オフ: OpenAI互換の任意のエンドポイント（LM Studio、Ollama、OpenRouterなど）。"/>
         <string id="EbiMcmEndpoint" text="エンドポイント"/>
-        <string id="EbiMcmEndpointHint" text="chat completionsのURL。空 = ゲーム開始時にローカルバックエンド（Ollama / LM Studio / Player2）を自動検出。"/>
+        <string id="EbiMcmEndpointHint" text="chat completionsのURL。例: http://localhost:1234/v1/chat/completions（サーバーアドレスのみでも可）。"/>
         <string id="EbiMcmModel" text="モデル"/>
         <string id="EbiMcmModelHint" text="モデルID。空 = 検出されたバックエンドの最初のモデル、またはプロバイダーの既定値。"/>
         <string id="EbiMcmApiKey" text="APIキー"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="モデルの応答を待つ時間。低速なローカルモデルは既定の30秒では足りない場合があります。"/>
         <string id="EbiMcmJsonFormat" text="JSON応答形式を要求"/>
         <string id="EbiMcmJsonFormatHint" text="OpenAI互換バックエンドに保証されたJSONを要求します。これを拒否するバックエンドは自動的に検出され回避されます。"/>
+        <string id="EbiMcmTest" text="接続テスト"/>
+        <string id="EbiMcmTestButton" text="実行"/>
+        <string id="EbiMcmTestHint" text="サーバーのモデル一覧を取得してエンドポイント（設定済みならAPIキーも）を確認します。モデル欄が空なら自動入力します。"/>
+        <string id="EbiAiNoEndpoint" text="エンドポイントが空です。サーバーアドレス（例: http://localhost:1234）を入力して再度テストしてください。"/>
+        <string id="EbiAiConnectionOk" text="接続OK: {ENDPOINT}（モデル: {MODEL}）。"/>
+        <string id="EbiAiConnectionFail" text="接続に失敗しました: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Anthropic APIが設定されています。キーは最初のリクエスト時に確認されます。"/>
+        <string id="EbiMakeDefault" text="既定にする"/>
+        <string id="EbiHintMakeDefault" text="このスロットのフィルターを、独自設定のない全英雄の既定値として保存します"/>
+        <string id="EbiOnDefault" text="既定値"/>
     </strings>
 </base>

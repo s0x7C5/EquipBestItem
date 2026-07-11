@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Buscar no seu próprio inventário. Também alternado pelo cadeado na placa direita."/>
         <string id="EbiMcmGroupAi" text="Assistente de IA"/>
         <string id="EbiMcmAnthropic" text="Usar a API da Anthropic"/>
-        <string id="EbiMcmAnthropicHint" text="Ligado: API de mensagens da Anthropic. Desligado: qualquer endpoint compatível com OpenAI (backends locais são detectados automaticamente quando o endpoint está vazio)."/>
+        <string id="EbiMcmAnthropicHint" text="Ligado: API de mensagens da Anthropic. Desligado: qualquer endpoint compatível com OpenAI (LM Studio, Ollama, OpenRouter...)."/>
         <string id="EbiMcmEndpoint" text="Endpoint"/>
-        <string id="EbiMcmEndpointHint" text="URL de chat completions. Vazio = detectar automaticamente um backend local (Ollama / LM Studio / Player2) ao iniciar o jogo."/>
+        <string id="EbiMcmEndpointHint" text="URL de chat completions, ex.: http://localhost:1234/v1/chat/completions (um endereço de servidor simples também funciona)."/>
         <string id="EbiMcmModel" text="Modelo"/>
         <string id="EbiMcmModelHint" text="ID do modelo. Vazio = primeiro modelo do backend detectado, ou o padrão do provedor."/>
         <string id="EbiMcmApiKey" text="Chave de API"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="Quanto tempo esperar pelo modelo. Modelos locais lentos podem precisar de mais que os 30 padrão."/>
         <string id="EbiMcmJsonFormat" text="Solicitar formato de resposta JSON"/>
         <string id="EbiMcmJsonFormatHint" text="Pedir aos backends compatíveis com OpenAI um JSON garantido. Backends que o rejeitam são detectados e contornados automaticamente."/>
+        <string id="EbiMcmTest" text="Teste de conexão"/>
+        <string id="EbiMcmTestButton" text="Testar"/>
+        <string id="EbiMcmTestHint" text="Solicita a lista de modelos do servidor para verificar o endpoint (e a chave de API, se definida). Preenche o campo do modelo quando vazio."/>
+        <string id="EbiAiNoEndpoint" text="O endpoint está vazio. Informe o endereço do servidor (ex.: http://localhost:1234) e execute o teste novamente."/>
+        <string id="EbiAiConnectionOk" text="Conexão OK: {ENDPOINT} (modelo: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Falha na conexão: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="A API da Anthropic está configurada; a chave é verificada na primeira solicitação."/>
+        <string id="EbiMakeDefault" text="Tornar padrão"/>
+        <string id="EbiHintMakeDefault" text="Salva o filtro deste espaço como padrão para todos os heróis sem configurações próprias"/>
+        <string id="EbiOnDefault" text="Valores padrão"/>
     </strings>
 </base>

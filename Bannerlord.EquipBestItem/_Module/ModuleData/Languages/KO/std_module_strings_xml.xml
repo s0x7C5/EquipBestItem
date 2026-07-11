@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="자신의 인벤토리를 검색합니다. 오른쪽 명판 잠금으로도 전환됩니다."/>
         <string id="EbiMcmGroupAi" text="AI 도우미"/>
         <string id="EbiMcmAnthropic" text="Anthropic API 사용"/>
-        <string id="EbiMcmAnthropicHint" text="켜짐: Anthropic Messages API. 꺼짐: OpenAI 호환 엔드포인트 아무거나(엔드포인트가 비어 있으면 로컬 백엔드를 자동 감지)."/>
+        <string id="EbiMcmAnthropicHint" text="켜짐: Anthropic Messages API. 꺼짐: OpenAI 호환 엔드포인트(LM Studio, Ollama, OpenRouter 등)."/>
         <string id="EbiMcmEndpoint" text="엔드포인트"/>
-        <string id="EbiMcmEndpointHint" text="chat completions URL. 비어 있음 = 게임 시작 시 로컬 백엔드(Ollama / LM Studio / Player2) 자동 감지."/>
+        <string id="EbiMcmEndpointHint" text="chat completions URL, 예: http://localhost:1234/v1/chat/completions (서버 주소만 입력해도 됩니다)."/>
         <string id="EbiMcmModel" text="모델"/>
         <string id="EbiMcmModelHint" text="모델 ID. 비어 있음 = 감지된 백엔드의 첫 번째 모델 또는 공급자 기본값."/>
         <string id="EbiMcmApiKey" text="API 키"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="모델 응답을 기다리는 시간. 느린 로컬 모델은 기본 30초보다 더 필요할 수 있습니다."/>
         <string id="EbiMcmJsonFormat" text="JSON 응답 형식 요청"/>
         <string id="EbiMcmJsonFormatHint" text="OpenAI 호환 백엔드에 보장된 JSON을 요청합니다. 이를 거부하는 백엔드는 자동으로 감지되어 우회됩니다."/>
+        <string id="EbiMcmTest" text="연결 테스트"/>
+        <string id="EbiMcmTestButton" text="실행"/>
+        <string id="EbiMcmTestHint" text="서버의 모델 목록을 요청하여 엔드포인트(설정된 경우 API 키 포함)를 확인합니다. 모델 필드가 비어 있으면 자동으로 채웁니다."/>
+        <string id="EbiAiNoEndpoint" text="엔드포인트가 비어 있습니다. 서버 주소(예: http://localhost:1234)를 입력한 후 다시 테스트하세요."/>
+        <string id="EbiAiConnectionOk" text="연결 정상: {ENDPOINT} (모델: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="연결 실패: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Anthropic API가 구성되었습니다. 키는 첫 요청 시 확인됩니다."/>
+        <string id="EbiMakeDefault" text="기본값으로"/>
+        <string id="EbiHintMakeDefault" text="이 슬롯의 필터를 자체 설정이 없는 모든 영웅의 기본값으로 저장합니다"/>
+        <string id="EbiOnDefault" text="기본값"/>
     </strings>
 </base>

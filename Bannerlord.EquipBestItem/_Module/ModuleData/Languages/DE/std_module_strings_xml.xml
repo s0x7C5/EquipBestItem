@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Im eigenen Inventar suchen. Auch über das Schloss an der rechten Tafel umschaltbar."/>
         <string id="EbiMcmGroupAi" text="KI-Assistent"/>
         <string id="EbiMcmAnthropic" text="Anthropic-API verwenden"/>
-        <string id="EbiMcmAnthropicHint" text="An: Anthropic Messages API. Aus: beliebiger OpenAI-kompatibler Endpunkt (lokale Backends werden bei leerem Endpunkt automatisch erkannt)."/>
+        <string id="EbiMcmAnthropicHint" text="An: Anthropic Messages API. Aus: beliebiger OpenAI-kompatibler Endpunkt (LM Studio, Ollama, OpenRouter, ...)."/>
         <string id="EbiMcmEndpoint" text="Endpunkt"/>
-        <string id="EbiMcmEndpointHint" text="Chat-Completions-URL. Leer = lokales Backend (Ollama / LM Studio / Player2) beim Spielstart automatisch erkennen."/>
+        <string id="EbiMcmEndpointHint" text="Chat-Completions-URL, z. B. http://localhost:1234/v1/chat/completions (eine reine Serveradresse funktioniert auch)."/>
         <string id="EbiMcmModel" text="Modell"/>
         <string id="EbiMcmModelHint" text="Modell-ID. Leer = erstes Modell des erkannten Backends oder Standard des Anbieters."/>
         <string id="EbiMcmApiKey" text="API-Schlüssel"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="Wie lange auf das Modell gewartet wird. Langsame lokale Modelle brauchen evtl. mehr als die standardmäßigen 30."/>
         <string id="EbiMcmJsonFormat" text="JSON-Antwortformat anfordern"/>
         <string id="EbiMcmJsonFormatHint" text="OpenAI-kompatible Backends um garantiertes JSON bitten. Backends, die dies ablehnen, werden erkannt und automatisch umgangen."/>
+        <string id="EbiMcmTest" text="Verbindungstest"/>
+        <string id="EbiMcmTestButton" text="Prüfen"/>
+        <string id="EbiMcmTestHint" text="Fragt die Modellliste des Servers ab und prüft so den Endpunkt (und ggf. den API-Schlüssel). Ein leeres Modellfeld wird automatisch ausgefüllt."/>
+        <string id="EbiAiNoEndpoint" text="Der Endpunkt ist leer. Gib die Serveradresse ein (z. B. http://localhost:1234) und führe den Test erneut aus."/>
+        <string id="EbiAiConnectionOk" text="Verbindung OK: {ENDPOINT} (Modell: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Verbindung fehlgeschlagen: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Anthropic-API ist konfiguriert; der Schlüssel wird bei der ersten Anfrage geprüft."/>
+        <string id="EbiMakeDefault" text="Als Standard"/>
+        <string id="EbiHintMakeDefault" text="Speichert den Filter dieses Slots als Standard für alle Helden ohne eigene Einstellungen"/>
+        <string id="EbiOnDefault" text="Standardwerte"/>
     </strings>
 </base>

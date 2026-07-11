@@ -35,10 +35,6 @@ internal static class ModRuntime
         // Write the file back so players can discover and edit the options.
         store.Save("settings.json", settings);
 
-        // Zero-config AI: probe local backends in the background while the
-        // game loads; done long before the first inventory screen opens.
-        _ = System.Threading.Tasks.Task.Run(() => LocalBackendDetector.DetectAsync(settings.Ai));
-
         var finder = new BestItemFinder(new IItemFilter[]
         {
             new EquippableFilter(),

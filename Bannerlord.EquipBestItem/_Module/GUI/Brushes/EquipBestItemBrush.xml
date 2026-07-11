@@ -150,6 +150,21 @@
             </EventSounds>
         </SoundProperties>
     </Brush>
+    <!-- Popup.Button.Text lookalikes with left/right alignment for the popup
+         rows: labels end at a fixed gap before the slider, values start at a
+         fixed gap after it. -->
+    <Brush Name="EquipBestItem.Label.Right" Font="Galahad" TextHorizontalAlignment="Right"
+           TextVerticalAlignment="Center">
+        <Styles>
+            <Style Name="Default" FontColor="#F8E3BEFF" FontSize="24"/>
+        </Styles>
+    </Brush>
+    <Brush Name="EquipBestItem.Label.Left" Font="Galahad" TextHorizontalAlignment="Left"
+           TextVerticalAlignment="Center">
+        <Styles>
+            <Style Name="Default" FontColor="#F8E3BEFF" FontSize="24"/>
+        </Styles>
+    </Brush>
     <!-- Popup.Button.Text (Galahad 24, #F8E3BE) plus hover/pressed brightening. -->
     <Brush Name="EquipBestItem.AiButton.Text" Font="Galahad" TextHorizontalAlignment="Center"
            TextVerticalAlignment="Center">

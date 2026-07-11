@@ -26,6 +26,12 @@ public sealed class ProfileService
     public ItemQuery GetQuery(CharacterObject character, Equipment equipment, EquipmentIndex slot)
     {
         var profile = FindSlotProfile(character, equipment, slot);
+
+        // No personal override: the player-edited slot default applies, and
+        // only then the built-in weights.
+        if (profile is null && _data.Defaults.TryGetValue(slot.ToString(), out var playerDefault))
+            profile = playerDefault;
+
         if (profile is null) return new ItemQuery(DefaultWeights.For(slot));
 
         WeaponClass? pinnedClass =
@@ -63,6 +69,30 @@ public sealed class ProfileService
         var profile = GetOrCreateSlotProfile(character, equipment, slot);
         profile.Culture = string.IsNullOrEmpty(cultureId) ? null : cultureId;
         profile.MaxItemWeight = maxItemWeight is > 0f ? maxItemWeight : null;
+    }
+
+    /// <summary>True when the hero has their own settings for the slot (is not following the defaults).</summary>
+    public bool HasOverride(CharacterObject character, Equipment equipment, EquipmentIndex slot) =>
+        FindSlotProfile(character, equipment, slot) is not null;
+
+    /// <summary>
+    ///     The hero's current effective filter becomes the slot's default for
+    ///     every hero without an override; this hero's own override is dropped
+    ///     so they follow the default from now on too.
+    /// </summary>
+    public void SaveAsDefault(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        var query = GetQuery(character, equipment, slot);
+
+        _data.Defaults[slot.ToString()] = new SlotProfileData
+        {
+            Weights = query.Weights.ToDictionary(),
+            WeaponClass = query.WeaponClass?.ToString(),
+            Culture = query.CultureId,
+            MaxItemWeight = query.MaxItemWeight > 0f ? query.MaxItemWeight : null
+        };
+
+        ResetSlot(character, equipment, slot);
     }
 
     public void ResetSlot(CharacterObject character, Equipment equipment, EquipmentIndex slot)

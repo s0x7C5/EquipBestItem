@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="搜尋你自己的物品欄。也可透過右側銘牌上的鎖切換。"/>
         <string id="EbiMcmGroupAi" text="AI 助手"/>
         <string id="EbiMcmAnthropic" text="使用 Anthropic API"/>
-        <string id="EbiMcmAnthropicHint" text="開啟：Anthropic Messages API。關閉：任何相容 OpenAI 的端點（端點為空時會自動偵測本機後端）。"/>
+        <string id="EbiMcmAnthropicHint" text="開啟：Anthropic Messages API。關閉：任何相容 OpenAI 的端點（LM Studio、Ollama、OpenRouter 等）。"/>
         <string id="EbiMcmEndpoint" text="端點"/>
-        <string id="EbiMcmEndpointHint" text="Chat completions 的 URL。留空 = 遊戲啟動時自動偵測本機後端（Ollama / LM Studio / Player2）。"/>
+        <string id="EbiMcmEndpointHint" text="Chat completions 的 URL，例如 http://localhost:1234/v1/chat/completions（也可只填伺服器位址）。"/>
         <string id="EbiMcmModel" text="模型"/>
         <string id="EbiMcmModelHint" text="模型 ID。留空 = 所偵測後端的第一個模型，或提供商的預設值。"/>
         <string id="EbiMcmApiKey" text="API 金鑰"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="等待模型回應的時長。較慢的本機模型可能需要超過預設的 30 秒。"/>
         <string id="EbiMcmJsonFormat" text="請求 JSON 回應格式"/>
         <string id="EbiMcmJsonFormatHint" text="向相容 OpenAI 的後端請求確保為 JSON 的回應。拒絕該請求的後端會被自動偵測並繞過。"/>
+        <string id="EbiMcmTest" text="連線測試"/>
+        <string id="EbiMcmTestButton" text="測試"/>
+        <string id="EbiMcmTestHint" text="請求伺服器的模型列表以驗證端點（以及已設定的 API 金鑰）。模型欄位為空時會自動填寫。"/>
+        <string id="EbiAiNoEndpoint" text="端點為空。請輸入伺服器位址（例如 http://localhost:1234）後重新測試。"/>
+        <string id="EbiAiConnectionOk" text="連線正常：{ENDPOINT}（模型：{MODEL}）。"/>
+        <string id="EbiAiConnectionFail" text="連線失敗：{ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="已設定 Anthropic API；金鑰將在首次請求時驗證。"/>
+        <string id="EbiMakeDefault" text="設為預設"/>
+        <string id="EbiHintMakeDefault" text="將此欄位的篩選儲存為所有未自訂英雄的預設值"/>
+        <string id="EbiOnDefault" text="預設值"/>
     </strings>
 </base>

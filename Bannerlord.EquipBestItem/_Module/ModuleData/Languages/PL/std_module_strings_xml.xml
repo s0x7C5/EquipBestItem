@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Szukaj we własnym ekwipunku. Przełączane także kłódką na prawej tablicy."/>
         <string id="EbiMcmGroupAi" text="Asystent AI"/>
         <string id="EbiMcmAnthropic" text="Użyj API Anthropic"/>
-        <string id="EbiMcmAnthropicHint" text="Wł.: Anthropic Messages API. Wył.: dowolny punkt końcowy zgodny z OpenAI (lokalne backendy są wykrywane automatycznie, gdy punkt końcowy jest pusty)."/>
+        <string id="EbiMcmAnthropicHint" text="Wł.: Anthropic Messages API. Wył.: dowolny punkt końcowy zgodny z OpenAI (LM Studio, Ollama, OpenRouter itd.)."/>
         <string id="EbiMcmEndpoint" text="Punkt końcowy"/>
-        <string id="EbiMcmEndpointHint" text="URL chat completions. Pusty = automatyczne wykrycie lokalnego backendu (Ollama / LM Studio / Player2) przy starcie gry."/>
+        <string id="EbiMcmEndpointHint" text="URL chat completions, np. http://localhost:1234/v1/chat/completions (sam adres serwera też zadziała)."/>
         <string id="EbiMcmModel" text="Model"/>
         <string id="EbiMcmModelHint" text="Identyfikator modelu. Pusty = pierwszy model wykrytego backendu lub domyślny dostawcy."/>
         <string id="EbiMcmApiKey" text="Klucz API"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="Jak długo czekać na model. Wolne lokalne modele mogą potrzebować więcej niż domyślne 30."/>
         <string id="EbiMcmJsonFormat" text="Żądaj formatu odpowiedzi JSON"/>
         <string id="EbiMcmJsonFormatHint" text="Proś backendy zgodne z OpenAI o gwarantowany JSON. Backendy, które go odrzucają, są wykrywane i automatycznie omijane."/>
+        <string id="EbiMcmTest" text="Test połączenia"/>
+        <string id="EbiMcmTestButton" text="Sprawdź"/>
+        <string id="EbiMcmTestHint" text="Pobiera listę modeli serwera, weryfikując punkt końcowy (i klucz API, jeśli ustawiony). Puste pole modelu wypełnia automatycznie."/>
+        <string id="EbiAiNoEndpoint" text="Punkt końcowy jest pusty. Podaj adres serwera (np. http://localhost:1234) i uruchom test ponownie."/>
+        <string id="EbiAiConnectionOk" text="Połączenie OK: {ENDPOINT} (model: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Błąd połączenia: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="API Anthropic jest skonfigurowane; klucz zostanie sprawdzony przy pierwszym żądaniu."/>
+        <string id="EbiMakeDefault" text="Ustaw jako domyślne"/>
+        <string id="EbiHintMakeDefault" text="Zapisuje filtr tego slotu jako domyślny dla wszystkich bohaterów bez własnych ustawień"/>
+        <string id="EbiOnDefault" text="Wartości domyślne"/>
     </strings>
 </base>

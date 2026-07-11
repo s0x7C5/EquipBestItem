@@ -7,6 +7,12 @@ public sealed class ProfileData
 {
     /// <summary>Hero string id → equipment set key ("battle"/"civilian"/"stealth") → slot name → slot profile.</summary>
     public Dictionary<string, Dictionary<string, Dictionary<string, SlotProfileData>>> Characters { get; set; } = new();
+
+    /// <summary>
+    ///     Player-edited per-slot defaults ("Make default" in the weights
+    ///     popup). Every hero without an override of their own follows these.
+    /// </summary>
+    public Dictionary<string, SlotProfileData> Defaults { get; set; } = new();
 }
 
 public sealed class SlotProfileData

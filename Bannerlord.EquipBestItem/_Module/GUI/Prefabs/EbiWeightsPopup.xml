@@ -27,12 +27,24 @@
                                            StackLayout.LayoutMethod="VerticalTopToBottom">
                                     <Children>
 
-                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                                    SuggestedHeight="45" Brush="Popup.Button.Text"
-                                                    Text="@HeaderText"/>
+                                        <!-- Header with the "default values" marker on its right,
+                                             shown while the hero follows the defaults for this slot -->
+                                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                SuggestedHeight="45">
+                                            <Children>
+                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Brush="Popup.Button.Text" Text="@HeaderText"/>
+                                                <TextWidget IsVisible="@IsOnDefault" WidthSizePolicy="CoverChildren"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            HorizontalAlignment="Right"
+                                                            Brush="EquipBestItem.Label.Left"
+                                                            Text="@OnDefaultText"/>
+                                            </Children>
+                                        </Widget>
 
                                         <!-- Culture restriction selector; "any culture" disables it -->
-                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                        <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed"
                                                    SuggestedHeight="50" MarginTop="5"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
@@ -53,16 +65,16 @@
                                         </ListPanel>
 
                                         <!-- Max item weight cap; 0 = off -->
-                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                                   SuggestedHeight="42" MarginTop="5"
+                                        <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed"
+                                                   SuggestedHeight="56"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
                                                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
-                                                            SuggestedWidth="185" Brush="Popup.Button.Text"
+                                                            SuggestedWidth="185" Brush="EquipBestItem.Label.Right"
                                                             Text="@MaxWeightLabel"/>
                                                 <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                                               SuggestedWidth="138" SuggestedHeight="42"
-                                                              VerticalAlignment="Center" MarginLeft="10"
+                                                              VerticalAlignment="Center" MarginLeft="20"
                                                               DoNotUpdateHandleSize="true" Filler="Filler"
                                                               Handle="SliderHandle" IsDiscrete="false"
                                                               MinValueFloat="0" MaxValueFloat="40"
@@ -104,13 +116,13 @@
                                                 </SliderWidget>
                                                 <TextWidget WidthSizePolicy="Fixed"
                                                             HeightSizePolicy="StretchToParent"
-                                                            SuggestedWidth="75" MarginLeft="10"
-                                                            Brush="Popup.Button.Text" Text="@MaxItemWeightText"/>
+                                                            SuggestedWidth="75" MarginLeft="20"
+                                                            Brush="EquipBestItem.Label.Left" Text="@MaxItemWeightText"/>
                                             </Children>
                                         </ListPanel>
 
                                         <!-- Weapon class pin (weapon slots only) -->
-                                        <ListPanel IsVisible="@IsWeaponSlot" WidthSizePolicy="StretchToParent"
+                                        <ListPanel IsVisible="@IsWeaponSlot" WidthSizePolicy="CoverChildren" HorizontalAlignment="Center"
                                                    HeightSizePolicy="Fixed" SuggestedHeight="50" MarginTop="5"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
@@ -135,18 +147,16 @@
                                                    HeightSizePolicy="CoverChildren" MarginTop="10"
                                                    StackLayout.LayoutMethod="VerticalTopToBottom">
                                             <ItemTemplate>
-                                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                                           SuggestedHeight="42"
-                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="56" StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
                                                         <TextWidget WidthSizePolicy="Fixed"
                                                                     HeightSizePolicy="StretchToParent"
-                                                                    SuggestedWidth="185" Brush="Popup.Button.Text"
+                                                                    SuggestedWidth="185" Brush="EquipBestItem.Label.Right"
                                                                     Text="@Name"/>
                                                         <!-- Structure copied from the proven legacy slider markup -->
                                                         <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                                                       SuggestedWidth="138" SuggestedHeight="42"
-                                                                      VerticalAlignment="Center" MarginLeft="10"
+                                                                      VerticalAlignment="Center" MarginLeft="20"
                                                                       DoNotUpdateHandleSize="true" Filler="Filler"
                                                                       Handle="SliderHandle" IsDiscrete="false"
                                                                       MinValueFloat="-1.0" MaxValueFloat="1.0"
@@ -188,21 +198,22 @@
                                                         </SliderWidget>
                                                         <TextWidget WidthSizePolicy="Fixed"
                                                                     HeightSizePolicy="StretchToParent"
-                                                                    SuggestedWidth="75" MarginLeft="10"
-                                                                    Brush="Popup.Button.Text" Text="@ValueText"/>
+                                                                    SuggestedWidth="75" MarginLeft="20"
+                                                                    Brush="EquipBestItem.Label.Left" Text="@ValueText"/>
                                                     </Children>
                                                 </ListPanel>
                                             </ItemTemplate>
                                         </ListPanel>
 
-                                        <!-- Actions: Default restores the built-in weights, Lock zeroes
-                                             them all which excludes the slot from searching -->
+                                        <!-- Actions: Default restores the (player-editable) defaults,
+                                             Make default saves the current filter as that default,
+                                             Lock zeroes the weights which excludes the slot -->
                                         <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                    MarginTop="15" HorizontalAlignment="Center"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
                                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                              HeightSizePolicy="Fixed" SuggestedWidth="200"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="130"
                                                               SuggestedHeight="55" Brush="Popup.Button.Base"
                                                               Command.Click="ExecuteReset" UpdateChildrenStates="true">
                                                     <Children>
@@ -219,8 +230,27 @@
                                                     </Children>
                                                 </ButtonWidget>
                                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                              HeightSizePolicy="Fixed" SuggestedWidth="200"
-                                                              SuggestedHeight="55" MarginLeft="20"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="210"
+                                                              SuggestedHeight="55" MarginLeft="10"
+                                                              Brush="Popup.Button.Base"
+                                                              Command.Click="ExecuteMakeDefault"
+                                                              UpdateChildrenStates="true">
+                                                    <Children>
+                                                        <HintWidget DoNotAcceptEvents="true"
+                                                                    DataSource="{MakeDefaultButtonHint}"
+                                                                    WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Command.HoverBegin="ExecuteBeginHint"
+                                                                    Command.HoverEnd="ExecuteEndHint"/>
+                                                        <TextWidget WidthSizePolicy="StretchToParent"
+                                                                    HeightSizePolicy="StretchToParent"
+                                                                    Brush="Popup.Button.Text"
+                                                                    Text="@MakeDefaultButtonText"/>
+                                                    </Children>
+                                                </ButtonWidget>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="130"
+                                                              SuggestedHeight="55" MarginLeft="10"
                                                               Brush="Popup.Button.Base" Command.Click="ExecuteLock"
                                                               UpdateChildrenStates="true">
                                                     <Children>

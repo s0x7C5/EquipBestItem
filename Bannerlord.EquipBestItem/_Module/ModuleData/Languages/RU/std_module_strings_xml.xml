@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Искать в собственном инвентаре. Дублируется замком на правой плашке."/>
         <string id="EbiMcmGroupAi" text="ИИ-помощник"/>
         <string id="EbiMcmAnthropic" text="Использовать Anthropic API"/>
-        <string id="EbiMcmAnthropicHint" text="Вкл: Anthropic Messages API. Выкл: любой OpenAI-совместимый эндпоинт (локальные бэкенды находятся автоматически при пустом эндпоинте)."/>
+        <string id="EbiMcmAnthropicHint" text="Вкл: Anthropic Messages API. Выкл: любой OpenAI-совместимый эндпоинт (LM Studio, Ollama, OpenRouter и т.д.)."/>
         <string id="EbiMcmEndpoint" text="Эндпоинт"/>
-        <string id="EbiMcmEndpointHint" text="URL chat completions. Пусто = автопоиск локального бэкенда (Ollama / LM Studio / Player2) при запуске игры."/>
+        <string id="EbiMcmEndpointHint" text="URL chat completions, например http://localhost:1234/v1/chat/completions (можно и просто адрес сервера)."/>
         <string id="EbiMcmModel" text="Модель"/>
         <string id="EbiMcmModelHint" text="Идентификатор модели. Пусто = первая модель найденного бэкенда или дефолт провайдера."/>
         <string id="EbiMcmApiKey" text="Ключ API"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="Сколько ждать ответа модели. Медленным локальным моделям может не хватить стандартных 30."/>
         <string id="EbiMcmJsonFormat" text="Запрашивать формат ответа JSON"/>
         <string id="EbiMcmJsonFormatHint" text="Просить у OpenAI-совместимых бэкендов гарантированный JSON. Бэкенды, отвергающие его, определяются и обходятся автоматически."/>
+        <string id="EbiMcmTest" text="Проверка соединения"/>
+        <string id="EbiMcmTestButton" text="Проверить"/>
+        <string id="EbiMcmTestHint" text="Запрашивает у сервера список моделей, проверяя эндпоинт (и ключ API, если задан). Пустое поле модели заполняется автоматически."/>
+        <string id="EbiAiNoEndpoint" text="Эндпоинт пуст. Укажите адрес сервера (например, http://localhost:1234) и повторите проверку."/>
+        <string id="EbiAiConnectionOk" text="Соединение установлено: {ENDPOINT} (модель: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Ошибка соединения: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Настроен Anthropic API; ключ проверяется при первом запросе."/>
+        <string id="EbiMakeDefault" text="Сделать дефолтом"/>
+        <string id="EbiHintMakeDefault" text="Сохранить фильтр слота как значение по умолчанию для всех героев без собственных настроек"/>
+        <string id="EbiOnDefault" text="Значения по умолчанию"/>
     </strings>
 </base>

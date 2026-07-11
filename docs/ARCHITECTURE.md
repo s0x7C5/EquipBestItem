@@ -67,6 +67,14 @@ the player chooses in `settings.json` (`searchMethod`):
   replaces the v2 per-slot "lock". In the stored profile the two states are
   distinct: `null` weights mean "never customized, use the slot/class
   defaults", an empty dictionary means "locked".
+- Defaults are **player-editable**: "Make default" in the weights popup
+  stores the slot's current filter beside the profiles, and every hero
+  without an override follows it instantly — the `null`-means-default
+  semantics make this free, no per-hero migration (which the legacy version
+  needed, materializing values for every character).
+- The value labels in the popup show each parameter's **signed share** of
+  the total weight (|w| / Σ|w|) rather than the raw number — the scorer
+  normalizes by that sum, so only shares affect the result.
 - `"effectiveness"` — the game's score. Weight windows still matter for the
   weapon-class pin. Weights explicitly spelled out by an AI directive
   (`HasExplicitWeights`) override this setting, because the player asked for

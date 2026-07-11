@@ -108,6 +108,7 @@ public sealed class SlotWeightsVM : ViewModel
     private int _cultureIndex;
     private float _maxItemWeight;
     private bool _isVisible;
+    private bool _isOnDefault;
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
 
@@ -124,6 +125,31 @@ public sealed class SlotWeightsVM : ViewModel
     [DataSourceProperty]
     public string LockButtonText { get; } =
         new TextObject("{=ebi_lock}Lock").ToString();
+
+    [DataSourceProperty]
+    public string MakeDefaultButtonText { get; } =
+        new TextObject("{=EbiMakeDefault}Make default").ToString();
+
+    [DataSourceProperty]
+    public string OnDefaultText { get; } =
+        new TextObject("{=EbiOnDefault}Default values").ToString();
+
+    /// <summary>True while the hero follows the defaults for this slot (no override of their own).</summary>
+    [DataSourceProperty]
+    public bool IsOnDefault
+    {
+        get => _isOnDefault;
+        set
+        {
+            if (value == _isOnDefault) return;
+            _isOnDefault = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
+    [DataSourceProperty]
+    public HintViewModel MakeDefaultButtonHint { get; } = new(new TextObject(
+        "{=EbiHintMakeDefault}Save this slot's filter as the default for every hero without their own settings"));
 
     [DataSourceProperty]
     public HintViewModel DefaultButtonHint { get; } =
@@ -227,7 +253,15 @@ public sealed class SlotWeightsVM : ViewModel
         OnPropertyChanged(nameof(CultureText));
         OnPropertyChanged(nameof(MaxItemWeight));
         OnPropertyChanged(nameof(MaxItemWeightText));
+        RefreshDefaultMarker();
         IsVisible = true;
+    }
+
+    private void RefreshDefaultMarker()
+    {
+        if (_character is null || _equipment is null) return;
+
+        IsOnDefault = !_profiles.HasOverride(_character, _equipment, _slot);
     }
 
     public void ExecuteClose()
@@ -245,6 +279,15 @@ public sealed class SlotWeightsVM : ViewModel
         _onChanged();
     }
 
+    public void ExecuteMakeDefault()
+    {
+        if (_character is null || _equipment is null) return;
+
+        _profiles.SaveAsDefault(_character, _equipment, _slot);
+        Open(_character, _equipment, _slot);
+        _onChanged();
+    }
+
     /// <summary>Zeroes every weight: an all-zero slot is excluded from searching.</summary>
     public void ExecuteLock()
     {
@@ -252,6 +295,7 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
         RebuildRows();
+        RefreshDefaultMarker();
         _onChanged();
     }
 
@@ -276,6 +320,7 @@ public sealed class SlotWeightsVM : ViewModel
         if (_character is null || _equipment is null) return;
 
         _profiles.SetConstraints(_character, _equipment, _slot, CultureChoices[_cultureIndex], _maxItemWeight);
+        RefreshDefaultMarker();
 
         // Live preview, same as the weight sliders.
         _onChanged();
@@ -290,6 +335,7 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.SetWeaponClass(_character, _equipment, _slot, WeaponClassChoices[_weaponClassIndex]);
         OnPropertyChanged(nameof(WeaponClassText));
+        RefreshDefaultMarker();
 
         // Each weapon class exposes its own parameter set.
         RebuildRows();
@@ -306,6 +352,23 @@ public sealed class SlotWeightsVM : ViewModel
         foreach (var param in GetVisibleParams())
             rows.Add(new ParamRowVM(param, GetParamName(param), query.Weights[param], PersistWeights));
         Rows = rows;
+
+        UpdateShares();
+    }
+
+    /// <summary>
+    ///     Influence share of each visible weight: value / Σ|values|. The
+    ///     scorer computes Σ(w·v) / Σ|w|, so this is exactly the fraction of
+    ///     the search's attention the parameter gets; the sign shows the
+    ///     direction. Absolute shares always add up to 100% and nothing
+    ///     explodes when positive and negative weights cancel out (dividing
+    ///     by the signed sum does: -1, -0.95, +1, +1 gave ±2000%).
+    /// </summary>
+    private void UpdateShares()
+    {
+        var absSum = 0f;
+        foreach (var row in _rows) absSum += Math.Abs(row.Value);
+        foreach (var row in _rows) row.UpdateShare(absSum);
     }
 
     /// <summary>
@@ -322,6 +385,8 @@ public sealed class SlotWeightsVM : ViewModel
             weights[row.Param] = row.Value;
 
         _profiles.SetWeights(_character, _equipment, _slot, weights);
+        UpdateShares();
+        RefreshDefaultMarker();
 
         // Live preview: the slot buttons re-search as the sliders move.
         _onChanged();

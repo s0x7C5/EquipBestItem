@@ -1,6 +1,10 @@
+using System.Threading.Tasks;
+using Bannerlord.EquipBestItem.Ai;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace Bannerlord.EquipBestItem.Settings;
 
@@ -39,6 +43,26 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
             S.SlotButtonColor = "#FFFFFF";
             Persist();
             OnPropertyChanged(nameof(SlotButtonColor));
+        };
+
+        TestConnection = () =>
+        {
+            if (!_isLive) return;
+
+            var settings = S.Ai;
+            Task.Run(async () =>
+            {
+                var verdict = await BackendConnectionTest.TestAsync(settings).ConfigureAwait(false);
+                MainThread.Post(() =>
+                {
+                    // The test may have filled in the model; save and refresh the textbox.
+                    Persist();
+                    OnPropertyChanged(nameof(AiModel));
+                    InformationManager.ShowInquiry(new InquiryData(
+                        DisplayName, verdict, true, false,
+                        GameTexts.FindText("str_ok").ToString(), "", null, null));
+                });
+            });
         };
     }
 
@@ -100,7 +124,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     }
 
     [SettingPropertyBool("{=EbiMcmAnthropic}Use the Anthropic API", Order = 0, RequireRestart = false,
-        HintText = "{=EbiMcmAnthropicHint}On: Anthropic Messages API. Off: any OpenAI-compatible endpoint (local backends are auto-detected when the endpoint is empty).")]
+        HintText = "{=EbiMcmAnthropicHint}On: Anthropic Messages API. Off: any OpenAI-compatible endpoint (LM Studio, Ollama, OpenRouter, ...).")]
     [SettingPropertyGroup("{=EbiMcmGroupAi}AI assistant", GroupOrder = 1)]
     public bool AiUseAnthropic
     {
@@ -109,7 +133,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     }
 
     [SettingPropertyText("{=EbiMcmEndpoint}Endpoint", Order = 1, RequireRestart = false,
-        HintText = "{=EbiMcmEndpointHint}Chat completions URL. Empty = auto-detect a local backend (Ollama / LM Studio / Player2) at game start.")]
+        HintText = "{=EbiMcmEndpointHint}Chat completions URL, e.g. http://localhost:1234/v1/chat/completions (a bare server address also works).")]
     [SettingPropertyGroup("{=EbiMcmGroupAi}AI assistant", GroupOrder = 1)]
     public string AiEndpoint
     {
@@ -144,7 +168,13 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
         set { S.Ai.TimeoutSeconds = value; Persist(); }
     }
 
-    [SettingPropertyBool("{=EbiMcmJsonFormat}Request JSON response format", Order = 5, RequireRestart = false,
+    [SettingPropertyButton("{=EbiMcmTest}Connection test", Content = "{=EbiMcmTestButton}Run",
+        Order = 5, RequireRestart = false,
+        HintText = "{=EbiMcmTestHint}Requests the server's model list to verify the endpoint (and API key, if set). Fills the model field in when it is empty.")]
+    [SettingPropertyGroup("{=EbiMcmGroupAi}AI assistant", GroupOrder = 1)]
+    public System.Action TestConnection { get; set; }
+
+    [SettingPropertyBool("{=EbiMcmJsonFormat}Request JSON response format", Order = 6, RequireRestart = false,
         HintText = "{=EbiMcmJsonFormatHint}Ask OpenAI-compatible backends for guaranteed JSON. Backends that reject it are detected and worked around automatically.")]
     [SettingPropertyGroup("{=EbiMcmGroupAi}AI assistant", GroupOrder = 1)]
     public bool AiUseJsonResponseFormat

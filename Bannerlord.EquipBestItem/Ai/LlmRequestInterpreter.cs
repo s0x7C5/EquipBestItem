@@ -42,16 +42,14 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         string request, InterpretationContext context, CancellationToken cancellationToken)
     {
         var apiKey = _settings.ResolveApiKey();
-        var isAnthropic =
-            string.Equals(_settings.Provider, "anthropic", StringComparison.OrdinalIgnoreCase) &&
-            !_settings.UsesAutoDetectedBackend;
+        var isAnthropic = string.Equals(_settings.Provider, "anthropic", StringComparison.OrdinalIgnoreCase);
 
-        // Local backends (explicit or auto-detected) work without a key.
-        var isKeyless = _settings.UsesAutoDetectedBackend || _settings.IsLocalEndpoint;
-        if (apiKey.Length == 0 && !isKeyless)
+        // Explicit endpoints (local or LAN) work without a key; servers that
+        // require one reject the request themselves with a clear error.
+        if (apiKey.Length == 0 && _settings.Endpoint.Length == 0)
             throw new InvalidOperationException(
-                $"No AI API key. Set the {_settings.ApiKeyEnvironmentVariable} environment variable, " +
-                "the ai.apiKey value in settings.json, or run a local backend (Ollama / LM Studio / Player2).");
+                "No AI backend configured. Set the endpoint (e.g. http://localhost:1234 for a local " +
+                $"server) in MCM or settings.json, or provide an API key via {_settings.ApiKeyEnvironmentVariable}.");
 
         var systemPrompt = BuildSystemPrompt(context);
 
@@ -157,19 +155,8 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         string request, string systemPrompt, string apiKey,
         bool includeResponseFormat, bool mergeSystemIntoUser = false)
     {
-        string endpoint;
-        string model;
-
-        if (_settings.UsesAutoDetectedBackend)
-        {
-            endpoint = _settings.AutoDetectedEndpoint!;
-            model = _settings.AutoDetectedModel!;
-        }
-        else
-        {
-            endpoint = _settings.Endpoint.Length > 0 ? NormalizeEndpoint(_settings.Endpoint) : OpenAiDefaultEndpoint;
-            model = _settings.Model.Length > 0 ? _settings.Model : OpenAiDefaultModel;
-        }
+        var endpoint = _settings.Endpoint.Length > 0 ? NormalizeEndpoint(_settings.Endpoint) : OpenAiDefaultEndpoint;
+        var model = _settings.Model.Length > 0 ? _settings.Model : OpenAiDefaultModel;
 
         var messages = mergeSystemIntoUser
             ? new JArray(new JObject

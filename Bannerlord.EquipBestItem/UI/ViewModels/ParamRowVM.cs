@@ -33,11 +33,27 @@ public sealed class ParamRowVM : ViewModel
 
             _value = value;
             OnPropertyChangedWithValue(value);
-            OnPropertyChanged(nameof(ValueText));
             _onValueChanged();
         }
     }
 
+    /// <summary>
+    ///     The parameter's signed share of the total scoring weight — only
+    ///     shares matter to the scorer, not absolute values. Recomputed by
+    ///     the popup whenever any slider moves.
+    /// </summary>
     [DataSourceProperty]
-    public string ValueText => _value.ToString("0.00");
+    public string ValueText => _shareText;
+
+    private string _shareText = "0%";
+
+    internal void UpdateShare(float denominator)
+    {
+        var share = denominator > 0f ? (int)Math.Round(_value / denominator * 100f) : 0;
+        var text = share + "%";
+        if (text == _shareText) return;
+
+        _shareText = text;
+        OnPropertyChanged(nameof(ValueText));
+    }
 }

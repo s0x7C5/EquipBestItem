@@ -34,9 +34,9 @@
         <string id="EbiMcmRightPanelHint" text="Kendi envanterinde ara. Sağ levhadaki kilitle de açılıp kapanır."/>
         <string id="EbiMcmGroupAi" text="Yapay zekâ yardımcısı"/>
         <string id="EbiMcmAnthropic" text="Anthropic API'sini kullan"/>
-        <string id="EbiMcmAnthropicHint" text="Açık: Anthropic Messages API. Kapalı: OpenAI uyumlu herhangi bir uç nokta (uç nokta boşken yerel arka uçlar otomatik algılanır)."/>
+        <string id="EbiMcmAnthropicHint" text="Açık: Anthropic Messages API. Kapalı: OpenAI uyumlu herhangi bir uç nokta (LM Studio, Ollama, OpenRouter, ...)."/>
         <string id="EbiMcmEndpoint" text="Uç nokta"/>
-        <string id="EbiMcmEndpointHint" text="Chat completions URL'si. Boş = oyun başlarken yerel bir arka ucu (Ollama / LM Studio / Player2) otomatik algıla."/>
+        <string id="EbiMcmEndpointHint" text="Chat completions URL'si, örn. http://localhost:1234/v1/chat/completions (yalnızca sunucu adresi de olur)."/>
         <string id="EbiMcmModel" text="Model"/>
         <string id="EbiMcmModelHint" text="Model kimliği. Boş = algılanan arka ucun ilk modeli veya sağlayıcının varsayılanı."/>
         <string id="EbiMcmApiKey" text="API anahtarı"/>
@@ -45,5 +45,15 @@
         <string id="EbiMcmTimeoutHint" text="Modelin yanıtının ne kadar bekleneceği. Yavaş yerel modeller varsayılan 30'dan fazlasına ihtiyaç duyabilir."/>
         <string id="EbiMcmJsonFormat" text="JSON yanıt biçimi iste"/>
         <string id="EbiMcmJsonFormatHint" text="OpenAI uyumlu arka uçlardan garantili JSON iste. Bunu reddeden arka uçlar algılanıp otomatik olarak atlanır."/>
+        <string id="EbiMcmTest" text="Bağlantı testi"/>
+        <string id="EbiMcmTestButton" text="Sına"/>
+        <string id="EbiMcmTestHint" text="Uç noktayı (ve ayarlıysa API anahtarını) doğrulamak için sunucunun model listesini ister. Boş model alanını otomatik doldurur."/>
+        <string id="EbiAiNoEndpoint" text="Uç nokta boş. Sunucu adresini girin (örn. http://localhost:1234) ve testi yeniden çalıştırın."/>
+        <string id="EbiAiConnectionOk" text="Bağlantı tamam: {ENDPOINT} (model: {MODEL})."/>
+        <string id="EbiAiConnectionFail" text="Bağlantı başarısız: {ERROR}"/>
+        <string id="EbiAiAnthropicNote" text="Anthropic API'si yapılandırıldı; anahtar ilk istekte doğrulanır."/>
+        <string id="EbiMakeDefault" text="Varsayılan yap"/>
+        <string id="EbiHintMakeDefault" text="Bu yuvanın filtresini kendi ayarı olmayan tüm kahramanlar için varsayılan olarak kaydeder"/>
+        <string id="EbiOnDefault" text="Varsayılan değerler"/>
     </strings>
 </base>
