@@ -84,10 +84,19 @@ the player chooses in `settings.json` (`searchMethod`):
 
 `LlmRequestInterpreter` posts the player's text plus a compact system prompt to
 either the Anthropic Messages API or any OpenAI-compatible endpoint
-(configurable in `settings.json`, key comes from the `EBI_AI_API_KEY`
+(configurable in `settings.json` or MCM, key comes from the `EBI_AI_API_KEY`
 environment variable by default). The model must answer with a single JSON
 object; `LlmPlanParser` validates it, expands group slots (`AllArmor`,
 `AllWeapons`, `AllMount`, `All`) and clamps weights.
+
+The backend is always configured **explicitly** — there is no automatic
+discovery (an earlier startup probe proved unreliable). A bare server
+address gets the standard chat-completions path appended, and any explicit
+endpoint (local or LAN) works without a key: servers that need one reject
+the request themselves. `BackendConnectionTest`, wired to the MCM
+"connection test" button, verifies the endpoint by listing the server's
+models and fills the model setting in when it is empty (skipping embedding
+models).
 
 The prompt is tuned for small local models: temperature 0, few-shot examples
 (including deliberately tricky ones — contradictory requests, one/two-handed
