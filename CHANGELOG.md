@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1 — 2026-07-12
+
+- Fixed: the character model in the inventory now updates immediately when
+  the mod equips an item (single slot and equip-all alike).
+
 ## 3.0.0 — 2026-07-11
 
 Complete ground-up rework for Bannerlord v1.4.6.
