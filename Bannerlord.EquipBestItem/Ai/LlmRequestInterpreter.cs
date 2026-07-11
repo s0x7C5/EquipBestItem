@@ -223,6 +223,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("""
 {
   "explanation": "one short sentence describing what you set up, written in the same language as the player request",
+  "target": "<optional, whose gear the request is about: current (default) | others (every party hero except the main one) | all (every party hero) | an exact hero name from the party list>",
   "directives": [
     {
       "slot": "Head|Cape|Body|Gloves|Leg|Horse|HorseHarness|Weapon0|Weapon1|Weapon2|Weapon3|AllArmor|AllWeapons|AllMount|All",
@@ -249,6 +250,9 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
             "mount->MountArmor. Never use Weight to express protection.");
         builder.AppendLine(
+            "target: only set it when the player names other heroes (\"everyone\", \"everyone except me\", " +
+            "a companion's name); requests about \"me\" or with no one named mean current.");
+        builder.AppendLine(
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
             "weaponClass only makes sense for weapon slots. Match the grip exactly, whatever the request " +
             "language: one-handed -> OneHanded…, two-handed -> TwoHanded…, never swap them; " +
@@ -272,9 +276,13 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("""User: "find a helmet with the best leg protection" -> {"explanation":"Picking the best-protecting helmet (a helmet cannot protect legs).","directives":[{"slot":"Head","weights":{"HeadArmor":1.0}}]}""");
         builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
         builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");
+        builder.AppendLine("""User: "set every hero except me up with a large shield in the first weapon slot" -> {"explanation":"Large shields in the first weapon slot for every other hero.","target":"others","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield"}]}""");
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");
+
+        if (context.PartyHeroes.Count > 1)
+            builder.AppendLine($"Party heroes: {string.Join(", ", context.PartyHeroes)}.");
 
         if (context.NotableSkills.Count > 0)
             builder.AppendLine($"Notable skills: {string.Join(", ", context.NotableSkills)}.");

@@ -21,14 +21,20 @@ public sealed class EbiSlotVM : ViewModel
     private bool _isButtonDisabled = true;
     private bool _hasTooltipItem;
 
-    internal EbiSlotVM(EquipmentIndex slot, Action<EbiSlotVM> equip, Action<EquipmentIndex> openSettings)
+    internal EbiSlotVM(
+        EquipmentIndex slot, Action<EbiSlotVM> equip, Action<EquipmentIndex> openSettings, Color buttonColor)
     {
         Slot = slot;
         _equip = equip;
         _openSettings = openSettings;
+        ButtonColor = buttonColor;
     }
 
     internal EquipmentIndex Slot { get; }
+
+    /// <summary>Player-configured button tint (settings/MCM), read at screen construction.</summary>
+    [DataSourceProperty]
+    public Color ButtonColor { get; }
 
     internal SPItemVM? FoundItem => _foundItem;
 

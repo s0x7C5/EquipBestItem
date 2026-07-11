@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
@@ -94,10 +95,18 @@ public sealed class SlotWeightsVM : ViewModel
     private readonly ProfileService _profiles;
     private readonly Action _onChanged;
 
+    /// <summary>Selectable culture restrictions; null = any culture.</summary>
+    private static readonly string?[] CultureChoices =
+        { null, "empire", "sturgia", "aserai", "vlandia", "battania", "khuzait" };
+
+    private const float MaxItemWeightCap = 40f;
+
     private CharacterObject? _character;
     private Equipment? _equipment;
     private EquipmentIndex _slot;
     private int _weaponClassIndex;
+    private int _cultureIndex;
+    private float _maxItemWeight;
     private bool _isVisible;
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
@@ -148,6 +157,35 @@ public sealed class SlotWeightsVM : ViewModel
         }
     }
 
+    /// <summary>The selected culture restriction, or "any culture".</summary>
+    [DataSourceProperty]
+    public string CultureText => CultureChoices[_cultureIndex] is { } cultureId
+        ? GetCultureName(cultureId)
+        : new TextObject("{=EbiAnyCulture}Any culture").ToString();
+
+    [DataSourceProperty]
+    public string MaxWeightLabel { get; } =
+        new TextObject("{=EbiMaxItemWeight}Weight limit").ToString();
+
+    /// <summary>Skip items heavier than this, kg; 0 disables the cap.</summary>
+    [DataSourceProperty]
+    public float MaxItemWeight
+    {
+        get => _maxItemWeight;
+        set
+        {
+            if (Math.Abs(value - _maxItemWeight) < 0.05f) return;
+            _maxItemWeight = value;
+            OnPropertyChangedWithValue(value);
+            OnPropertyChanged(nameof(MaxItemWeightText));
+            PersistConstraints();
+        }
+    }
+
+    [DataSourceProperty]
+    public string MaxItemWeightText =>
+        _maxItemWeight > 0f ? _maxItemWeight.ToString("0.0", CultureInfo.InvariantCulture) : "—";
+
     [DataSourceProperty]
     public MBBindingList<ParamRowVM> Rows
     {
@@ -177,6 +215,8 @@ public sealed class SlotWeightsVM : ViewModel
 
         var query = _profiles.GetQuery(character, equipment, slot);
         _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponClassChoices, query.WeaponClass));
+        _cultureIndex = Math.Max(0, Array.IndexOf(CultureChoices, query.CultureId));
+        _maxItemWeight = query.MaxItemWeight;
 
         RebuildRows();
 
@@ -184,6 +224,9 @@ public sealed class SlotWeightsVM : ViewModel
 
         OnPropertyChanged(nameof(IsWeaponSlot));
         OnPropertyChanged(nameof(WeaponClassText));
+        OnPropertyChanged(nameof(CultureText));
+        OnPropertyChanged(nameof(MaxItemWeight));
+        OnPropertyChanged(nameof(MaxItemWeightText));
         IsVisible = true;
     }
 
@@ -215,6 +258,28 @@ public sealed class SlotWeightsVM : ViewModel
     public void ExecutePreviousWeaponClass() => CycleWeaponClass(-1);
 
     public void ExecuteNextWeaponClass() => CycleWeaponClass(1);
+
+    public void ExecutePreviousCulture() => CycleCulture(-1);
+
+    public void ExecuteNextCulture() => CycleCulture(1);
+
+    private void CycleCulture(int step)
+    {
+        var count = CultureChoices.Length;
+        _cultureIndex = (_cultureIndex + step + count) % count;
+        OnPropertyChanged(nameof(CultureText));
+        PersistConstraints();
+    }
+
+    private void PersistConstraints()
+    {
+        if (_character is null || _equipment is null) return;
+
+        _profiles.SetConstraints(_character, _equipment, _slot, CultureChoices[_cultureIndex], _maxItemWeight);
+
+        // Live preview, same as the weight sliders.
+        _onChanged();
+    }
 
     private void CycleWeaponClass(int step)
     {
@@ -313,6 +378,13 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.Weight => new TextObject("{=YvwQL9aa}Weight: "),
         _ => new TextObject(param.ToString())
     }).ToString().TrimEnd(':', ' ');
+
+    /// <summary>The game's localized culture name, or the raw id when unknown.</summary>
+    internal static string GetCultureName(string cultureId)
+    {
+        var culture = TaleWorlds.ObjectSystem.MBObjectManager.Instance?.GetObject<CultureObject>(cultureId);
+        return culture?.Name?.ToString() ?? cultureId;
+    }
 
     internal static string GetSlotName(EquipmentIndex slot)
     {

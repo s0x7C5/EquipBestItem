@@ -19,5 +19,31 @@
         <string id="EbiAiPromptHint" text="Describe the gear you want, in your own words."/>
         <string id="EbiAiThinking" text="Interpreting request..."/>
         <string id="EbiAiTimeout" text="The AI did not respond in time."/>
+        <string id="EbiAnyCulture" text="Any culture"/>
+        <string id="EbiMaxItemWeight" text="Weight limit"/>
+        <string id="EbiAiTargetNotFound" text="Could not find that hero in the party."/>
+        <string id="EbiMcmGroupGeneral" text="General"/>
+        <string id="EbiMcmEffectiveness" text="Use game Effectiveness score"/>
+        <string id="EbiMcmEffectivenessHint" text="Score items with the game's built-in aggregate instead of the per-slot parameter weights. Weights explicitly requested from the AI still win."/>
+        <string id="EbiMcmButtonColor" text="Slot button color"/>
+        <string id="EbiMcmButtonColorHint" text="Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened."/>
+        <string id="EbiMcmButtonColorReset" text="Reset button color"/>
+        <string id="EbiMcmLeftPanel" text="Search the left panel"/>
+        <string id="EbiMcmLeftPanelHint" text="Search the merchant/loot side too; equipping a found item buys it. Also toggled by the lock on the left plaque in the inventory."/>
+        <string id="EbiMcmRightPanel" text="Search the inventory panel"/>
+        <string id="EbiMcmRightPanelHint" text="Search your own inventory. Also toggled by the lock on the right plaque."/>
+        <string id="EbiMcmGroupAi" text="AI assistant"/>
+        <string id="EbiMcmAnthropic" text="Use the Anthropic API"/>
+        <string id="EbiMcmAnthropicHint" text="On: Anthropic Messages API. Off: any OpenAI-compatible endpoint (local backends are auto-detected when the endpoint is empty)."/>
+        <string id="EbiMcmEndpoint" text="Endpoint"/>
+        <string id="EbiMcmEndpointHint" text="Chat completions URL. Empty = auto-detect a local backend (Ollama / LM Studio / Player2) at game start."/>
+        <string id="EbiMcmModel" text="Model"/>
+        <string id="EbiMcmModelHint" text="Model id. Empty = the auto-detected backend's first model, or the provider default."/>
+        <string id="EbiMcmApiKey" text="API key"/>
+        <string id="EbiMcmApiKeyHint" text="Cloud providers only; local backends need none. The EBI_AI_API_KEY environment variable is used when this is empty."/>
+        <string id="EbiMcmTimeout" text="Timeout, seconds"/>
+        <string id="EbiMcmTimeoutHint" text="How long to wait for the model. Slow local models may need more than the default 30."/>
+        <string id="EbiMcmJsonFormat" text="Request JSON response format"/>
+        <string id="EbiMcmJsonFormatHint" text="Ask OpenAI-compatible backends for guaranteed JSON. Backends that reject it are detected and worked around automatically."/>
     </strings>
 </base>

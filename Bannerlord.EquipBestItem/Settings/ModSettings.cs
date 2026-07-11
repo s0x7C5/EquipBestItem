@@ -22,6 +22,12 @@ public sealed class ModSettings
     /// <summary>Search candidates in the player inventory panel.</summary>
     public bool SearchRightPanel { get; set; } = true;
 
+    /// <summary>
+    ///     Tint of the per-slot equip buttons, "#RRGGBB" or "#RRGGBBAA".
+    ///     White keeps the sprite's own color.
+    /// </summary>
+    public string SlotButtonColor { get; set; } = "#FFFFFF";
+
     public AiSettings Ai { get; set; } = new();
 
     public bool UseEffectiveness =>

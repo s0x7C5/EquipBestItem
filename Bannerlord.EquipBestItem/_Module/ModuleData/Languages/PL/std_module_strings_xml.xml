@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="Polski"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="Nie znaleziono lepszego przedmiotu."/>
+        <string id="EbiEquippedCount" text="Założono przedmioty: {COUNT}."/>
+        <string id="EbiClassAsEquipped" text="Jak założone"/>
+        <string id="ebi_default" text="Domyślne"/>
+        <string id="ebi_lock" text="Zablokuj"/>
+        <string id="ebi_hint_default" text="Przywróć wartości domyślne"/>
+        <string id="ebi_hint_lock" text="Wyłącz wyszukiwanie dla tego slotu"/>
+        <string id="EbiHintEquipCurrent" text="Wyposaż obecną postać w najlepsze przedmioty"/>
+        <string id="EbiHintEquipAll" text="Wyposaż wszystkich bohaterów drużyny w najlepsze przedmioty"/>
+        <string id="EbiHintLeftLock" text="Szukaj w lewym panelu (kupiec, łup). Wyposażenie kupuje przedmiot."/>
+        <string id="EbiHintRightLock" text="Szukaj w swoim ekwipunku"/>
+        <string id="EbiAiInterpret" text="Zapytaj AI"/>
+        <string id="EbiAiPromptHint" text="Opisz własnymi słowami, jakiego wyposażenia chcesz."/>
+        <string id="EbiAiThinking" text="Przetwarzanie żądania..."/>
+        <string id="EbiAiTimeout" text="AI nie odpowiedziało na czas."/>
+        <string id="EbiAnyCulture" text="Dowolna kultura"/>
+        <string id="EbiMaxItemWeight" text="Limit wagi"/>
+        <string id="EbiAiTargetNotFound" text="Nie znaleziono takiego bohatera w drużynie."/>
+        <string id="EbiMcmGroupGeneral" text="Ogólne"/>
+        <string id="EbiMcmEffectiveness" text="Użyj oceny Skuteczności z gry"/>
+        <string id="EbiMcmEffectivenessHint" text="Oceniaj przedmioty wbudowaną zbiorczą oceną gry zamiast wag parametrów dla slotów. Wagi wyraźnie zażądane od AI nadal mają pierwszeństwo."/>
+        <string id="EbiMcmButtonColor" text="Kolor przycisków slotów"/>
+        <string id="EbiMcmButtonColorHint" text="Odcień przycisków wyposażania dla slotów, #RRGGBB lub #RRGGBBAA. #FFFFFF zachowuje oryginalny wygląd. Stosowane po ponownym otwarciu ekwipunku."/>
+        <string id="EbiMcmButtonColorReset" text="Przywróć kolor przycisków"/>
+        <string id="EbiMcmLeftPanel" text="Szukaj w lewym panelu"/>
+        <string id="EbiMcmLeftPanelHint" text="Szukaj także po stronie kupca/łupu; wyposażenie znalezionego przedmiotu kupuje go. Przełączane także kłódką na lewej tablicy."/>
+        <string id="EbiMcmRightPanel" text="Szukaj w ekwipunku"/>
+        <string id="EbiMcmRightPanelHint" text="Szukaj we własnym ekwipunku. Przełączane także kłódką na prawej tablicy."/>
+        <string id="EbiMcmGroupAi" text="Asystent AI"/>
+        <string id="EbiMcmAnthropic" text="Użyj API Anthropic"/>
+        <string id="EbiMcmAnthropicHint" text="Wł.: Anthropic Messages API. Wył.: dowolny punkt końcowy zgodny z OpenAI (lokalne backendy są wykrywane automatycznie, gdy punkt końcowy jest pusty)."/>
+        <string id="EbiMcmEndpoint" text="Punkt końcowy"/>
+        <string id="EbiMcmEndpointHint" text="URL chat completions. Pusty = automatyczne wykrycie lokalnego backendu (Ollama / LM Studio / Player2) przy starcie gry."/>
+        <string id="EbiMcmModel" text="Model"/>
+        <string id="EbiMcmModelHint" text="Identyfikator modelu. Pusty = pierwszy model wykrytego backendu lub domyślny dostawcy."/>
+        <string id="EbiMcmApiKey" text="Klucz API"/>
+        <string id="EbiMcmApiKeyHint" text="Tylko dostawcy w chmurze; lokalne backendy go nie potrzebują. Gdy puste, używana jest zmienna środowiskowa EBI_AI_API_KEY."/>
+        <string id="EbiMcmTimeout" text="Limit czasu, sekundy"/>
+        <string id="EbiMcmTimeoutHint" text="Jak długo czekać na model. Wolne lokalne modele mogą potrzebować więcej niż domyślne 30."/>
+        <string id="EbiMcmJsonFormat" text="Żądaj formatu odpowiedzi JSON"/>
+        <string id="EbiMcmJsonFormatHint" text="Proś backendy zgodne z OpenAI o gwarantowany JSON. Backendy, które go odrzucają, są wykrywane i automatycznie omijane."/>
+    </strings>
+</base>

@@ -351,3 +351,5 @@ MigrationBackup/
 
 **/.idea/workspace.xml **/.idea/tasks.xml
 .idea/
+# Release archives built for GitHub/Workshop uploads
+/*.zip

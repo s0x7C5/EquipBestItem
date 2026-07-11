@@ -104,9 +104,17 @@ the session, so every later request is a single HTTP call:
 
 **Applying a plan edits the slot filters.** The interpreted directives are
 written into the per-slot profiles — the very filters the manual sliders
-edit — and the previews are recomputed; the status line reports each slot's
-new weights. The AI never equips items directly, so the player always sees
+edit (weights, weapon class, and the culture/max-weight hard constraints) —
+and the previews are recomputed; the status line reports each slot's new
+settings. The AI never equips items directly, so the player always sees
 (and can tweak) what a request produced before committing to it.
+
+**Plans can target other heroes.** The optional plan-level `target` field
+("current", "others" = everyone but the main hero, "all", or an exact hero
+name from the party list included in the prompt) makes the same directives
+apply to several heroes' profiles at once; non-current heroes get their
+battle set edited. Since profiles are per-hero anyway, the existing
+"equip all heroes" batch then dresses the whole party by those filters.
 
 Threading contract: interpretation runs on a background task and only writes
 view-model text properties; **game state is mutated exclusively on the main
@@ -136,7 +144,9 @@ parameterized prefabs:
   the async complexity and its UI races are gone.
 - `GUI/Prefabs/EbiWeightsPopup.xml` renders the weight sliders with a single
   `<ItemTemplate>` bound to `MBBindingList<ParamRowVM>` — rows come from data,
-  not from code.
+  not from code. The popup also edits the slot's hard constraints: a culture
+  selector (the six major cultures or "any") and a max-item-weight slider
+  (0 = off) — the same fields the AI writes.
 - `GUI/Prefabs/EbiInventoryPanel.xml` places two toolbox plaques at the top
   of the center panel (legacy placement), built exactly like the game's
   `InventoryEquippedItemControls`: a fixed 146×69 background holding 35×35
@@ -156,12 +166,22 @@ file to insert — they contain no markup.
 
 ## Dependencies
 
-`Bannerlord.UIExtenderEx` and `Lib.Harmony` are consumed as **libraries** and
-shipped inside the module's `bin` folder (declared in `SubModule.xml`
-`<Assemblies>`), so players install no extra mods. ButterLib and MCM were
-dropped: settings live in
+The module depends on the standalone `Bannerlord.Harmony` and
+`Bannerlord.UIExtenderEx` mods (declared in `SubModule.xml`
+`<DependedModules>` with `LoadBeforeThis` ordering); players install them
+separately, as with most UI mods. The NuGet packages are compile-only
+references (`IncludeAssets="compile"`), so no third-party DLL ships in the
+module's `bin`.
+
+Settings live in
 `Documents/Mount and Blade II Bannerlord/Configs/EquipBestItem/settings.json`,
-profiles in `profiles.json` next to it.
+profiles in `profiles.json` next to it. MCM is an **optional** dependency
+(`Bannerlord.MBOptionScreen`, `Optional="true"`): when the module is present,
+`McmSettings` — a facade whose plain-typed properties delegate straight to
+`ModSettings` and re-save the JSON — is registered from
+`OnBeforeInitialModuleScreenSetAsRoot`, guarded by a loaded-modules check and
+a non-inlined method so the MCM types are never touched without the module.
+settings.json stays the single source of truth either way.
 
 ## Bulk equip
 
@@ -177,8 +197,5 @@ still be the best option for the last one.
 
 - The banner slot (`Equipment_4`) is not searchable (banners have no scorable
   stats); its buttons report "no better item".
-- AI directives can carry `culture` and `maxItemWeight` constraints, but the
-  slot profiles have no fields for them yet, so they are not written into the
-  filters (weights and the weapon class are).
 - The first AI request of a session may take up to three HTTP calls while
   backend quirks are being detected; later requests are a single call.

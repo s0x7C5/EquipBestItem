@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="Deutsch"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="Kein besserer Gegenstand gefunden."/>
+        <string id="EbiEquippedCount" text="{COUNT} Gegenstand/Gegenstände ausgerüstet."/>
+        <string id="EbiClassAsEquipped" text="Wie ausgerüstet"/>
+        <string id="ebi_default" text="Standard"/>
+        <string id="ebi_lock" text="Sperren"/>
+        <string id="ebi_hint_default" text="Auf Standardwerte zurücksetzen"/>
+        <string id="ebi_hint_lock" text="Suche für diesen Slot deaktivieren"/>
+        <string id="EbiHintEquipCurrent" text="Aktuellen Charakter mit den besten Gegenständen ausrüsten"/>
+        <string id="EbiHintEquipAll" text="Alle Helden der Gruppe mit den besten Gegenständen ausrüsten"/>
+        <string id="EbiHintLeftLock" text="Im linken Fenster suchen (Händler, Beute). Ausrüsten kauft den Gegenstand."/>
+        <string id="EbiHintRightLock" text="Im eigenen Inventar suchen"/>
+        <string id="EbiAiInterpret" text="KI fragen"/>
+        <string id="EbiAiPromptHint" text="Beschreibe mit eigenen Worten, welche Ausrüstung du möchtest."/>
+        <string id="EbiAiThinking" text="Anfrage wird verarbeitet ..."/>
+        <string id="EbiAiTimeout" text="Die KI hat nicht rechtzeitig geantwortet."/>
+        <string id="EbiAnyCulture" text="Beliebige Kultur"/>
+        <string id="EbiMaxItemWeight" text="Gewichtslimit"/>
+        <string id="EbiAiTargetNotFound" text="Dieser Held wurde in der Gruppe nicht gefunden."/>
+        <string id="EbiMcmGroupGeneral" text="Allgemein"/>
+        <string id="EbiMcmEffectiveness" text="Effektivitätswert des Spiels verwenden"/>
+        <string id="EbiMcmEffectivenessHint" text="Gegenstände mit dem spieleigenen Gesamtwert bewerten statt mit den Parametergewichten pro Slot. Von der KI ausdrücklich angeforderte Gewichte haben weiterhin Vorrang."/>
+        <string id="EbiMcmButtonColor" text="Farbe der Slot-Schaltflächen"/>
+        <string id="EbiMcmButtonColorHint" text="Färbung der Ausrüsten-Schaltflächen pro Slot, #RRGGBB oder #RRGGBBAA. #FFFFFF behält das Originalaussehen. Wird beim erneuten Öffnen des Inventars angewendet."/>
+        <string id="EbiMcmButtonColorReset" text="Schaltflächenfarbe zurücksetzen"/>
+        <string id="EbiMcmLeftPanel" text="Im linken Fenster suchen"/>
+        <string id="EbiMcmLeftPanelHint" text="Auch die Händler-/Beuteseite durchsuchen; das Ausrüsten eines gefundenen Gegenstands kauft ihn. Auch über das Schloss an der linken Tafel umschaltbar."/>
+        <string id="EbiMcmRightPanel" text="Im Inventar suchen"/>
+        <string id="EbiMcmRightPanelHint" text="Im eigenen Inventar suchen. Auch über das Schloss an der rechten Tafel umschaltbar."/>
+        <string id="EbiMcmGroupAi" text="KI-Assistent"/>
+        <string id="EbiMcmAnthropic" text="Anthropic-API verwenden"/>
+        <string id="EbiMcmAnthropicHint" text="An: Anthropic Messages API. Aus: beliebiger OpenAI-kompatibler Endpunkt (lokale Backends werden bei leerem Endpunkt automatisch erkannt)."/>
+        <string id="EbiMcmEndpoint" text="Endpunkt"/>
+        <string id="EbiMcmEndpointHint" text="Chat-Completions-URL. Leer = lokales Backend (Ollama / LM Studio / Player2) beim Spielstart automatisch erkennen."/>
+        <string id="EbiMcmModel" text="Modell"/>
+        <string id="EbiMcmModelHint" text="Modell-ID. Leer = erstes Modell des erkannten Backends oder Standard des Anbieters."/>
+        <string id="EbiMcmApiKey" text="API-Schlüssel"/>
+        <string id="EbiMcmApiKeyHint" text="Nur für Cloud-Anbieter; lokale Backends benötigen keinen. Bei leerem Feld wird die Umgebungsvariable EBI_AI_API_KEY verwendet."/>
+        <string id="EbiMcmTimeout" text="Zeitlimit, Sekunden"/>
+        <string id="EbiMcmTimeoutHint" text="Wie lange auf das Modell gewartet wird. Langsame lokale Modelle brauchen evtl. mehr als die standardmäßigen 30."/>
+        <string id="EbiMcmJsonFormat" text="JSON-Antwortformat anfordern"/>
+        <string id="EbiMcmJsonFormatHint" text="OpenAI-kompatible Backends um garantiertes JSON bitten. Backends, die dies ablehnen, werden erkannt und automatisch umgangen."/>
+    </strings>
+</base>

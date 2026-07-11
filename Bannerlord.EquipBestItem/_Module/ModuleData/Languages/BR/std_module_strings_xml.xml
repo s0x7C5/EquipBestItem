@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="Português (BR)"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="Nenhum item melhor encontrado."/>
+        <string id="EbiEquippedCount" text="{COUNT} item(ns) equipado(s)."/>
+        <string id="EbiClassAsEquipped" text="Como equipado"/>
+        <string id="ebi_default" text="Padrão"/>
+        <string id="ebi_lock" text="Bloquear"/>
+        <string id="ebi_hint_default" text="Redefinir para os valores padrão"/>
+        <string id="ebi_hint_lock" text="Desativar a busca para este espaço"/>
+        <string id="EbiHintEquipCurrent" text="Equipar o personagem atual com os melhores itens"/>
+        <string id="EbiHintEquipAll" text="Equipar todos os heróis do grupo com os melhores itens"/>
+        <string id="EbiHintLeftLock" text="Buscar no painel esquerdo (mercador, saque). Equipar compra o item."/>
+        <string id="EbiHintRightLock" text="Buscar no seu inventário"/>
+        <string id="EbiAiInterpret" text="Perguntar à IA"/>
+        <string id="EbiAiPromptHint" text="Descreva com suas próprias palavras o equipamento que deseja."/>
+        <string id="EbiAiThinking" text="Interpretando a solicitação..."/>
+        <string id="EbiAiTimeout" text="A IA não respondeu a tempo."/>
+        <string id="EbiAnyCulture" text="Qualquer cultura"/>
+        <string id="EbiMaxItemWeight" text="Limite de peso"/>
+        <string id="EbiAiTargetNotFound" text="Esse herói não foi encontrado no grupo."/>
+        <string id="EbiMcmGroupGeneral" text="Geral"/>
+        <string id="EbiMcmEffectiveness" text="Usar a pontuação de Eficácia do jogo"/>
+        <string id="EbiMcmEffectivenessHint" text="Pontuar os itens com o valor agregado do próprio jogo em vez dos pesos de parâmetros por espaço. Pesos solicitados explicitamente à IA ainda têm prioridade."/>
+        <string id="EbiMcmButtonColor" text="Cor dos botões de espaço"/>
+        <string id="EbiMcmButtonColorHint" text="Tonalidade dos botões de equipar por espaço, #RRGGBB ou #RRGGBBAA. #FFFFFF mantém a aparência original. Aplicado ao reabrir o inventário."/>
+        <string id="EbiMcmButtonColorReset" text="Redefinir a cor dos botões"/>
+        <string id="EbiMcmLeftPanel" text="Buscar no painel esquerdo"/>
+        <string id="EbiMcmLeftPanelHint" text="Buscar também no lado do mercador/saque; equipar um item encontrado o compra. Também alternado pelo cadeado na placa esquerda."/>
+        <string id="EbiMcmRightPanel" text="Buscar no inventário"/>
+        <string id="EbiMcmRightPanelHint" text="Buscar no seu próprio inventário. Também alternado pelo cadeado na placa direita."/>
+        <string id="EbiMcmGroupAi" text="Assistente de IA"/>
+        <string id="EbiMcmAnthropic" text="Usar a API da Anthropic"/>
+        <string id="EbiMcmAnthropicHint" text="Ligado: API de mensagens da Anthropic. Desligado: qualquer endpoint compatível com OpenAI (backends locais são detectados automaticamente quando o endpoint está vazio)."/>
+        <string id="EbiMcmEndpoint" text="Endpoint"/>
+        <string id="EbiMcmEndpointHint" text="URL de chat completions. Vazio = detectar automaticamente um backend local (Ollama / LM Studio / Player2) ao iniciar o jogo."/>
+        <string id="EbiMcmModel" text="Modelo"/>
+        <string id="EbiMcmModelHint" text="ID do modelo. Vazio = primeiro modelo do backend detectado, ou o padrão do provedor."/>
+        <string id="EbiMcmApiKey" text="Chave de API"/>
+        <string id="EbiMcmApiKeyHint" text="Apenas provedores na nuvem; backends locais não precisam. Se vazio, é usada a variável de ambiente EBI_AI_API_KEY."/>
+        <string id="EbiMcmTimeout" text="Tempo limite, segundos"/>
+        <string id="EbiMcmTimeoutHint" text="Quanto tempo esperar pelo modelo. Modelos locais lentos podem precisar de mais que os 30 padrão."/>
+        <string id="EbiMcmJsonFormat" text="Solicitar formato de resposta JSON"/>
+        <string id="EbiMcmJsonFormatHint" text="Pedir aos backends compatíveis com OpenAI um JSON garantido. Backends que o rejeitam são detectados e contornados automaticamente."/>
+    </strings>
+</base>

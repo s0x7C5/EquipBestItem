@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="한국어"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="더 나은 아이템을 찾지 못했습니다."/>
+        <string id="EbiEquippedCount" text="아이템 {COUNT}개를 장착했습니다."/>
+        <string id="EbiClassAsEquipped" text="장착 중인 것과 동일"/>
+        <string id="ebi_default" text="기본값"/>
+        <string id="ebi_lock" text="잠금"/>
+        <string id="ebi_hint_default" text="기본값으로 초기화"/>
+        <string id="ebi_hint_lock" text="이 슬롯의 검색 비활성화"/>
+        <string id="EbiHintEquipCurrent" text="현재 캐릭터에게 최고의 아이템을 장착"/>
+        <string id="EbiHintEquipAll" text="부대의 모든 영웅에게 최고의 아이템을 장착"/>
+        <string id="EbiHintLeftLock" text="왼쪽 패널(상인, 전리품)에서 검색합니다. 장착하면 해당 아이템을 구매합니다."/>
+        <string id="EbiHintRightLock" text="내 인벤토리에서 검색"/>
+        <string id="EbiAiInterpret" text="AI에게 묻기"/>
+        <string id="EbiAiPromptHint" text="원하는 장비를 자신의 말로 설명하세요."/>
+        <string id="EbiAiThinking" text="요청을 해석하는 중..."/>
+        <string id="EbiAiTimeout" text="AI가 제때 응답하지 않았습니다."/>
+        <string id="EbiAnyCulture" text="모든 문화"/>
+        <string id="EbiMaxItemWeight" text="무게 제한"/>
+        <string id="EbiAiTargetNotFound" text="부대에서 해당 영웅을 찾을 수 없습니다."/>
+        <string id="EbiMcmGroupGeneral" text="일반"/>
+        <string id="EbiMcmEffectiveness" text="게임의 효율성 점수 사용"/>
+        <string id="EbiMcmEffectivenessHint" text="슬롯별 매개변수 가중치 대신 게임 내장 종합 점수로 아이템을 평가합니다. AI에 명시적으로 요청한 가중치는 여전히 우선합니다."/>
+        <string id="EbiMcmButtonColor" text="슬롯 버튼 색상"/>
+        <string id="EbiMcmButtonColorHint" text="슬롯별 장착 버튼의 색조, #RRGGBB 또는 #RRGGBBAA. #FFFFFF는 원래 모습을 유지합니다. 인벤토리를 다시 열면 적용됩니다."/>
+        <string id="EbiMcmButtonColorReset" text="버튼 색상 초기화"/>
+        <string id="EbiMcmLeftPanel" text="왼쪽 패널 검색"/>
+        <string id="EbiMcmLeftPanelHint" text="상인/전리품 쪽도 검색합니다. 찾은 아이템을 장착하면 구매합니다. 인벤토리의 왼쪽 명판 잠금으로도 전환됩니다."/>
+        <string id="EbiMcmRightPanel" text="인벤토리 검색"/>
+        <string id="EbiMcmRightPanelHint" text="자신의 인벤토리를 검색합니다. 오른쪽 명판 잠금으로도 전환됩니다."/>
+        <string id="EbiMcmGroupAi" text="AI 도우미"/>
+        <string id="EbiMcmAnthropic" text="Anthropic API 사용"/>
+        <string id="EbiMcmAnthropicHint" text="켜짐: Anthropic Messages API. 꺼짐: OpenAI 호환 엔드포인트 아무거나(엔드포인트가 비어 있으면 로컬 백엔드를 자동 감지)."/>
+        <string id="EbiMcmEndpoint" text="엔드포인트"/>
+        <string id="EbiMcmEndpointHint" text="chat completions URL. 비어 있음 = 게임 시작 시 로컬 백엔드(Ollama / LM Studio / Player2) 자동 감지."/>
+        <string id="EbiMcmModel" text="모델"/>
+        <string id="EbiMcmModelHint" text="모델 ID. 비어 있음 = 감지된 백엔드의 첫 번째 모델 또는 공급자 기본값."/>
+        <string id="EbiMcmApiKey" text="API 키"/>
+        <string id="EbiMcmApiKeyHint" text="클라우드 공급자에만 필요하며 로컬 백엔드에는 필요 없습니다. 비어 있으면 환경 변수 EBI_AI_API_KEY를 사용합니다."/>
+        <string id="EbiMcmTimeout" text="제한 시간(초)"/>
+        <string id="EbiMcmTimeoutHint" text="모델 응답을 기다리는 시간. 느린 로컬 모델은 기본 30초보다 더 필요할 수 있습니다."/>
+        <string id="EbiMcmJsonFormat" text="JSON 응답 형식 요청"/>
+        <string id="EbiMcmJsonFormatHint" text="OpenAI 호환 백엔드에 보장된 JSON을 요청합니다. 이를 거부하는 백엔드는 자동으로 감지되어 우회됩니다."/>
+    </strings>
+</base>

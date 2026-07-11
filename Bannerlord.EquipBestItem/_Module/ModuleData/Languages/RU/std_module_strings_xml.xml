@@ -19,5 +19,31 @@
         <string id="EbiAiPromptHint" text="Опишите своими словами, что хотите надеть."/>
         <string id="EbiAiThinking" text="Разбираю запрос..."/>
         <string id="EbiAiTimeout" text="ИИ не ответил вовремя."/>
+        <string id="EbiAnyCulture" text="Любая культура"/>
+        <string id="EbiMaxItemWeight" text="Лимит веса"/>
+        <string id="EbiAiTargetNotFound" text="Такой герой в отряде не найден."/>
+        <string id="EbiMcmGroupGeneral" text="Общие"/>
+        <string id="EbiMcmEffectiveness" text="Игровая оценка Effectiveness"/>
+        <string id="EbiMcmEffectivenessHint" text="Оценивать предметы встроенной игровой формулой вместо весов параметров по слотам. Веса, явно запрошенные у ИИ, всё равно приоритетнее."/>
+        <string id="EbiMcmButtonColor" text="Цвет кнопок на слотах"/>
+        <string id="EbiMcmButtonColorHint" text="Оттенок кнопок подбора на слотах, #RRGGBB или #RRGGBBAA. #FFFFFF — исходный вид. Применяется при следующем открытии инвентаря."/>
+        <string id="EbiMcmButtonColorReset" text="Сбросить цвет кнопок"/>
+        <string id="EbiMcmLeftPanel" text="Искать в левой панели"/>
+        <string id="EbiMcmLeftPanelHint" text="Искать и на стороне торговца/добычи; экипировка найденного купит предмет. Дублируется замком на левой плашке в инвентаре."/>
+        <string id="EbiMcmRightPanel" text="Искать в инвентаре"/>
+        <string id="EbiMcmRightPanelHint" text="Искать в собственном инвентаре. Дублируется замком на правой плашке."/>
+        <string id="EbiMcmGroupAi" text="ИИ-помощник"/>
+        <string id="EbiMcmAnthropic" text="Использовать Anthropic API"/>
+        <string id="EbiMcmAnthropicHint" text="Вкл: Anthropic Messages API. Выкл: любой OpenAI-совместимый эндпоинт (локальные бэкенды находятся автоматически при пустом эндпоинте)."/>
+        <string id="EbiMcmEndpoint" text="Эндпоинт"/>
+        <string id="EbiMcmEndpointHint" text="URL chat completions. Пусто = автопоиск локального бэкенда (Ollama / LM Studio / Player2) при запуске игры."/>
+        <string id="EbiMcmModel" text="Модель"/>
+        <string id="EbiMcmModelHint" text="Идентификатор модели. Пусто = первая модель найденного бэкенда или дефолт провайдера."/>
+        <string id="EbiMcmApiKey" text="Ключ API"/>
+        <string id="EbiMcmApiKeyHint" text="Только для облачных провайдеров; локальным не нужен. При пустом значении берётся переменная окружения EBI_AI_API_KEY."/>
+        <string id="EbiMcmTimeout" text="Таймаут, секунд"/>
+        <string id="EbiMcmTimeoutHint" text="Сколько ждать ответа модели. Медленным локальным моделям может не хватить стандартных 30."/>
+        <string id="EbiMcmJsonFormat" text="Запрашивать формат ответа JSON"/>
+        <string id="EbiMcmJsonFormatHint" text="Просить у OpenAI-совместимых бэкендов гарантированный JSON. Бэкенды, отвергающие его, определяются и обходятся автоматически."/>
     </strings>
 </base>

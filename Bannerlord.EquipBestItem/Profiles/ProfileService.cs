@@ -40,6 +40,8 @@ public sealed class ProfileService
 
         var query = new ItemQuery(weights);
         if (pinnedClass is { } pinned) query.WeaponClass = pinned;
+        if (!string.IsNullOrEmpty(profile.Culture)) query.CultureId = profile.Culture;
+        if (profile.MaxItemWeight is { } maxWeight and > 0f) query.MaxItemWeight = maxWeight;
         return query;
     }
 
@@ -51,6 +53,16 @@ public sealed class ProfileService
     public void SetWeaponClass(CharacterObject character, Equipment equipment, EquipmentIndex slot, WeaponClass? weaponClass)
     {
         GetOrCreateSlotProfile(character, equipment, slot).WeaponClass = weaponClass?.ToString();
+    }
+
+    /// <summary>Hard constraints; null clears the constraint.</summary>
+    public void SetConstraints(
+        CharacterObject character, Equipment equipment, EquipmentIndex slot,
+        string? cultureId, float? maxItemWeight)
+    {
+        var profile = GetOrCreateSlotProfile(character, equipment, slot);
+        profile.Culture = string.IsNullOrEmpty(cultureId) ? null : cultureId;
+        profile.MaxItemWeight = maxItemWeight is > 0f ? maxItemWeight : null;
     }
 
     public void ResetSlot(CharacterObject character, Equipment equipment, EquipmentIndex slot)

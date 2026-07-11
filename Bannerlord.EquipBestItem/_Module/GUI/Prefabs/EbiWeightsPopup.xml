@@ -31,6 +31,84 @@
                                                     SuggestedHeight="45" Brush="Popup.Button.Text"
                                                     Text="@HeaderText"/>
 
+                                        <!-- Culture restriction selector; "any culture" disables it -->
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                   SuggestedHeight="50" MarginTop="5"
+                                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                            <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="60"
+                                                              SuggestedHeight="43" VerticalAlignment="Center"
+                                                              Brush="SPOptions.Dropdown.Left.Button"
+                                                              Command.Click="ExecutePreviousCulture"/>
+                                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                                            SuggestedWidth="330" Brush="Popup.Button.Text"
+                                                            Text="@CultureText"/>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                              HeightSizePolicy="Fixed" SuggestedWidth="60"
+                                                              SuggestedHeight="43" VerticalAlignment="Center"
+                                                              Brush="SPOptions.Dropdown.Right.Button"
+                                                              Command.Click="ExecuteNextCulture"/>
+                                            </Children>
+                                        </ListPanel>
+
+                                        <!-- Max item weight cap; 0 = off -->
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                   SuggestedHeight="42" MarginTop="5"
+                                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                            <Children>
+                                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
+                                                            SuggestedWidth="185" Brush="Popup.Button.Text"
+                                                            Text="@MaxWeightLabel"/>
+                                                <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                              SuggestedWidth="138" SuggestedHeight="42"
+                                                              VerticalAlignment="Center" MarginLeft="10"
+                                                              DoNotUpdateHandleSize="true" Filler="Filler"
+                                                              Handle="SliderHandle" IsDiscrete="false"
+                                                              MinValueFloat="0" MaxValueFloat="40"
+                                                              ValueFloat="@MaxItemWeight">
+                                                    <Children>
+                                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                                SuggestedWidth="138" SuggestedHeight="38"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center" IsEnabled="false"
+                                                                Sprite="SPGeneral\SPOptions\standart_slider_canvas"/>
+                                                        <Widget Id="Filler" WidthSizePolicy="Fixed"
+                                                                HeightSizePolicy="Fixed" SuggestedWidth="345"
+                                                                SuggestedHeight="35" VerticalAlignment="Center"
+                                                                Sprite="SPGeneral\SPOptions\standart_slider_fill"
+                                                                ClipContents="true">
+                                                            <Children>
+                                                                <Widget WidthSizePolicy="Fixed"
+                                                                        HeightSizePolicy="Fixed"
+                                                                        SuggestedWidth="345"
+                                                                        SuggestedHeight="35"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Center"
+                                                                        Sprite="SPGeneral\SPOptions\standart_slider_fill"/>
+                                                            </Children>
+                                                        </Widget>
+                                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                                                SuggestedWidth="160" SuggestedHeight="65"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center" IsEnabled="false"
+                                                                Sprite="SPGeneral\SPOptions\standart_slider_frame"/>
+                                                        <ImageWidget Id="SliderHandle" DoNotAcceptEvents="true"
+                                                                     WidthSizePolicy="Fixed"
+                                                                     HeightSizePolicy="Fixed"
+                                                                     SuggestedWidth="14" SuggestedHeight="38"
+                                                                     HorizontalAlignment="Left"
+                                                                     VerticalAlignment="Center"
+                                                                     Brush="SPOptions.Slider.Handle"/>
+                                                    </Children>
+                                                </SliderWidget>
+                                                <TextWidget WidthSizePolicy="Fixed"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            SuggestedWidth="75" MarginLeft="10"
+                                                            Brush="Popup.Button.Text" Text="@MaxItemWeightText"/>
+                                            </Children>
+                                        </ListPanel>
+
                                         <!-- Weapon class pin (weapon slots only) -->
                                         <ListPanel IsVisible="@IsWeaponSlot" WidthSizePolicy="StretchToParent"
                                                    HeightSizePolicy="Fixed" SuggestedHeight="50" MarginTop="5"
@@ -119,7 +197,7 @@
 
                                         <!-- Actions: Default restores the built-in weights, Lock zeroes
                                              them all which excludes the slot from searching -->
-                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                    MarginTop="15" HorizontalAlignment="Center"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>

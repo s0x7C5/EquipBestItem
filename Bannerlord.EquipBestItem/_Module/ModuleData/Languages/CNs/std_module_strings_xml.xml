@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="简体中文"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="未找到更好的物品。"/>
+        <string id="EbiEquippedCount" text="已装备 {COUNT} 件物品。"/>
+        <string id="EbiClassAsEquipped" text="与当前装备相同"/>
+        <string id="ebi_default" text="默认"/>
+        <string id="ebi_lock" text="锁定"/>
+        <string id="ebi_hint_default" text="重置为默认值"/>
+        <string id="ebi_hint_lock" text="禁用该槽位的搜索"/>
+        <string id="EbiHintEquipCurrent" text="为当前角色装备最佳物品"/>
+        <string id="EbiHintEquipAll" text="为队伍中所有英雄装备最佳物品"/>
+        <string id="EbiHintLeftLock" text="在左侧面板（商人、战利品）中搜索。装备将购买该物品。"/>
+        <string id="EbiHintRightLock" text="在你的物品栏中搜索"/>
+        <string id="EbiAiInterpret" text="询问 AI"/>
+        <string id="EbiAiPromptHint" text="用你自己的话描述想要的装备。"/>
+        <string id="EbiAiThinking" text="正在解析请求……"/>
+        <string id="EbiAiTimeout" text="AI 未能及时回应。"/>
+        <string id="EbiAnyCulture" text="任意文化"/>
+        <string id="EbiMaxItemWeight" text="重量上限"/>
+        <string id="EbiAiTargetNotFound" text="队伍中未找到该英雄。"/>
+        <string id="EbiMcmGroupGeneral" text="常规"/>
+        <string id="EbiMcmEffectiveness" text="使用游戏的效能评分"/>
+        <string id="EbiMcmEffectivenessHint" text="使用游戏内置的综合评分而非各槽位的参数权重来评估物品。向 AI 明确请求的权重仍然优先。"/>
+        <string id="EbiMcmButtonColor" text="槽位按钮颜色"/>
+        <string id="EbiMcmButtonColorHint" text="各槽位装备按钮的色调，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外观。重新打开物品栏时生效。"/>
+        <string id="EbiMcmButtonColorReset" text="重置按钮颜色"/>
+        <string id="EbiMcmLeftPanel" text="搜索左侧面板"/>
+        <string id="EbiMcmLeftPanelHint" text="同时搜索商人/战利品一侧；装备找到的物品会将其购买。也可通过左侧铭牌上的锁来切换。"/>
+        <string id="EbiMcmRightPanel" text="搜索物品栏"/>
+        <string id="EbiMcmRightPanelHint" text="搜索你自己的物品栏。也可通过右侧铭牌上的锁来切换。"/>
+        <string id="EbiMcmGroupAi" text="AI 助手"/>
+        <string id="EbiMcmAnthropic" text="使用 Anthropic API"/>
+        <string id="EbiMcmAnthropicHint" text="开启：Anthropic Messages API。关闭：任何兼容 OpenAI 的端点（端点为空时会自动检测本地后端）。"/>
+        <string id="EbiMcmEndpoint" text="端点"/>
+        <string id="EbiMcmEndpointHint" text="Chat completions 的 URL。留空 = 游戏启动时自动检测本地后端（Ollama / LM Studio / Player2）。"/>
+        <string id="EbiMcmModel" text="模型"/>
+        <string id="EbiMcmModelHint" text="模型 ID。留空 = 所检测后端的第一个模型，或提供商的默认值。"/>
+        <string id="EbiMcmApiKey" text="API 密钥"/>
+        <string id="EbiMcmApiKeyHint" text="仅云端提供商需要；本地后端无需。留空时使用环境变量 EBI_AI_API_KEY。"/>
+        <string id="EbiMcmTimeout" text="超时（秒）"/>
+        <string id="EbiMcmTimeoutHint" text="等待模型响应的时长。较慢的本地模型可能需要超过默认的 30 秒。"/>
+        <string id="EbiMcmJsonFormat" text="请求 JSON 响应格式"/>
+        <string id="EbiMcmJsonFormatHint" text="向兼容 OpenAI 的后端请求确保为 JSON 的响应。拒绝该请求的后端会被自动检测并绕过。"/>
+    </strings>
+</base>

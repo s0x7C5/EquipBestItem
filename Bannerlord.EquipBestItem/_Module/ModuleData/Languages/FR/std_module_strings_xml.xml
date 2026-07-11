@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="Français"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="Aucun meilleur objet trouvé."/>
+        <string id="EbiEquippedCount" text="{COUNT} objet(s) équipé(s)."/>
+        <string id="EbiClassAsEquipped" text="Comme équipé"/>
+        <string id="ebi_default" text="Défaut"/>
+        <string id="ebi_lock" text="Verrouiller"/>
+        <string id="ebi_hint_default" text="Réinitialiser aux valeurs par défaut"/>
+        <string id="ebi_hint_lock" text="Désactiver la recherche pour cet emplacement"/>
+        <string id="EbiHintEquipCurrent" text="Équiper le personnage actuel avec les meilleurs objets"/>
+        <string id="EbiHintEquipAll" text="Équiper tous les héros du groupe avec les meilleurs objets"/>
+        <string id="EbiHintLeftLock" text="Chercher dans le panneau de gauche (marchand, butin). Équiper achète l'objet."/>
+        <string id="EbiHintRightLock" text="Chercher dans votre inventaire"/>
+        <string id="EbiAiInterpret" text="Demander à l'IA"/>
+        <string id="EbiAiPromptHint" text="Décrivez avec vos propres mots l'équipement souhaité."/>
+        <string id="EbiAiThinking" text="Interprétation de la requête..."/>
+        <string id="EbiAiTimeout" text="L'IA n'a pas répondu à temps."/>
+        <string id="EbiAnyCulture" text="Toute culture"/>
+        <string id="EbiMaxItemWeight" text="Limite de poids"/>
+        <string id="EbiAiTargetNotFound" text="Ce héros est introuvable dans le groupe."/>
+        <string id="EbiMcmGroupGeneral" text="Général"/>
+        <string id="EbiMcmEffectiveness" text="Utiliser le score d'Efficacité du jeu"/>
+        <string id="EbiMcmEffectivenessHint" text="Évaluer les objets avec le score global intégré au jeu plutôt qu'avec les poids de paramètres par emplacement. Les poids explicitement demandés à l'IA restent prioritaires."/>
+        <string id="EbiMcmButtonColor" text="Couleur des boutons d'emplacement"/>
+        <string id="EbiMcmButtonColorHint" text="Teinte des boutons d'équipement par emplacement, #RRGGBB ou #RRGGBBAA. #FFFFFF conserve l'apparence d'origine. Appliqué à la réouverture de l'inventaire."/>
+        <string id="EbiMcmButtonColorReset" text="Réinitialiser la couleur des boutons"/>
+        <string id="EbiMcmLeftPanel" text="Chercher dans le panneau de gauche"/>
+        <string id="EbiMcmLeftPanelHint" text="Chercher aussi du côté marchand/butin ; équiper un objet trouvé l'achète. Également géré par le cadenas sur la plaque de gauche."/>
+        <string id="EbiMcmRightPanel" text="Chercher dans l'inventaire"/>
+        <string id="EbiMcmRightPanelHint" text="Chercher dans votre propre inventaire. Également géré par le cadenas sur la plaque de droite."/>
+        <string id="EbiMcmGroupAi" text="Assistant IA"/>
+        <string id="EbiMcmAnthropic" text="Utiliser l'API Anthropic"/>
+        <string id="EbiMcmAnthropicHint" text="Activé : API Anthropic Messages. Désactivé : tout point de terminaison compatible OpenAI (les backends locaux sont détectés automatiquement si le point de terminaison est vide)."/>
+        <string id="EbiMcmEndpoint" text="Point de terminaison"/>
+        <string id="EbiMcmEndpointHint" text="URL des chat completions. Vide = détecter automatiquement un backend local (Ollama / LM Studio / Player2) au démarrage du jeu."/>
+        <string id="EbiMcmModel" text="Modèle"/>
+        <string id="EbiMcmModelHint" text="Identifiant du modèle. Vide = premier modèle du backend détecté, ou valeur par défaut du fournisseur."/>
+        <string id="EbiMcmApiKey" text="Clé API"/>
+        <string id="EbiMcmApiKeyHint" text="Fournisseurs cloud uniquement ; les backends locaux n'en ont pas besoin. La variable d'environnement EBI_AI_API_KEY est utilisée si ce champ est vide."/>
+        <string id="EbiMcmTimeout" text="Délai d'attente, secondes"/>
+        <string id="EbiMcmTimeoutHint" text="Durée d'attente de la réponse du modèle. Les modèles locaux lents peuvent nécessiter plus que les 30 par défaut."/>
+        <string id="EbiMcmJsonFormat" text="Demander le format de réponse JSON"/>
+        <string id="EbiMcmJsonFormatHint" text="Demander aux backends compatibles OpenAI un JSON garanti. Les backends qui le refusent sont détectés et contournés automatiquement."/>
+    </strings>
+</base>

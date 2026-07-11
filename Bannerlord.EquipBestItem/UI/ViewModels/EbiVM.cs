@@ -35,7 +35,8 @@ public sealed class EbiVM : ViewModel
             services.Interpreter, services.Profiles, gateway,
             RecomputeBestItems, services.Settings.Ai.IsConfigured);
 
-        EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings);
+        var buttonColor = ParseColor(services.Settings.SlotButtonColor);
+        EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings, buttonColor);
 
         SlotWeapon0 = Create(EquipmentIndex.Weapon0);
         SlotWeapon1 = Create(EquipmentIndex.Weapon1);
@@ -253,6 +254,21 @@ public sealed class EbiVM : ViewModel
 
         _services.EquipBest.Equip(_gateway, slot.FoundItem, slot.Slot);
         // The transfer fires InventoryLogic.AfterTransfer, which recomputes buttons.
+    }
+
+    /// <summary>"#RRGGBB" or "#RRGGBBAA"; anything unparsable falls back to white (no tint).</summary>
+    private static Color ParseColor(string hex)
+    {
+        try
+        {
+            var value = (hex ?? "").Trim();
+            if (value.Length == 7) value += "FF";
+            return Color.ConvertStringToColor(value);
+        }
+        catch
+        {
+            return Color.White;
+        }
     }
 
     private void OpenSettings(EquipmentIndex slot)

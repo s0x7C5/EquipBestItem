@@ -1,8 +1,7 @@
 # Equip Best Item
 
 A Mount & Blade II: Bannerlord mod that equips your characters with the best
-items in one click — and, if you want, understands plain-language requests
-in any language, like *"dress me in the lightest imperial armor"*, via an LLM.
+items in one click.
 
 ## Features
 
@@ -14,26 +13,36 @@ in any language, like *"dress me in the lightest imperial armor"*, via an LLM.
   a slot's weights (the Lock button) to exclude it from searching. Weapon
   slots can pin a **weapon class** (bow, one-handed axe, shield, …) — each
   class brings its own sensible default weights.
-- Choice of search method in `settings.json`: parameter weights (default) or
-  the game's built-in Effectiveness score.
-- **AI assistant**: the AI button next to the equip buttons opens the game's
-  native text-input dialog — describe what you want in your own words and
-  the mod rewrites the affected slot filters, recomputes the previews and
-  reports exactly what changed per slot. Works with the Anthropic API or any
-  OpenAI-compatible endpoint, including fully local ones.
+- Choice of search method: parameter weights (default) or the game's built-in
+  Effectiveness score. Configurable — along with the slot button color and
+  panel toggles — via
+  [MCM](https://www.nexusmods.com/mountandblade2bannerlord/mods/612) when
+  installed, or `settings.json` otherwise.
 - Fast: single-pass search with cached item stat vectors.
-- Self-contained: no dependency on other mods (UIExtenderEx and Harmony ship
-  inside the module).
+- Extra, entirely optional: an AI button that fills in the slot filters from a
+  plain-language request (see below). Everything above works without it.
 
 ## Installation
 
-1. Copy `Bannerlord.EquipBestItem` into your game's `Modules` folder
+Requires two common framework mods (like most UI mods):
+[Harmony](https://www.nexusmods.com/mountandblade2bannerlord/mods/2006) and
+[UIExtenderEx](https://www.nexusmods.com/mountandblade2bannerlord/mods/2102).
+
+1. Install Harmony and UIExtenderEx (NexusMods or Steam Workshop).
+2. Copy `Bannerlord.EquipBestItem` into your game's `Modules` folder
    (or download from [NexusMods](https://www.nexusmods.com/mountandblade2bannerlord/mods/369)).
-2. Enable it in the launcher.
+3. Enable all three in the launcher — the load order is enforced
+   automatically (Harmony → UIExtenderEx → Equip Best Item).
+
+Optionally install
+[Mod Configuration Menu](https://www.nexusmods.com/mountandblade2bannerlord/mods/612)
+to edit the mod's settings in-game; without it the same settings live in
+`Documents/Mount and Blade II Bannerlord/Configs/EquipBestItem/settings.json`.
 
 ### Enabling the AI assistant (optional)
 
-The AI button appears in the inventory as soon as a backend is available.
+Skip this section unless you want the AI button — the mod does not need it.
+The button appears in the inventory as soon as a backend is available.
 Three ways, easiest first:
 
 **Zero-config (local model).** Run [Ollama](https://ollama.com)
@@ -61,6 +70,35 @@ Any other OpenAI-compatible server works the same way via `endpoint`.
 Settings are read at game start. Backend quirks (a rejected JSON response
 format, a chat template that drops the system role) are detected and worked
 around automatically on the first request, then remembered for the session.
+
+## Translations
+
+The mod ships with translations for **every language the game supports**
+(Brazilian Portuguese, both Chinese variants, English, French, German,
+Italian, Japanese, Korean, Latin-American Spanish, Polish, Russian, Turkish).
+It follows the game's language automatically — no configuration.
+
+Most of what you see in the inventory needs no translation in the first
+place: item parameter names, slot names and weapon classes are the game's own
+strings. Only the mod's own messages (button hints, AI status lines, MCM
+option names) are translated, and they live in
+`Bannerlord.EquipBestItem/ModuleData/Languages/<CODE>/std_module_strings_xml.xml`.
+
+To fix or add one:
+
+1. Copy the English base
+   (`Languages/std_module_strings_xml.xml`) into a language subfolder
+   (existing ones, or a new one — the folder name is conventional).
+2. Set the `<tag language="…"/>` value to the game's name for the language
+   **exactly as the game spells it** — e.g. `Deutsch`, `Türkçe`, `简体中文`
+   (see `Modules/Native/ModuleData/Languages` for the list).
+3. Translate the `text` attributes. Never change the `id` attributes, and
+   keep placeholders like `{COUNT}` intact.
+4. Save as UTF-8. Picked up on the next game start; any missing string falls
+   back to English, so partial translations are safe.
+
+The AI assistant is language-independent regardless — it answers in whatever
+language the request is written in.
 
 ## Building
 

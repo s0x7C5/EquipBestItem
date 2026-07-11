@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="Türkçe"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="Daha iyi bir eşya bulunamadı."/>
+        <string id="EbiEquippedCount" text="{COUNT} eşya kuşanıldı."/>
+        <string id="EbiClassAsEquipped" text="Kuşanıldığı gibi"/>
+        <string id="ebi_default" text="Varsayılan"/>
+        <string id="ebi_lock" text="Kilitle"/>
+        <string id="ebi_hint_default" text="Varsayılan değerlere sıfırla"/>
+        <string id="ebi_hint_lock" text="Bu yuva için aramayı devre dışı bırak"/>
+        <string id="EbiHintEquipCurrent" text="Mevcut karakteri en iyi eşyalarla kuşandır"/>
+        <string id="EbiHintEquipAll" text="Gruptaki tüm kahramanları en iyi eşyalarla kuşandır"/>
+        <string id="EbiHintLeftLock" text="Sol panelde ara (tüccar, ganimet). Kuşanmak eşyayı satın alır."/>
+        <string id="EbiHintRightLock" text="Kendi envanterinde ara"/>
+        <string id="EbiAiInterpret" text="Yapay zekâya sor"/>
+        <string id="EbiAiPromptHint" text="İstediğin teçhizatı kendi sözcüklerinle anlat."/>
+        <string id="EbiAiThinking" text="İstek yorumlanıyor..."/>
+        <string id="EbiAiTimeout" text="Yapay zekâ zamanında yanıt vermedi."/>
+        <string id="EbiAnyCulture" text="Herhangi bir kültür"/>
+        <string id="EbiMaxItemWeight" text="Ağırlık sınırı"/>
+        <string id="EbiAiTargetNotFound" text="Bu kahraman grupta bulunamadı."/>
+        <string id="EbiMcmGroupGeneral" text="Genel"/>
+        <string id="EbiMcmEffectiveness" text="Oyunun Etkililik puanını kullan"/>
+        <string id="EbiMcmEffectivenessHint" text="Eşyaları yuva başına parametre ağırlıkları yerine oyunun yerleşik toplam puanıyla değerlendir. Yapay zekâdan açıkça istenen ağırlıklar yine de öncelikli olur."/>
+        <string id="EbiMcmButtonColor" text="Yuva düğmesi rengi"/>
+        <string id="EbiMcmButtonColorHint" text="Yuva başına kuşanma düğmelerinin tonu, #RRGGBB veya #RRGGBBAA. #FFFFFF özgün görünümü korur. Envanter yeniden açıldığında uygulanır."/>
+        <string id="EbiMcmButtonColorReset" text="Düğme rengini sıfırla"/>
+        <string id="EbiMcmLeftPanel" text="Sol panelde ara"/>
+        <string id="EbiMcmLeftPanelHint" text="Tüccar/ganimet tarafında da ara; bulunan bir eşyayı kuşanmak onu satın alır. Envanterdeki sol levhadaki kilitle de açılıp kapanır."/>
+        <string id="EbiMcmRightPanel" text="Envanterde ara"/>
+        <string id="EbiMcmRightPanelHint" text="Kendi envanterinde ara. Sağ levhadaki kilitle de açılıp kapanır."/>
+        <string id="EbiMcmGroupAi" text="Yapay zekâ yardımcısı"/>
+        <string id="EbiMcmAnthropic" text="Anthropic API'sini kullan"/>
+        <string id="EbiMcmAnthropicHint" text="Açık: Anthropic Messages API. Kapalı: OpenAI uyumlu herhangi bir uç nokta (uç nokta boşken yerel arka uçlar otomatik algılanır)."/>
+        <string id="EbiMcmEndpoint" text="Uç nokta"/>
+        <string id="EbiMcmEndpointHint" text="Chat completions URL'si. Boş = oyun başlarken yerel bir arka ucu (Ollama / LM Studio / Player2) otomatik algıla."/>
+        <string id="EbiMcmModel" text="Model"/>
+        <string id="EbiMcmModelHint" text="Model kimliği. Boş = algılanan arka ucun ilk modeli veya sağlayıcının varsayılanı."/>
+        <string id="EbiMcmApiKey" text="API anahtarı"/>
+        <string id="EbiMcmApiKeyHint" text="Yalnızca bulut sağlayıcıları için; yerel arka uçlar gerektirmez. Boşken EBI_AI_API_KEY ortam değişkeni kullanılır."/>
+        <string id="EbiMcmTimeout" text="Zaman aşımı, saniye"/>
+        <string id="EbiMcmTimeoutHint" text="Modelin yanıtının ne kadar bekleneceği. Yavaş yerel modeller varsayılan 30'dan fazlasına ihtiyaç duyabilir."/>
+        <string id="EbiMcmJsonFormat" text="JSON yanıt biçimi iste"/>
+        <string id="EbiMcmJsonFormatHint" text="OpenAI uyumlu arka uçlardan garantili JSON iste. Bunu reddeden arka uçlar algılanıp otomatik olarak atlanır."/>
+    </strings>
+</base>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base type="string">
+    <tags>
+        <tag language="日本語"/>
+    </tags>
+    <strings>
+        <string id="EbiNothingBetter" text="より良い装備は見つかりませんでした。"/>
+        <string id="EbiEquippedCount" text="{COUNT} 個の装備を装着しました。"/>
+        <string id="EbiClassAsEquipped" text="装備中のものと同じ"/>
+        <string id="ebi_default" text="デフォルト"/>
+        <string id="ebi_lock" text="ロック"/>
+        <string id="ebi_hint_default" text="デフォルト値にリセット"/>
+        <string id="ebi_hint_lock" text="このスロットの検索を無効化"/>
+        <string id="EbiHintEquipCurrent" text="現在のキャラクターに最良の装備を装着する"/>
+        <string id="EbiHintEquipAll" text="部隊のすべての英雄に最良の装備を装着する"/>
+        <string id="EbiHintLeftLock" text="左パネル（商人・戦利品）を検索する。装備するとその品を購入します。"/>
+        <string id="EbiHintRightLock" text="自分の所持品を検索する"/>
+        <string id="EbiAiInterpret" text="AIに尋ねる"/>
+        <string id="EbiAiPromptHint" text="欲しい装備を自分の言葉で説明してください。"/>
+        <string id="EbiAiThinking" text="リクエストを解釈中..."/>
+        <string id="EbiAiTimeout" text="AIが時間内に応答しませんでした。"/>
+        <string id="EbiAnyCulture" text="すべての文化"/>
+        <string id="EbiMaxItemWeight" text="重量上限"/>
+        <string id="EbiAiTargetNotFound" text="その英雄は部隊に見つかりませんでした。"/>
+        <string id="EbiMcmGroupGeneral" text="一般"/>
+        <string id="EbiMcmEffectiveness" text="ゲームの有効性スコアを使用"/>
+        <string id="EbiMcmEffectivenessHint" text="スロットごとのパラメータ重みではなく、ゲーム内蔵の総合スコアで装備を評価します。AIに明示的に要求された重みは引き続き優先されます。"/>
+        <string id="EbiMcmButtonColor" text="スロットボタンの色"/>
+        <string id="EbiMcmButtonColorHint" text="スロットごとの装備ボタンの色合い。#RRGGBB または #RRGGBBAA。#FFFFFF で元の見た目を保ちます。所持品を開き直すと適用されます。"/>
+        <string id="EbiMcmButtonColorReset" text="ボタンの色をリセット"/>
+        <string id="EbiMcmLeftPanel" text="左パネルを検索"/>
+        <string id="EbiMcmLeftPanelHint" text="商人・戦利品側も検索します。見つけた品を装備すると購入します。所持品画面の左の銘板の錠でも切り替えられます。"/>
+        <string id="EbiMcmRightPanel" text="所持品を検索"/>
+        <string id="EbiMcmRightPanelHint" text="自分の所持品を検索します。右の銘板の錠でも切り替えられます。"/>
+        <string id="EbiMcmGroupAi" text="AIアシスタント"/>
+        <string id="EbiMcmAnthropic" text="Anthropic APIを使用"/>
+        <string id="EbiMcmAnthropicHint" text="オン：Anthropic Messages API。オフ：OpenAI互換の任意のエンドポイント（エンドポイントが空のときはローカルバックエンドを自動検出）。"/>
+        <string id="EbiMcmEndpoint" text="エンドポイント"/>
+        <string id="EbiMcmEndpointHint" text="chat completionsのURL。空 = ゲーム開始時にローカルバックエンド（Ollama / LM Studio / Player2）を自動検出。"/>
+        <string id="EbiMcmModel" text="モデル"/>
+        <string id="EbiMcmModelHint" text="モデルID。空 = 検出されたバックエンドの最初のモデル、またはプロバイダーの既定値。"/>
+        <string id="EbiMcmApiKey" text="APIキー"/>
+        <string id="EbiMcmApiKeyHint" text="クラウドプロバイダーのみ必要。ローカルバックエンドには不要です。空の場合は環境変数 EBI_AI_API_KEY が使用されます。"/>
+        <string id="EbiMcmTimeout" text="タイムアウト（秒）"/>
+        <string id="EbiMcmTimeoutHint" text="モデルの応答を待つ時間。低速なローカルモデルは既定の30秒では足りない場合があります。"/>
+        <string id="EbiMcmJsonFormat" text="JSON応答形式を要求"/>
+        <string id="EbiMcmJsonFormatHint" text="OpenAI互換バックエンドに保証されたJSONを要求します。これを拒否するバックエンドは自動的に検出され回避されます。"/>
+    </strings>
+</base>

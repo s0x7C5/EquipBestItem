@@ -14,6 +14,9 @@
     <DependedModule Id="Sandbox" />
     <DependedModule Id="StoryMode" />
     <DependedModule Id="CustomBattle" />
+    <DependedModule Id="Bannerlord.Harmony" />
+    <DependedModule Id="Bannerlord.UIExtenderEx" />
+    <DependedModule Id="Bannerlord.MBOptionScreen" Optional="true" />
   </DependedModules>
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" />
@@ -21,16 +24,15 @@
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
     <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
     <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Bannerlord.MBOptionScreen" order="LoadBeforeThis" optional="true" />
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
       <Name value="$modulename$" />
       <DLLName value="$moduleid$.dll" />
       <SubModuleClassType value="$moduleid$.SubModule" />
-      <Assemblies>
-        <Assembly value="0Harmony.dll" />
-        <Assembly value="Bannerlord.UIExtenderEx.dll" />
-      </Assemblies>
       <Tags />
     </SubModule>
   </SubModules>

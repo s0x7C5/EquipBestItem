@@ -10,12 +10,13 @@ public sealed class InterpretationContext
 {
     public InterpretationContext(
         string characterName, string equipmentSetKey, IReadOnlyList<string> notableSkills,
-        string languageGlossary = "")
+        string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null)
     {
         CharacterName = characterName;
         EquipmentSetKey = equipmentSetKey;
         NotableSkills = notableSkills;
         LanguageGlossary = languageGlossary;
+        PartyHeroes = partyHeroes ?? System.Array.Empty<string>();
     }
 
     public string CharacterName { get; }
@@ -31,4 +32,10 @@ public sealed class InterpretationContext
     ///     game's own localized strings. Empty when the game runs in English.
     /// </summary>
     public string LanguageGlossary { get; }
+
+    /// <summary>
+    ///     Equippable party hero names, the main hero marked with "(main)".
+    ///     Lets the model resolve targets like "everyone except me".
+    /// </summary>
+    public IReadOnlyList<string> PartyHeroes { get; }
 }

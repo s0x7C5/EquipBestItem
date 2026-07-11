@@ -1,6 +1,7 @@
 using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.InputSystem;
+using TaleWorlds.Library;
 
 namespace Bannerlord.EquipBestItem.UI.Widgets;
 
@@ -13,9 +14,30 @@ namespace Bannerlord.EquipBestItem.UI.Widgets;
 public sealed class EbiEquipButtonWidget : ButtonWidget
 {
     private bool _stateBeforeAltReveal;
+    private Color _buttonColor = Color.White;
 
     public EbiEquipButtonWidget(UIContext context) : base(context)
     {
+    }
+
+    /// <summary>
+    ///     Player-configured tint. Brush-based widgets ignore the plain Color
+    ///     attribute, so the tint goes through a per-widget brush clone's
+    ///     GlobalColor, which multiplies every state (default/hover/pressed).
+    /// </summary>
+    [Editor(false)]
+    public Color ButtonColor
+    {
+        get => _buttonColor;
+        set
+        {
+            if (value == _buttonColor) return;
+            _buttonColor = value;
+            OnPropertyChanged(value, nameof(ButtonColor));
+
+            Brush = Brush.Clone();
+            Brush.GlobalColor = value;
+        }
     }
 
     protected override void OnLateUpdate(float dt)

@@ -47,7 +47,7 @@ public static class LlmPlanParser
         if (directives.Count == 0)
             throw new FormatException("The AI response contains no usable directives.");
 
-        return new InterpretedPlan(directives, dto.Explanation ?? "");
+        return new InterpretedPlan(directives, dto.Explanation ?? "", dto.Target ?? "");
     }
 
     private static ItemQuery BuildQuery(DirectiveDto dto, EquipmentIndex slot)
@@ -112,6 +112,8 @@ public static class LlmPlanParser
     private sealed class PlanDto
     {
         [JsonProperty("explanation")] public string? Explanation { get; set; }
+
+        [JsonProperty("target")] public string? Target { get; set; }
 
         [JsonProperty("directives")] public List<DirectiveDto>? Directives { get; set; }
     }

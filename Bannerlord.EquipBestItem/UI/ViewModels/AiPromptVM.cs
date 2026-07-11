@@ -116,7 +116,8 @@ public sealed class AiPromptVM : ViewModel
             character.Name.ToString(),
             equipment.IsCivilian ? "civilian" : equipment.IsStealth ? "stealth" : "battle",
             CollectNotableSkills(character),
-            PromptGlossary.Text);
+            PromptGlossary.Text,
+            CollectPartyHeroes());
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();
@@ -169,32 +170,88 @@ public sealed class AiPromptVM : ViewModel
 
     /// <summary>
     ///     Writes each directive into the slot's filter — the same path the
-    ///     manual sliders use — then recomputes the slot-button previews.
-    ///     Runs on the main thread only.
+    ///     manual sliders use — for every hero the plan targets, then
+    ///     recomputes the slot-button previews. Non-current heroes get their
+    ///     battle set edited. Runs on the main thread only.
     /// </summary>
     private void ApplyPlan(InterpretedPlan plan, CharacterObject character, Equipment equipment)
     {
-        var changes = new List<string>();
+        var targets = ResolveTargets(plan.Target, character, equipment);
+        if (targets.Count == 0)
+        {
+            StatusText = new TextObject("{=EbiAiTargetNotFound}Could not find that hero in the party.").ToString();
+            return;
+        }
 
+        var changes = new List<string>();
+        foreach (var directive in plan.Directives)
+            changes.Add(DescribeChange(directive));
+
+        foreach (var (targetCharacter, targetEquipment) in targets)
         foreach (var directive in plan.Directives)
         {
-            // Directives without explicit weights fall back to the slot
-            // defaults. (culture/maxItemWeight have no filter field yet, so
-            // they are not persisted here.)
+            // Directives without explicit weights fall back to the slot defaults.
             if (directive.Query.HasExplicitWeights)
-                _profiles.SetWeights(character, equipment, directive.Slot, directive.Query.Weights);
+                _profiles.SetWeights(targetCharacter, targetEquipment, directive.Slot, directive.Query.Weights);
             else
-                _profiles.ResetSlot(character, equipment, directive.Slot);
+                _profiles.ResetSlot(targetCharacter, targetEquipment, directive.Slot);
 
-            _profiles.SetWeaponClass(character, equipment, directive.Slot, directive.Query.WeaponClass);
-            changes.Add(DescribeChange(directive));
+            _profiles.SetWeaponClass(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponClass);
+            _profiles.SetConstraints(
+                targetCharacter, targetEquipment, directive.Slot,
+                directive.Query.CultureId, directive.Query.MaxItemWeight);
         }
 
         _profiles.Save();
         _onApplied();
 
         var summary = string.Join("; ", changes);
+        if (targets.Count > 1) summary += $" (x{targets.Count})";
         StatusText = plan.Explanation.Length > 0 ? $"{plan.Explanation} {summary}" : summary;
+    }
+
+    /// <summary>
+    ///     "current" (or empty) → the shown character with the open set;
+    ///     "others"/"all" → party heroes (their battle sets); anything else is
+    ///     matched as a hero name. Empty result = named hero not found.
+    /// </summary>
+    private List<(CharacterObject Character, Equipment Equipment)> ResolveTargets(
+        string target, CharacterObject current, Equipment currentEquipment)
+    {
+        var kind = target.Trim().ToLowerInvariant();
+        if (kind.Length == 0 || kind == "current")
+            return new List<(CharacterObject, Equipment)> { (current, currentEquipment) };
+
+        var result = new List<(CharacterObject, Equipment)>();
+        foreach (var hero in _gateway.GetEquippableHeroes())
+        {
+            var include = kind switch
+            {
+                "all" => true,
+                "others" => hero.HeroObject != Hero.MainHero,
+                _ => string.Equals(hero.Name.ToString(), target.Trim(), StringComparison.OrdinalIgnoreCase)
+            };
+            if (!include) continue;
+
+            var heroEquipment = hero == current ? currentEquipment : hero.FirstBattleEquipment;
+            if (heroEquipment is not null) result.Add((hero, heroEquipment));
+        }
+
+        return result;
+    }
+
+    /// <summary>Equippable party heroes for the prompt, the main hero marked.</summary>
+    private IReadOnlyList<string> CollectPartyHeroes()
+    {
+        var names = new List<string>();
+        foreach (var hero in _gateway.GetEquippableHeroes())
+        {
+            var name = hero.Name.ToString();
+            if (hero.HeroObject == Hero.MainHero) name += " (main)";
+            names.Add(name);
+        }
+
+        return names;
     }
 
     /// <summary>"Helm: Head Armor +1, Weight -0.5" in the game's language.</summary>
@@ -220,6 +277,13 @@ public sealed class AiPromptVM : ViewModel
 
         if (directive.Query.WeaponClass is { } weaponClass)
             parts.Add(GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString());
+
+        if (directive.Query.CultureId is { } cultureId)
+            parts.Add(SlotWeightsVM.GetCultureName(cultureId));
+
+        if (directive.Query.MaxItemWeight > 0f)
+            parts.Add("<= " + directive.Query.MaxItemWeight.ToString("0.#", CultureInfo.InvariantCulture) + " " +
+                      SlotWeightsVM.GetParamName(ItemParam.Weight).ToLowerInvariant());
 
         return $"{SlotWeightsVM.GetSlotName(directive.Slot)}: {string.Join(", ", parts)}";
     }

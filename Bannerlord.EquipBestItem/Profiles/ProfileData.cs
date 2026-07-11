@@ -14,4 +14,10 @@ public sealed class SlotProfileData
     public Dictionary<string, float>? Weights { get; set; }
 
     public string? WeaponClass { get; set; }
+
+    /// <summary>Restrict the search to items of this culture (e.g. "empire").</summary>
+    public string? Culture { get; set; }
+
+    /// <summary>Skip items heavier than this, kg.</summary>
+    public float? MaxItemWeight { get; set; }
 }

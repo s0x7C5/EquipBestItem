@@ -24,7 +24,7 @@
                                                        HeightSizePolicy="Fixed" SuggestedWidth="14"
                                                        SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="10">
                                 <Children>
-                                    <EbiEquipButtonWidget DataSource="{..}" IsDisabled="@IsButtonDisabled"
+                                    <EbiEquipButtonWidget ButtonColor="@ButtonColor" DataSource="{..}" IsDisabled="@IsButtonDisabled"
                                                           Command.Click="ExecuteEquip"
                                                           Command.AlternateClick="ExecuteOpenSettings"
                                                           WidthSizePolicy="StretchToParent"
@@ -38,7 +38,7 @@
                     <Widget IsVisible="@HasNoTooltipItem" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent"
                             HeightSizePolicy="StretchToParent">
                         <Children>
-                            <EbiEquipButtonWidget IsDisabled="@IsButtonDisabled" Command.Click="ExecuteEquip"
+                            <EbiEquipButtonWidget ButtonColor="@ButtonColor" IsDisabled="@IsButtonDisabled" Command.Click="ExecuteEquip"
                                                   Command.AlternateClick="ExecuteOpenSettings"
                                                   WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
                                                   SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="5" MarginRight="10"
