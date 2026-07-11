@@ -353,3 +353,6 @@ MigrationBackup/
 .idea/
 # Release archives built for GitHub/Workshop uploads
 /*.zip
+
+# Steam Workshop upload configs and preview stay local
+/workshop/
