@@ -117,7 +117,8 @@ public sealed class AiPromptVM : ViewModel
             equipment.IsCivilian ? "civilian" : equipment.IsStealth ? "stealth" : "battle",
             CollectNotableSkills(character),
             PromptGlossary.Text,
-            CollectPartyHeroes());
+            CollectPartyHeroes(),
+            MBTextManager.ActiveTextLanguage);
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();

@@ -10,13 +10,15 @@ public sealed class InterpretationContext
 {
     public InterpretationContext(
         string characterName, string equipmentSetKey, IReadOnlyList<string> notableSkills,
-        string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null)
+        string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null,
+        string gameLanguage = "English")
     {
         CharacterName = characterName;
         EquipmentSetKey = equipmentSetKey;
         NotableSkills = notableSkills;
         LanguageGlossary = languageGlossary;
         PartyHeroes = partyHeroes ?? System.Array.Empty<string>();
+        GameLanguage = gameLanguage;
     }
 
     public string CharacterName { get; }
@@ -38,4 +40,11 @@ public sealed class InterpretationContext
     ///     Lets the model resolve targets like "everyone except me".
     /// </summary>
     public IReadOnlyList<string> PartyHeroes { get; }
+
+    /// <summary>
+    ///     The game's UI language name (e.g. "Русский"). The explanation is
+    ///     requested in this language so the status line stays one language,
+    ///     whatever language the player typed in.
+    /// </summary>
+    public string GameLanguage { get; }
 }

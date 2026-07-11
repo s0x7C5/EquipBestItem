@@ -167,7 +167,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         }
         else
         {
-            endpoint = _settings.Endpoint.Length > 0 ? _settings.Endpoint : OpenAiDefaultEndpoint;
+            endpoint = _settings.Endpoint.Length > 0 ? NormalizeEndpoint(_settings.Endpoint) : OpenAiDefaultEndpoint;
             model = _settings.Model.Length > 0 ? _settings.Model : OpenAiDefaultModel;
         }
 
@@ -203,6 +203,19 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         return httpRequest;
     }
 
+    /// <summary>
+    ///     A bare server address (no path) gets the standard chat-completions
+    ///     path appended — the most common misconfiguration. Explicit paths
+    ///     are respected as-is.
+    /// </summary>
+    private static string NormalizeEndpoint(string endpoint)
+    {
+        var trimmed = endpoint.TrimEnd('/');
+        return Uri.TryCreate(trimmed, UriKind.Absolute, out var uri) && uri.AbsolutePath is "" or "/"
+            ? trimmed + "/v1/chat/completions"
+            : endpoint;
+    }
+
     private static string ReadAnthropicText(string body) =>
         JObject.Parse(body)["content"]?[0]?["text"]?.ToString()
         ?? throw new FormatException("Unexpected Anthropic response shape.");
@@ -222,7 +235,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("JSON shape:");
         builder.AppendLine("""
 {
-  "explanation": "one short sentence describing what you set up, written in the same language as the player request",
+  "explanation": "one short sentence describing what you set up",
   "target": "<optional, whose gear the request is about: current (default) | others (every party hero except the main one) | all (every party hero) | an exact hero name from the party list>",
   "directives": [
     {
@@ -277,6 +290,10 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
         builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");
         builder.AppendLine("""User: "set every hero except me up with a large shield in the first weapon slot" -> {"explanation":"Large shields in the first weapon slot for every other hero.","target":"others","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield"}]}""");
+        builder.AppendLine();
+        builder.AppendLine(
+            $"Write the \"explanation\" value in {context.GameLanguage} (the game's language), " +
+            "no matter what language the player typed the request in. Everything else stays as specified.");
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");
