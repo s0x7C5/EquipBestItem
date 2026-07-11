@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Inventory;
@@ -16,6 +18,19 @@ namespace Bannerlord.EquipBestItem.Inventory;
 /// </summary>
 public sealed class InventoryGateway
 {
+    /// <summary>
+    ///     SPInventoryVM.AfterTransfer only FLAGS the character model as dirty
+    ///     (_isCharacterEquipmentDirty); the actual repaint lives in the
+    ///     private RefreshInformationValues, which native UI equip handlers
+    ///     call themselves. Our transfers bypass those handlers, so without
+    ///     this call the paperdoll keeps showing the old gear.
+    /// </summary>
+    private static readonly Action<SPInventoryVM>? RefreshInformationValues =
+        typeof(SPInventoryVM)
+                .GetMethod("RefreshInformationValues", BindingFlags.Instance | BindingFlags.NonPublic)?
+                .CreateDelegate(typeof(Action<SPInventoryVM>))
+            as Action<SPInventoryVM>;
+
     private readonly SPInventoryVM _vm;
 
     public InventoryGateway(SPInventoryVM vm)
@@ -98,6 +113,7 @@ public sealed class InventoryGateway
         // Equipping the last piece of a stack leaves a zero-count row in the
         // item list; the native screen removes those explicitly.
         _vm.ExecuteRemoveZeroCounts();
+        RefreshInformationValues?.Invoke(_vm);
     }
 
     /// <summary>
@@ -115,6 +131,7 @@ public sealed class InventoryGateway
 
         logic.AddTransferCommands(commands);
         _vm.ExecuteRemoveZeroCounts();
+        RefreshInformationValues?.Invoke(_vm);
     }
 
     public TransferCommand BuildEquipCommand(SPItemVM item, EquipmentIndex slot, CharacterObject character) =>

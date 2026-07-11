@@ -356,3 +356,4 @@ MigrationBackup/
 
 # Steam Workshop upload configs and preview stay local
 /workshop/
+/*.7z
