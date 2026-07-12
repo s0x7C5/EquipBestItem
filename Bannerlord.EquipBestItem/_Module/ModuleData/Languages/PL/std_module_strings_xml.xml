@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="Nie znaleziono lepszego przedmiotu."/>
         <string id="EbiEquippedCount" text="Założono przedmioty: {COUNT}."/>
         <string id="EbiClassAsEquipped" text="Jak założone"/>
+        <string id="EbiEffectivenessNote" text="Przedmioty są oceniane wbudowaną oceną efektywności gry; wagi statystyk nie mają zastosowania."/>
         <string id="EbiShortBow" text="Krótki łuk"/>
         <string id="EbiLongBow" text="Długi łuk"/>
         <string id="ebi_default" text="Domyślne"/>

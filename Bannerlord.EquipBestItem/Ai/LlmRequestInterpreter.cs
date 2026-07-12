@@ -250,7 +250,11 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             $"The player's search method is \"{context.SearchMethod}\". When it is \"priority\", express " +
             "stat preferences as \"priorities\" — an ordered list, most important first, \"A+B\" meaning " +
             "equal rank — and leave \"weights\" empty; otherwise use \"weights\" and omit \"priorities\". " +
-            "Never put Weight into priorities: lightness is a maxItemWeight cap, not a rank.");
+            "Never put Weight into priorities: lightness is a maxItemWeight cap, not a rank. " +
+            "When the method is \"effectiveness\", items are ranked by the game's built-in score: emit only " +
+            "weaponClass/culture/maxItemWeight and leave weights and priorities out — unless the player " +
+            "explicitly asks to rank by specific stats, in which case emit weights (that switches the slot " +
+            "to weighted scoring).");
         builder.AppendLine(
             "Words meaning protection/armor (in any language) map to the matching *Armor param for that " +
             "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +

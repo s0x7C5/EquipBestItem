@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="未找到更好的物品。"/>
         <string id="EbiEquippedCount" text="已装备 {COUNT} 件物品。"/>
         <string id="EbiClassAsEquipped" text="与当前装备相同"/>
+        <string id="EbiEffectivenessNote" text="物品按游戏内置的效能评分排序；属性权重不生效。"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="长弓"/>
         <string id="ebi_default" text="默认"/>

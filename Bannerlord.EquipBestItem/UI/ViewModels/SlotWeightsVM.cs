@@ -274,7 +274,23 @@ public sealed class SlotWeightsVM : ViewModel
     public bool IsPriorityMode => _settings.UsePriority;
 
     [DataSourceProperty]
-    public bool IsWeightsMode => !_settings.UsePriority;
+    public bool IsWeightsMode => !_settings.UsePriority && !_settings.UseEffectiveness;
+
+    /// <summary>
+    ///     Effectiveness mode ignores weights and priorities, so the popup
+    ///     shows only what still applies: the weapon class pin, the culture
+    ///     restriction and the weight cap.
+    /// </summary>
+    [DataSourceProperty]
+    public bool IsEffectivenessMode => _settings.UseEffectiveness;
+
+    /// <summary>Lock works by zeroing weights, which effectiveness searches ignore.</summary>
+    [DataSourceProperty]
+    public bool IsLockVisible => !_settings.UseEffectiveness;
+
+    [DataSourceProperty]
+    public string EffectivenessNoteText { get; } = new TextObject(
+        "{=EbiEffectivenessNote}Items are ranked by the game's built-in Effectiveness score; stat weights do not apply.").ToString();
 
     [DataSourceProperty]
     public bool IsWeaponSlot => _slot >= EquipmentIndex.Weapon0 && _slot <= EquipmentIndex.Weapon3;
@@ -307,6 +323,8 @@ public sealed class SlotWeightsVM : ViewModel
         // The search method may have changed in MCM since the popup last opened.
         OnPropertyChanged(nameof(IsPriorityMode));
         OnPropertyChanged(nameof(IsWeightsMode));
+        OnPropertyChanged(nameof(IsEffectivenessMode));
+        OnPropertyChanged(nameof(IsLockVisible));
         RefreshDefaultMarker();
         IsVisible = true;
     }
@@ -405,6 +423,13 @@ public sealed class SlotWeightsVM : ViewModel
     private void RebuildRows()
     {
         if (_character is null || _equipment is null) return;
+
+        if (IsEffectivenessMode)
+        {
+            Rows = new MBBindingList<ParamRowVM>();
+            PriorityRows = new MBBindingList<PriorityRowVM>();
+            return;
+        }
 
         if (IsPriorityMode)
         {

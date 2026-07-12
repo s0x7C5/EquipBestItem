@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="Kein besserer Gegenstand gefunden."/>
         <string id="EbiEquippedCount" text="{COUNT} Gegenstand/Gegenstände ausgerüstet."/>
         <string id="EbiClassAsEquipped" text="Wie ausgerüstet"/>
+        <string id="EbiEffectivenessNote" text="Gegenstände werden nach der spieleigenen Effektivitätswertung sortiert; Wertegewichte gelten nicht."/>
         <string id="EbiShortBow" text="Kurzbogen"/>
         <string id="EbiLongBow" text="Langbogen"/>
         <string id="ebi_default" text="Standard"/>

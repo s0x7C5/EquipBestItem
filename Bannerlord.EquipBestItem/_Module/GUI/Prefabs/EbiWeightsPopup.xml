@@ -142,6 +142,14 @@
                                             </Children>
                                         </ListPanel>
 
+                                        <!-- Effectiveness mode ignores weights/priorities: only the
+                                             constraints above apply, and this note says so -->
+                                        <TextWidget IsVisible="@IsEffectivenessMode" WidthSizePolicy="StretchToParent"
+                                                    HeightSizePolicy="Fixed" SuggestedHeight="80" MarginTop="10"
+                                                    MarginLeft="20" MarginRight="20"
+                                                    Brush="EquipBestItem.Label.Left"
+                                                    Text="@EffectivenessNoteText"/>
+
                                         <!-- One template row per visible parameter (weights mode) -->
                                         <ListPanel IsVisible="@IsWeightsMode" DataSource="{Rows}" WidthSizePolicy="StretchToParent"
                                                    HeightSizePolicy="CoverChildren" MarginTop="10"
@@ -335,7 +343,7 @@
                                                                     Text="@MakeDefaultButtonText"/>
                                                     </Children>
                                                 </ButtonWidget>
-                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                <ButtonWidget IsVisible="@IsLockVisible" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
                                                               HeightSizePolicy="Fixed" SuggestedWidth="130"
                                                               SuggestedHeight="55" MarginLeft="10"
                                                               Brush="Popup.Button.Base" Command.Click="ExecuteLock"

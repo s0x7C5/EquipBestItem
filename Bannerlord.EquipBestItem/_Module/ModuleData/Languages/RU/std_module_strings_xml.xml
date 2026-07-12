@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>
+        <string id="EbiEffectivenessNote" text="Предметы ранжируются встроенной оценкой эффективности игры; веса статов не применяются."/>
         <string id="EbiShortBow" text="Короткий лук"/>
         <string id="EbiLongBow" text="Длинный лук"/>
         <string id="ebi_default" text="По умолчанию"/>

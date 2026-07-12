@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="より良い装備は見つかりませんでした。"/>
         <string id="EbiEquippedCount" text="{COUNT} 個の装備を装着しました。"/>
         <string id="EbiClassAsEquipped" text="装備中のものと同じ"/>
+        <string id="EbiEffectivenessNote" text="アイテムはゲーム内蔵の有効性スコアで順位付けされ、ステータスの重みは適用されません。"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="デフォルト"/>

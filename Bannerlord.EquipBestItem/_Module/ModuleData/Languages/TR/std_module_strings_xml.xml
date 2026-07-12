@@ -7,6 +7,7 @@
         <string id="EbiNothingBetter" text="Daha iyi bir eşya bulunamadı."/>
         <string id="EbiEquippedCount" text="{COUNT} eşya kuşanıldı."/>
         <string id="EbiClassAsEquipped" text="Kuşanıldığı gibi"/>
+        <string id="EbiEffectivenessNote" text="Eşyalar oyunun yerleşik etkinlik puanına göre sıralanır; özellik ağırlıkları uygulanmaz."/>
         <string id="EbiShortBow" text="Kısa yay"/>
         <string id="EbiLongBow" text="Uzun yay"/>
         <string id="ebi_default" text="Varsayılan"/>
