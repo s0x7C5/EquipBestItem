@@ -175,6 +175,56 @@
             <Style Name="Disabled" FontColor="#F8E3BEFF" TextAlphaFactor="0.5" FontSize="24"/>
         </Styles>
     </Brush>
+    <!-- Up/down arrows for the priority rows, built from the always-loaded
+         StdAssets triangle the game's own sort arrows use. -->
+    <Brush Name="EquipBestItem.Sort.Up">
+        <Layers>
+            <BrushLayer Name="Default" Sprite="StdAssets\expanded" VerticalFlip="true"/>
+        </Layers>
+        <Styles>
+            <Style Name="Default">
+                <BrushLayer Name="Default" ColorFactor="1"/>
+            </Style>
+            <Style Name="Hovered">
+                <BrushLayer Name="Default" ColorFactor="1.5"/>
+            </Style>
+            <Style Name="Pressed">
+                <BrushLayer Name="Default" ColorFactor="0.8"/>
+            </Style>
+            <Style Name="Disabled">
+                <BrushLayer Name="Default" ColorFactor="0.3" AlphaFactor="0.4"/>
+            </Style>
+        </Styles>
+        <SoundProperties>
+            <EventSounds>
+                <EventSound EventName="Click" Audio="popup"/>
+            </EventSounds>
+        </SoundProperties>
+    </Brush>
+    <Brush Name="EquipBestItem.Sort.Down">
+        <Layers>
+            <BrushLayer Name="Default" Sprite="StdAssets\expanded"/>
+        </Layers>
+        <Styles>
+            <Style Name="Default">
+                <BrushLayer Name="Default" ColorFactor="1"/>
+            </Style>
+            <Style Name="Hovered">
+                <BrushLayer Name="Default" ColorFactor="1.5"/>
+            </Style>
+            <Style Name="Pressed">
+                <BrushLayer Name="Default" ColorFactor="0.8"/>
+            </Style>
+            <Style Name="Disabled">
+                <BrushLayer Name="Default" ColorFactor="0.3" AlphaFactor="0.4"/>
+            </Style>
+        </Styles>
+        <SoundProperties>
+            <EventSounds>
+                <EventSound EventName="Click" Audio="popup"/>
+            </EventSounds>
+        </SoundProperties>
+    </Brush>
     <Brush Name="EquipBestItem.LockPanelButton.Opened">
         <Layers>
             <BrushLayer Name="Default" Sprite="StdAssets\lock_opened"/>

@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="常规"/>
         <string id="EbiMcmEffectiveness" text="使用游戏的效能评分"/>
         <string id="EbiMcmEffectivenessHint" text="使用游戏内置的综合评分而非各槽位的参数权重来评估物品。向 AI 明确请求的权重仍然优先。"/>
+        <string id="EbiMcmPriority" text="按属性优先级搜索"/>
+        <string id="EbiMcmPriorityHint" text="按槽位的优先级顺序逐项比较物品属性，而不是加权评分：最上面的属性优先，相同时比较下一项。可在槽位的筛选窗口中调整顺序。"/>
+        <string id="EbiMcmMethod" text="搜索方式"/>
+        <string id="EbiMcmMethodHint" text="参数权重：均衡选择——所有加权属性都参与计算，单一超高属性不会压倒其余，只有明显更好时才建议更换。属性优先级：严格排序——最上面的属性起决定作用，其余仅在相同时比较；在槽位筛选中调整顺序或连接为同级。游戏效能：游戏内置的综合评分——无需设置，但较粗糙。"/>
+        <string id="EbiMcmMethodWeights" text="参数权重"/>
+        <string id="EbiMcmMethodPriority" text="属性优先级"/>
+        <string id="EbiMcmMethodEffectiveness" text="游戏效能评分"/>
         <string id="EbiMcmButtonColor" text="槽位按钮颜色"/>
         <string id="EbiMcmButtonColorHint" text="各槽位装备按钮的色调，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外观。重新打开物品栏时生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按钮颜色"/>

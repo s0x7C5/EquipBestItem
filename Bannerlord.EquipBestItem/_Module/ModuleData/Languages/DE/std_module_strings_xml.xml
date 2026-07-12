@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Allgemein"/>
         <string id="EbiMcmEffectiveness" text="Effektivitätswert des Spiels verwenden"/>
         <string id="EbiMcmEffectivenessHint" text="Gegenstände mit dem spieleigenen Gesamtwert bewerten statt mit den Parametergewichten pro Slot. Von der KI ausdrücklich angeforderte Gewichte haben weiterhin Vorrang."/>
+        <string id="EbiMcmPriority" text="Prioritätsbasierte Suche"/>
+        <string id="EbiMcmPriorityHint" text="Gegenstände Wert für Wert in der Prioritätsreihenfolge des Slots vergleichen statt gewichteter Bewertung: der oberste Wert entscheidet, bei Gleichstand der nächste. Die Reihenfolge wird im Filterfenster des Slots festgelegt."/>
+        <string id="EbiMcmMethod" text="Suchmethode"/>
+        <string id="EbiMcmMethodHint" text="Parametergewichte: ausgewogene Wahl - alle gewichteten Werte zählen, ein einzelner hoher Wert überwiegt nicht den Rest, ein Tausch wird nur bei klarer Verbesserung vorgeschlagen. Wertepriorität: strikte Reihenfolge - der oberste Wert entscheidet, weitere nur bei Gleichstand; Reihenfolge und Verknüpfungen im Slot-Filter. Spieleigene Effektivität: die eingebaute Gesamtwertung des Spiels - ohne Einstellung, aber grob."/>
+        <string id="EbiMcmMethodWeights" text="Parametergewichte"/>
+        <string id="EbiMcmMethodPriority" text="Wertepriorität"/>
+        <string id="EbiMcmMethodEffectiveness" text="Spieleigene Effektivität"/>
         <string id="EbiMcmButtonColor" text="Farbe der Slot-Schaltflächen"/>
         <string id="EbiMcmButtonColorHint" text="Färbung der Ausrüsten-Schaltflächen pro Slot, #RRGGBB oder #RRGGBBAA. #FFFFFF behält das Originalaussehen. Wird beim erneuten Öffnen des Inventars angewendet."/>
         <string id="EbiMcmButtonColorReset" text="Schaltflächenfarbe zurücksetzen"/>

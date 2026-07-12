@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Général"/>
         <string id="EbiMcmEffectiveness" text="Utiliser le score d'Efficacité du jeu"/>
         <string id="EbiMcmEffectivenessHint" text="Évaluer les objets avec le score global intégré au jeu plutôt qu'avec les poids de paramètres par emplacement. Les poids explicitement demandés à l'IA restent prioritaires."/>
+        <string id="EbiMcmPriority" text="Recherche par priorité"/>
+        <string id="EbiMcmPriorityHint" text="Comparer les objets stat par stat selon l'ordre de priorité de l'emplacement au lieu du score pondéré : la stat du haut décide, en cas d'égalité la suivante. Réorganisez les stats dans la fenêtre de filtre de l'emplacement."/>
+        <string id="EbiMcmMethod" text="Méthode de recherche"/>
+        <string id="EbiMcmMethodHint" text="Poids des paramètres : choix équilibré - toutes les stats pondérées comptent, une seule stat énorme ne l'emporte pas sur le reste, un échange n'est proposé qu'en cas de nette amélioration. Priorité des stats : ordre strict - la stat du haut décide, les suivantes ne servent qu'en cas d'égalité ; ordre et liaisons dans le filtre de l'emplacement. Efficacité du jeu : la note globale intégrée du jeu - aucun réglage, mais approximative."/>
+        <string id="EbiMcmMethodWeights" text="Poids des paramètres"/>
+        <string id="EbiMcmMethodPriority" text="Priorité des stats"/>
+        <string id="EbiMcmMethodEffectiveness" text="Score d'efficacité du jeu"/>
         <string id="EbiMcmButtonColor" text="Couleur des boutons d'emplacement"/>
         <string id="EbiMcmButtonColorHint" text="Teinte des boutons d'équipement par emplacement, #RRGGBB ou #RRGGBBAA. #FFFFFF conserve l'apparence d'origine. Appliqué à la réouverture de l'inventaire."/>
         <string id="EbiMcmButtonColorReset" text="Réinitialiser la couleur des boutons"/>

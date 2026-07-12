@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="일반"/>
         <string id="EbiMcmEffectiveness" text="게임의 효율성 점수 사용"/>
         <string id="EbiMcmEffectivenessHint" text="슬롯별 매개변수 가중치 대신 게임 내장 종합 점수로 아이템을 평가합니다. AI에 명시적으로 요청한 가중치는 여전히 우선합니다."/>
+        <string id="EbiMcmPriority" text="우선순위 기반 검색"/>
+        <string id="EbiMcmPriorityHint" text="가중치 점수 대신 슬롯의 우선순위 순서대로 능력치를 하나씩 비교합니다: 최상위 능력치가 우선하며, 같으면 다음 능력치로 넘어갑니다. 순서는 슬롯의 필터 창에서 변경합니다."/>
+        <string id="EbiMcmMethod" text="검색 방식"/>
+        <string id="EbiMcmMethodHint" text="능력치 가중치: 균형 잡힌 선택 - 가중치를 준 모든 능력치가 반영되고, 하나의 큰 능력치가 나머지를 압도하지 않으며, 확실히 더 좋을 때만 교체를 제안합니다. 능력치 우선순위: 엄격한 순서 - 최상위 능력치가 결정하고, 아래 능력치는 동률일 때만 봅니다. 순서와 묶음은 슬롯 필터에서 설정. 게임 효율: 게임 내장 종합 점수 - 설정이 필요 없으나 대략적입니다."/>
+        <string id="EbiMcmMethodWeights" text="능력치 가중치"/>
+        <string id="EbiMcmMethodPriority" text="능력치 우선순위"/>
+        <string id="EbiMcmMethodEffectiveness" text="게임 효율 점수"/>
         <string id="EbiMcmButtonColor" text="슬롯 버튼 색상"/>
         <string id="EbiMcmButtonColorHint" text="슬롯별 장착 버튼의 색조, #RRGGBB 또는 #RRGGBBAA. #FFFFFF는 원래 모습을 유지합니다. 인벤토리를 다시 열면 적용됩니다."/>
         <string id="EbiMcmButtonColorReset" text="버튼 색상 초기화"/>

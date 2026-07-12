@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="General"/>
         <string id="EbiMcmEffectiveness" text="Usar la puntuación de Eficacia del juego"/>
         <string id="EbiMcmEffectivenessHint" text="Puntuar los objetos con el valor agregado propio del juego en lugar de los pesos de parámetros por ranura. Los pesos solicitados explícitamente a la IA siguen teniendo prioridad."/>
+        <string id="EbiMcmPriority" text="Búsqueda por prioridad"/>
+        <string id="EbiMcmPriorityHint" text="Compara los objetos estadística por estadística según el orden de prioridad de la ranura en lugar de la puntuación ponderada: decide la primera, en caso de empate la siguiente. Reordena las estadísticas en la ventana de filtro de la ranura."/>
+        <string id="EbiMcmMethod" text="Método de búsqueda"/>
+        <string id="EbiMcmMethodHint" text="Pesos de parámetros: elección equilibrada - cuentan todas las estadísticas ponderadas, una sola estadística enorme no supera al resto, el cambio solo se sugiere con una clara mejora. Prioridad de estadísticas: orden estricto - decide la primera, las demás solo en caso de empate; ordena y vincula estadísticas en el filtro de la ranura. Efectividad del juego: la puntuación global integrada del juego - sin ajustes, pero tosca."/>
+        <string id="EbiMcmMethodWeights" text="Pesos de parámetros"/>
+        <string id="EbiMcmMethodPriority" text="Prioridad de estadísticas"/>
+        <string id="EbiMcmMethodEffectiveness" text="Efectividad del juego"/>
         <string id="EbiMcmButtonColor" text="Color de los botones de ranura"/>
         <string id="EbiMcmButtonColorHint" text="Tinte de los botones de equipar por ranura, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene el aspecto original. Se aplica al reabrir el inventario."/>
         <string id="EbiMcmButtonColorReset" text="Restablecer el color de los botones"/>

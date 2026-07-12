@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Generale"/>
         <string id="EbiMcmEffectiveness" text="Usa il punteggio di Efficacia del gioco"/>
         <string id="EbiMcmEffectivenessHint" text="Valuta gli oggetti con il punteggio aggregato integrato nel gioco anziché con i pesi dei parametri per slot. I pesi richiesti esplicitamente all'IA hanno comunque la precedenza."/>
+        <string id="EbiMcmPriority" text="Ricerca per priorità"/>
+        <string id="EbiMcmPriorityHint" text="Confronta gli oggetti statistica per statistica nell'ordine di priorità dello slot invece del punteggio ponderato: decide la statistica in cima, a parità la successiva. Riordina le statistiche nella finestra filtro dello slot."/>
+        <string id="EbiMcmMethod" text="Metodo di ricerca"/>
+        <string id="EbiMcmMethodHint" text="Pesi dei parametri: scelta equilibrata - contano tutte le statistiche pesate, una singola statistica enorme non supera il resto, la sostituzione viene proposta solo con un chiaro vantaggio. Priorità delle statistiche: ordine rigido - decide la statistica in cima, le altre contano solo a parità; ordina e collega le statistiche nel filtro dello slot. Efficacia del gioco: il punteggio complessivo integrato del gioco - nessuna regolazione, ma approssimativo."/>
+        <string id="EbiMcmMethodWeights" text="Pesi dei parametri"/>
+        <string id="EbiMcmMethodPriority" text="Priorità delle statistiche"/>
+        <string id="EbiMcmMethodEffectiveness" text="Efficacia del gioco"/>
         <string id="EbiMcmButtonColor" text="Colore dei pulsanti degli slot"/>
         <string id="EbiMcmButtonColorHint" text="Tinta dei pulsanti di equipaggiamento per slot, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene l'aspetto originale. Applicato alla riapertura dell'inventario."/>
         <string id="EbiMcmButtonColorReset" text="Ripristina il colore dei pulsanti"/>

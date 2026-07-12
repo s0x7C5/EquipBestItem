@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="一般"/>
         <string id="EbiMcmEffectiveness" text="ゲームの有効性スコアを使用"/>
         <string id="EbiMcmEffectivenessHint" text="スロットごとのパラメータ重みではなく、ゲーム内蔵の総合スコアで装備を評価します。AIに明示的に要求された重みは引き続き優先されます。"/>
+        <string id="EbiMcmPriority" text="優先度ベースの検索"/>
+        <string id="EbiMcmPriorityHint" text="加重スコアの代わりに、スロットの優先順位に従ってステータスを一つずつ比較します。最上位のステータスで決まり、同値なら次に進みます。順序はスロットのフィルターウィンドウで変更できます。"/>
+        <string id="EbiMcmMethod" text="検索方式"/>
+        <string id="EbiMcmMethodHint" text="パラメータの重み：バランス重視 - 重み付けした全ステータスが評価され、突出した単一ステータスが他を圧倒せず、明確に優れている場合のみ交換を提案します。ステータス優先度：厳格な順位 - 最上位のステータスが決定し、下位は同値の時のみ比較。順序と連結はスロットのフィルターで設定。ゲームの有効性：ゲーム内蔵の総合スコア - 設定不要ですが大まかです。"/>
+        <string id="EbiMcmMethodWeights" text="パラメータの重み"/>
+        <string id="EbiMcmMethodPriority" text="ステータス優先度"/>
+        <string id="EbiMcmMethodEffectiveness" text="ゲームの有効性スコア"/>
         <string id="EbiMcmButtonColor" text="スロットボタンの色"/>
         <string id="EbiMcmButtonColorHint" text="スロットごとの装備ボタンの色合い。#RRGGBB または #RRGGBBAA。#FFFFFF で元の見た目を保ちます。所持品を開き直すと適用されます。"/>
         <string id="EbiMcmButtonColorReset" text="ボタンの色をリセット"/>

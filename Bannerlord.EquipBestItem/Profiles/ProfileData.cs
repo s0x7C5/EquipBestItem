@@ -19,6 +19,14 @@ public sealed class SlotProfileData
 {
     public Dictionary<string, float>? Weights { get; set; }
 
+    /// <summary>
+    ///     Stat-priority order for the priority search mode, most important
+    ///     first. One entry is a group of equal-rank stats joined with '+'
+    ///     ("HitPoints+BodyArmor"). Null = never customized; an empty list =
+    ///     locked out of priority searches.
+    /// </summary>
+    public List<string>? Priorities { get; set; }
+
     public string? WeaponClass { get; set; }
 
     /// <summary>Restrict the search to items of this culture (e.g. "empire").</summary>

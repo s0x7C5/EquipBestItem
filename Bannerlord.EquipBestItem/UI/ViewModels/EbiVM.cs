@@ -30,7 +30,7 @@ public sealed class EbiVM : ViewModel
 
         // Recompute the slot buttons on every weights change: the player has
         // just changed what "best" means, so the previews follow live.
-        SlotSettings = new SlotWeightsVM(services.Profiles, RecomputeBestItems);
+        SlotSettings = new SlotWeightsVM(services.Profiles, services.Settings, RecomputeBestItems);
         Ai = new AiPromptVM(
             services.Interpreter, services.Profiles, gateway,
             RecomputeBestItems, services.Settings.Ai.IsConfigured);

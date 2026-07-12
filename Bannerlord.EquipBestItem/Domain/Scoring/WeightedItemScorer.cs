@@ -1,29 +1,40 @@
 using System;
-using System.Collections.Generic;
 using TaleWorlds.Core;
 
 namespace Bannerlord.EquipBestItem.Domain.Scoring;
 
 /// <summary>
-///     Normalized weighted sum of item stats: sum(w * v/scale) / sum(|w|),
-///     where each stat is divided by a fixed per-parameter reference
-///     (<see cref="ParamScales" />). The reference puts parameters on a common
-///     range so a weight of 1 on hit points is comparable to a weight of 1 on
-///     maneuver, while preserving magnitude and keeping the score independent
-///     of whatever else is in the inventory (so the pick is stable across
-///     equips). Stat vectors are cached per (item, modifier) pair until the
-///     inventory is refreshed, so repeated searches stay O(items) with no
-///     re-extraction.
+///     Weighted sum of item stats with diminishing returns:
+///     sum(w * sqrt(v/scale)) / sum(|w|), each stat first brought onto a
+///     common range by a fixed per-parameter reference (<see cref="ParamScales" />).
+///     The square root makes gains near the bottom of a stat worth more than
+///     gains near the top, so balanced items beat one-huge-stat freaks — a
+///     linear sum lets any surplus buy off any deficit, which is not how a
+///     player judges gear. The fixed reference keeps a weight of 1 on hit
+///     points comparable to a weight of 1 on maneuver and the score
+///     independent of whatever else is in the inventory.
 /// </summary>
 public sealed class WeightedItemScorer : IItemScorer
 {
-    private readonly Dictionary<CacheKey, float[]> _statCache = new();
-    private EquipmentElement _cachedHarness;
+    // A trade-off candidate must clear the current item by this relative
+    // margin (with a small absolute floor near zero scores) before it is
+    // suggested; stat-dominant candidates pass without it. Kills both the
+    // "swapped two near-identical shields" churn and lopsided trades.
+    private const float UpgradeMargin = 0.05f;
+    private const float MinUpgradeStep = 0.01f;
+    private const float StatEpsilon = 0.001f;
+
+    private readonly ItemStatCache _stats;
+
+    public WeightedItemScorer(ItemStatCache stats)
+    {
+        _stats = stats;
+    }
 
     public float Score(EquipmentElement element, in SearchContext context)
     {
         var weights = context.Query.Weights.Raw;
-        var stats = GetStats(element, context.Equipment[EquipmentIndex.HorseHarness]);
+        var stats = _stats.GetStats(element, context.Equipment[EquipmentIndex.HorseHarness]);
         var invScale = ParamScales.Inverse;
 
         var weightedSum = 0f;
@@ -34,59 +45,44 @@ public sealed class WeightedItemScorer : IItemScorer
             var weight = weights[i];
             if (weight == 0f) continue;
 
-            weightedSum += stats[i] * invScale[i] * weight;
+            var normalized = stats[i] * invScale[i];
+            weightedSum += (float)Math.Sqrt(normalized) * weight;
             weightTotal += Math.Abs(weight);
         }
 
         return weightTotal > 0f ? weightedSum / weightTotal : 0f;
     }
 
-    /// <summary>Drop cached stats. Call when the inventory contents change.</summary>
-    public void InvalidateCache()
+    /// <summary>
+    ///     A candidate that is at least as good on every weighted stat (and
+    ///     better overall) is always a safe suggestion. A trade-off candidate
+    ///     must clear the score margin instead.
+    /// </summary>
+    public bool BeatsCurrent(EquipmentElement candidate, EquipmentElement current, in SearchContext context)
     {
-        _statCache.Clear();
-    }
+        var candidateScore = Score(candidate, context);
+        var currentScore = Score(current, context);
+        if (candidateScore <= currentScore) return false;
 
-    private float[] GetStats(EquipmentElement element, EquipmentElement harness)
-    {
-        // Mount stats depend on the equipped harness; a harness change invalidates them.
-        if (!Equals(_cachedHarness.Item, harness.Item))
+        if (candidateScore >= currentScore + Math.Max(Math.Abs(currentScore) * UpgradeMargin, MinUpgradeStep))
+            return true;
+
+        // Within the margin: only a dominating candidate (no downside on any
+        // stat the player weighs) is suggested.
+        var weights = context.Query.Weights.Raw;
+        var harness = context.Equipment[EquipmentIndex.HorseHarness];
+        var candidateStats = _stats.GetStats(candidate, harness);
+        var currentStats = _stats.GetStats(current, harness);
+
+        for (var i = 0; i < weights.Length; i++)
         {
-            _statCache.Clear();
-            _cachedHarness = harness;
+            var weight = weights[i];
+            if (weight == 0f) continue;
+
+            var gain = (candidateStats[i] - currentStats[i]) * Math.Sign(weight);
+            if (gain < -StatEpsilon) return false;
         }
 
-        var key = new CacheKey(element.Item, element.ItemModifier);
-        if (_statCache.TryGetValue(key, out var stats)) return stats;
-
-        stats = new float[ItemParams.Count];
-        ItemStatExtractor.Fill(element, harness, stats);
-        _statCache[key] = stats;
-        return stats;
-    }
-
-    private readonly struct CacheKey : IEquatable<CacheKey>
-    {
-        private readonly ItemObject? _item;
-        private readonly ItemModifier? _modifier;
-
-        public CacheKey(ItemObject? item, ItemModifier? modifier)
-        {
-            _item = item;
-            _modifier = modifier;
-        }
-
-        public bool Equals(CacheKey other) =>
-            ReferenceEquals(_item, other._item) && ReferenceEquals(_modifier, other._modifier);
-
-        public override bool Equals(object? obj) => obj is CacheKey other && Equals(other);
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((_item?.GetHashCode() ?? 0) * 397) ^ (_modifier?.GetHashCode() ?? 0);
-            }
-        }
+        return true;
     }
 }

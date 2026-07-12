@@ -44,10 +44,18 @@ internal static class ModRuntime
             new QueryConstraintFilter()
         });
 
+        var statCache = new ItemStatCache();
+
         Services = new ModServices(
             settings,
             new ProfileService(store),
-            new EquipBestService(finder, new WeightedItemScorer(), new EffectivenessItemScorer(), settings),
+            new EquipBestService(
+                finder,
+                new WeightedItemScorer(statCache),
+                new EffectivenessItemScorer(),
+                new PriorityItemComparer(statCache),
+                statCache,
+                settings),
             new LlmRequestInterpreter(settings.Ai),
             () => store.Save("settings.json", settings));
     }

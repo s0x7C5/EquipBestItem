@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="一般"/>
         <string id="EbiMcmEffectiveness" text="使用遊戲的效能評分"/>
         <string id="EbiMcmEffectivenessHint" text="使用遊戲內建的綜合評分而非各欄位的參數權重來評估物品。向 AI 明確請求的權重仍然優先。"/>
+        <string id="EbiMcmPriority" text="按屬性優先級搜尋"/>
+        <string id="EbiMcmPriorityHint" text="按槽位的優先級順序逐項比較物品屬性，而不是加權評分：最上面的屬性優先，相同時比較下一項。可在槽位的篩選視窗中調整順序。"/>
+        <string id="EbiMcmMethod" text="搜尋方式"/>
+        <string id="EbiMcmMethodHint" text="參數權重：均衡選擇——所有加權屬性都參與計算，單一超高屬性不會壓倒其餘，只有明顯更好時才建議更換。屬性優先級：嚴格排序——最上面的屬性起決定作用，其餘僅在相同時比較；在槽位篩選中調整順序或連接為同級。遊戲效能：遊戲內建的綜合評分——無需設定，但較粗糙。"/>
+        <string id="EbiMcmMethodWeights" text="參數權重"/>
+        <string id="EbiMcmMethodPriority" text="屬性優先級"/>
+        <string id="EbiMcmMethodEffectiveness" text="遊戲效能評分"/>
         <string id="EbiMcmButtonColor" text="欄位按鈕顏色"/>
         <string id="EbiMcmButtonColorHint" text="各欄位裝備按鈕的色調，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外觀。重新開啟物品欄時生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按鈕顏色"/>

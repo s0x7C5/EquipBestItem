@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Geral"/>
         <string id="EbiMcmEffectiveness" text="Usar a pontuação de Eficácia do jogo"/>
         <string id="EbiMcmEffectivenessHint" text="Pontuar os itens com o valor agregado do próprio jogo em vez dos pesos de parâmetros por espaço. Pesos solicitados explicitamente à IA ainda têm prioridade."/>
+        <string id="EbiMcmPriority" text="Busca por prioridade"/>
+        <string id="EbiMcmPriorityHint" text="Compara os itens atributo por atributo na ordem de prioridade do slot em vez da pontuação ponderada: o atributo do topo decide, em caso de empate o próximo. Reordene os atributos na janela de filtro do slot."/>
+        <string id="EbiMcmMethod" text="Método de busca"/>
+        <string id="EbiMcmMethodHint" text="Pesos de parâmetros: escolha equilibrada - todos os atributos ponderados contam, um único atributo enorme não supera o resto, a troca só é sugerida com clara vantagem. Prioridade de atributos: ordem estrita - o atributo do topo decide, os demais só em caso de empate; reordene e vincule atributos no filtro do slot. Efetividade do jogo: a pontuação geral integrada do jogo - sem ajustes, porém grosseira."/>
+        <string id="EbiMcmMethodWeights" text="Pesos de parâmetros"/>
+        <string id="EbiMcmMethodPriority" text="Prioridade de atributos"/>
+        <string id="EbiMcmMethodEffectiveness" text="Efetividade do jogo"/>
         <string id="EbiMcmButtonColor" text="Cor dos botões de espaço"/>
         <string id="EbiMcmButtonColorHint" text="Tonalidade dos botões de equipar por espaço, #RRGGBB ou #RRGGBBAA. #FFFFFF mantém a aparência original. Aplicado ao reabrir o inventário."/>
         <string id="EbiMcmButtonColorReset" text="Redefinir a cor dos botões"/>

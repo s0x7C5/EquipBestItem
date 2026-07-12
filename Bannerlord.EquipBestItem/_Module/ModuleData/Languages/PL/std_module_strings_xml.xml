@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Ogólne"/>
         <string id="EbiMcmEffectiveness" text="Użyj oceny Skuteczności z gry"/>
         <string id="EbiMcmEffectivenessHint" text="Oceniaj przedmioty wbudowaną zbiorczą oceną gry zamiast wag parametrów dla slotów. Wagi wyraźnie zażądane od AI nadal mają pierwszeństwo."/>
+        <string id="EbiMcmPriority" text="Wyszukiwanie priorytetowe"/>
+        <string id="EbiMcmPriorityHint" text="Porównuj przedmioty statystyka po statystyce w kolejności priorytetów slotu zamiast oceny ważonej: decyduje najwyższa statystyka, przy remisie następna. Kolejność ustawisz w oknie filtra slotu."/>
+        <string id="EbiMcmMethod" text="Metoda wyszukiwania"/>
+        <string id="EbiMcmMethodHint" text="Wagi parametrów: wybór zrównoważony - liczą się wszystkie ważone statystyki, jedna wielka statystyka nie przeważa reszty, zamiana jest sugerowana tylko przy wyraźnej przewadze. Priorytet statystyk: ścisła kolejność - decyduje najwyższa statystyka, kolejne tylko przy remisie; kolejność i łączenie w filtrze slotu. Efektywność gry: wbudowana zbiorcza ocena gry - bez konfiguracji, ale zgrubna."/>
+        <string id="EbiMcmMethodWeights" text="Wagi parametrów"/>
+        <string id="EbiMcmMethodPriority" text="Priorytet statystyk"/>
+        <string id="EbiMcmMethodEffectiveness" text="Ocena efektywności gry"/>
         <string id="EbiMcmButtonColor" text="Kolor przycisków slotów"/>
         <string id="EbiMcmButtonColorHint" text="Odcień przycisków wyposażania dla slotów, #RRGGBB lub #RRGGBBAA. #FFFFFF zachowuje oryginalny wygląd. Stosowane po ponownym otwarciu ekwipunku."/>
         <string id="EbiMcmButtonColorReset" text="Przywróć kolor przycisków"/>

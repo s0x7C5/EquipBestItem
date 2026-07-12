@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
@@ -121,6 +122,7 @@ public sealed class SlotWeightsVM : ViewModel
     }
 
     private readonly ProfileService _profiles;
+    private readonly Settings.ModSettings _settings;
     private readonly Action _onChanged;
 
     /// <summary>Selectable culture restrictions; null = any culture.</summary>
@@ -139,10 +141,13 @@ public sealed class SlotWeightsVM : ViewModel
     private bool _isOnDefault;
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
+    private MBBindingList<PriorityRowVM> _priorityRows = new();
+    private readonly List<List<ItemParam>> _priorityGroups = new();
 
-    public SlotWeightsVM(ProfileService profiles, Action onChanged)
+    public SlotWeightsVM(ProfileService profiles, Settings.ModSettings settings, Action onChanged)
     {
         _profiles = profiles;
+        _settings = settings;
         _onChanged = onChanged;
     }
 
@@ -253,6 +258,25 @@ public sealed class SlotWeightsVM : ViewModel
     }
 
     [DataSourceProperty]
+    public MBBindingList<PriorityRowVM> PriorityRows
+    {
+        get => _priorityRows;
+        set
+        {
+            if (ReferenceEquals(value, _priorityRows)) return;
+            _priorityRows = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
+    /// <summary>Priority mode replaces the weight sliders with a reorderable stat list.</summary>
+    [DataSourceProperty]
+    public bool IsPriorityMode => _settings.UsePriority;
+
+    [DataSourceProperty]
+    public bool IsWeightsMode => !_settings.UsePriority;
+
+    [DataSourceProperty]
     public bool IsWeaponSlot => _slot >= EquipmentIndex.Weapon0 && _slot <= EquipmentIndex.Weapon3;
 
     [DataSourceProperty]
@@ -280,6 +304,9 @@ public sealed class SlotWeightsVM : ViewModel
         OnPropertyChanged(nameof(CultureText));
         OnPropertyChanged(nameof(MaxItemWeight));
         OnPropertyChanged(nameof(MaxItemWeightText));
+        // The search method may have changed in MCM since the popup last opened.
+        OnPropertyChanged(nameof(IsPriorityMode));
+        OnPropertyChanged(nameof(IsWeightsMode));
         RefreshDefaultMarker();
         IsVisible = true;
     }
@@ -315,12 +342,18 @@ public sealed class SlotWeightsVM : ViewModel
         _onChanged();
     }
 
-    /// <summary>Zeroes every weight: an all-zero slot is excluded from searching.</summary>
+    /// <summary>
+    ///     Excludes the slot from searching: zeroes every weight (weights
+    ///     mode) or empties the priority order (priority mode).
+    /// </summary>
     public void ExecuteLock()
     {
         if (_character is null || _equipment is null) return;
 
-        _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
+        if (IsPriorityMode)
+            _profiles.SetPriorities(_character, _equipment, _slot, Array.Empty<IReadOnlyList<ItemParam>>());
+        else
+            _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
         RebuildRows();
         RefreshDefaultMarker();
         _onChanged();
@@ -373,6 +406,12 @@ public sealed class SlotWeightsVM : ViewModel
     {
         if (_character is null || _equipment is null) return;
 
+        if (IsPriorityMode)
+        {
+            RebuildPriorityRows();
+            return;
+        }
+
         var query = _profiles.GetQuery(_character, _equipment, _slot);
 
         var rows = new MBBindingList<ParamRowVM>();
@@ -383,9 +422,108 @@ public sealed class SlotWeightsVM : ViewModel
         UpdateShares();
     }
 
+    private void RebuildPriorityRows()
+    {
+        if (_character is null || _equipment is null) return;
+
+        // GetQuery already normalized the stored order (and its groups) to
+        // the class that matters right now — pinned, or "as equipped" the
+        // equipped item's. A locked (empty) order displays as the defaults.
+        var query = _profiles.GetQuery(_character, _equipment, _slot);
+        var stored = query.Priorities is { Count: > 0 }
+            ? query.Priorities
+            : DefaultPriorities.GroupsFor(_slot,
+                WeaponCategoryChoices[_weaponClassIndex]?.Class
+                ?? _equipment[_slot].Item?.PrimaryWeapon?.WeaponClass);
+
+        _priorityGroups.Clear();
+        foreach (var group in stored)
+            _priorityGroups.Add(new List<ItemParam>(group));
+
+        RefreshPriorityRowsFromGroups();
+    }
+
+    private void RefreshPriorityRowsFromGroups()
+    {
+        var rows = new MBBindingList<PriorityRowVM>();
+        for (var i = 0; i < _priorityGroups.Count; i++)
+        {
+            var chips = new List<PriorityChipVM>(_priorityGroups[i].Count);
+            foreach (var param in _priorityGroups[i])
+                chips.Add(new PriorityChipVM(param, GetParamName(param)));
+            rows.Add(new PriorityRowVM(_priorityGroups[i], i, chips, LinkChip));
+        }
+
+        PriorityRows = rows;
+    }
+
+    /// <summary>
+    ///     Gauntlet drop handler on the rows list: a chip dropped between rows
+    ///     becomes its own rank at that position.
+    /// </summary>
+    public void ExecuteReorderChip(PriorityChipVM chip, int index, string tag)
+    {
+        var insertAt = Math.Max(0, Math.Min(index, _priorityGroups.Count));
+        insertAt -= RemoveChip(chip.Param, insertAt);
+
+        _priorityGroups.Insert(insertAt, new List<ItemParam> { chip.Param });
+        PersistPriorities();
+    }
+
+    private void LinkChip(PriorityChipVM chip, PriorityRowVM row)
+    {
+        if (row.Group.Contains(chip.Param)) return;
+
+        RemoveChip(chip.Param, _priorityGroups.Count);
+        // The row keeps a reference to its backing group, so it stays valid
+        // even when removing the chip collapsed an earlier group.
+        if (!_priorityGroups.Contains(row.Group)) return;
+
+        row.Group.Add(chip.Param);
+        PersistPriorities();
+    }
+
+    /// <summary>
+    ///     Pulls the stat out of whatever group holds it, dropping the group
+    ///     when it empties.
+    /// </summary>
+    /// <returns>1 when a group before <paramref name="insertAt" /> collapsed (the caller's index shifts), else 0.</returns>
+    private int RemoveChip(ItemParam param, int insertAt)
+    {
+        for (var i = 0; i < _priorityGroups.Count; i++)
+        {
+            if (!_priorityGroups[i].Remove(param)) continue;
+
+            if (_priorityGroups[i].Count == 0)
+            {
+                _priorityGroups.RemoveAt(i);
+                return i < insertAt ? 1 : 0;
+            }
+
+            return 0;
+        }
+
+        return 0;
+    }
+
+    private void PersistPriorities()
+    {
+        if (_character is null || _equipment is null) return;
+
+        var order = new List<IReadOnlyList<ItemParam>>(_priorityGroups.Count);
+        foreach (var group in _priorityGroups) order.Add(group.ToArray());
+        _profiles.SetPriorities(_character, _equipment, _slot, order);
+
+        RefreshPriorityRowsFromGroups();
+        RefreshDefaultMarker();
+
+        // Live preview, same as the weight sliders.
+        _onChanged();
+    }
+
     /// <summary>
     ///     Influence share of each visible weight: value / Σ|values|. The
-    ///     scorer computes Σ(w·v) / Σ|w|, so this is exactly the fraction of
+    ///     scorer computes Σ(w·√v̂) / Σ|w|, so this is exactly the fraction of
     ///     the search's attention the parameter gets; the sign shows the
     ///     direction. Absolute shares always add up to 100% and nothing
     ///     explodes when positive and negative weights cancel out (dividing

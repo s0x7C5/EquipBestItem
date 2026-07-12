@@ -142,8 +142,8 @@
                                             </Children>
                                         </ListPanel>
 
-                                        <!-- One template row per visible parameter -->
-                                        <ListPanel DataSource="{Rows}" WidthSizePolicy="StretchToParent"
+                                        <!-- One template row per visible parameter (weights mode) -->
+                                        <ListPanel IsVisible="@IsWeightsMode" DataSource="{Rows}" WidthSizePolicy="StretchToParent"
                                                    HeightSizePolicy="CoverChildren" MarginTop="10"
                                                    StackLayout.LayoutMethod="VerticalTopToBottom">
                                             <ItemTemplate>
@@ -204,6 +204,93 @@
                                                 </ListPanel>
                                             </ItemTemplate>
                                         </ListPanel>
+
+                                        <!-- Priority mode: draggable stat chips grouped into ranks.
+                                             Dropping a chip onto a row's center band links it into
+                                             that rank (equal stats); a drop that misses the band
+                                             lands on this list and inserts the chip as its own rank
+                                             at the computed position. DropEventHandledManually keeps
+                                             Gauntlet from physically reparenting the chip widget —
+                                             the view models rebuild the rows instead. -->
+                                        <EbiPriorityListWidget IsVisible="@IsPriorityMode" DataSource="{PriorityRows}"
+                                                   WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="CoverChildren" MarginTop="10"
+                                                   AcceptDrop="true" DropEventHandledManually="true"
+                                                   Command.Drop="..\ExecuteReorderChip"
+                                                   CommandParameter.Drop="PriorityRows"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                            <ItemTemplate>
+                                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                        SuggestedHeight="56">
+                                                    <Children>
+                                                        <!-- Soft glow while a dragged chip hovers the link
+                                                             band; toggled by the band widget every frame -->
+                                                        <Widget Id="LinkGlow" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent"
+                                                                HeightSizePolicy="StretchToParent"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF"
+                                                                AlphaFactor="0.13"/>
+                                                        <!-- Insertion lines on the row edges; the list widget
+                                                             lights the one matching the engine's drop index -->
+                                                        <Widget Id="EbiRowInsertTop" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                SuggestedHeight="4" VerticalAlignment="Top"
+                                                                MarginLeft="20" MarginRight="20"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF" AlphaFactor="0.7"/>
+                                                        <Widget Id="EbiRowInsertBottom" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                SuggestedHeight="4" VerticalAlignment="Bottom"
+                                                                MarginLeft="20" MarginRight="20"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF" AlphaFactor="0.7"/>
+                                                        <!-- Center band = the "link with this rank" drop
+                                                             target; the strips above and below fall
+                                                             through to the list's insert handling. -->
+                                                        <EbiLinkDropZoneWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                               SuggestedHeight="30" VerticalAlignment="Center"
+                                                                               AcceptDrop="true" DropEventHandledManually="true"
+                                                                               Command.Drop="ExecuteLinkChip"/>
+                                                        <ListPanel WidthSizePolicy="CoverChildren"
+                                                                   HeightSizePolicy="StretchToParent"
+                                                                   HorizontalAlignment="Center"
+                                                                   StackLayout.LayoutMethod="HorizontalLeftToRight"
+                                                                   DoNotAcceptEvents="true">
+                                                            <Children>
+                                                                <TextWidget WidthSizePolicy="Fixed"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            SuggestedWidth="45"
+                                                                            Brush="EquipBestItem.Label.Right"
+                                                                            Text="@PositionText"/>
+                                                                <ListPanel DataSource="{Chips}"
+                                                                           WidthSizePolicy="CoverChildren"
+                                                                           HeightSizePolicy="StretchToParent"
+                                                                           MarginLeft="12"
+                                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                                    <ItemTemplate>
+                                                                        <ButtonWidget DoNotPassEventsToChildren="true"
+                                                                                      WidthSizePolicy="CoverChildren"
+                                                                                      HeightSizePolicy="Fixed"
+                                                                                      SuggestedHeight="46"
+                                                                                      VerticalAlignment="Center"
+                                                                                      MarginRight="8"
+                                                                                      AcceptDrag="true"
+                                                                                      Brush="Popup.Button.Base"
+                                                                                      UpdateChildrenStates="true">
+                                                                            <Children>
+                                                                                <TextWidget WidthSizePolicy="CoverChildren"
+                                                                                            HeightSizePolicy="StretchToParent"
+                                                                                            MarginLeft="28" MarginRight="28"
+                                                                                            Brush="Popup.Button.Text"
+                                                                                            Text="@Name"/>
+                                                                            </Children>
+                                                                        </ButtonWidget>
+                                                                    </ItemTemplate>
+                                                                </ListPanel>
+                                                            </Children>
+                                                        </ListPanel>
+                                                    </Children>
+                                                </Widget>
+                                            </ItemTemplate>
+                                        </EbiPriorityListWidget>
 
                                         <!-- Actions: Default restores the (player-editable) defaults,
                                              Make default saves the current filter as that default,

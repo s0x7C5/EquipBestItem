@@ -27,6 +27,13 @@
         <string id="EbiMcmGroupGeneral" text="Общие"/>
         <string id="EbiMcmEffectiveness" text="Игровая оценка Effectiveness"/>
         <string id="EbiMcmEffectivenessHint" text="Оценивать предметы встроенной игровой формулой вместо весов параметров по слотам. Веса, явно запрошенные у ИИ, всё равно приоритетнее."/>
+        <string id="EbiMcmPriority" text="Поиск по приоритету статов"/>
+        <string id="EbiMcmPriorityHint" text="Сравнивать предметы стат за статом в порядке приоритета вместо взвешенной оценки: решает верхний стат, при равенстве — следующий. Порядок задаётся в окне фильтра слота."/>
+        <string id="EbiMcmMethod" text="Метод поиска"/>
+        <string id="EbiMcmMethodHint" text="Веса параметров: сбалансированный выбор — учитываются все взвешенные статы, один раздутый стат не перевешивает остальные, замена предлагается только при явном превосходстве. Приоритет статов: жёсткий порядок — решает верхний стат, нижние важны лишь при равенстве; порядок и связки настраиваются в фильтре слота. Игровая эффективность: единая встроенная оценка игры — без настройки, но грубая."/>
+        <string id="EbiMcmMethodWeights" text="Веса параметров"/>
+        <string id="EbiMcmMethodPriority" text="Приоритет статов"/>
+        <string id="EbiMcmMethodEffectiveness" text="Игровая эффективность"/>
         <string id="EbiMcmButtonColor" text="Цвет кнопок на слотах"/>
         <string id="EbiMcmButtonColorHint" text="Оттенок кнопок подбора на слотах, #RRGGBB или #RRGGBBAA. #FFFFFF — исходный вид. Применяется при следующем открытии инвентаря."/>
         <string id="EbiMcmButtonColorReset" text="Сбросить цвет кнопок"/>
