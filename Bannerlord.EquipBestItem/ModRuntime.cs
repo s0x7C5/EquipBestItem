@@ -45,16 +45,18 @@ internal static class ModRuntime
         });
 
         var statCache = new ItemStatCache();
+        var percentiles = new ItemStatPercentiles();
 
         Services = new ModServices(
             settings,
             new ProfileService(store),
             new EquipBestService(
                 finder,
-                new WeightedItemScorer(statCache),
+                new WeightedItemScorer(statCache, percentiles),
                 new EffectivenessItemScorer(),
                 new PriorityItemComparer(statCache),
                 statCache,
+                percentiles,
                 settings),
             new LlmRequestInterpreter(settings.Ai),
             () => store.Save("settings.json", settings));

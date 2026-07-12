@@ -5,14 +5,15 @@ namespace Bannerlord.EquipBestItem.Domain.Scoring;
 
 /// <summary>
 ///     Weighted sum of item stats with diminishing returns:
-///     sum(w * sqrt(v/scale)) / sum(|w|), each stat first brought onto a
-///     common range by a fixed per-parameter reference (<see cref="ParamScales" />).
-///     The square root makes gains near the bottom of a stat worth more than
-///     gains near the top, so balanced items beat one-huge-stat freaks — a
-///     linear sum lets any surplus buy off any deficit, which is not how a
-///     player judges gear. The fixed reference keeps a weight of 1 on hit
-///     points comparable to a weight of 1 on maneuver and the score
-///     independent of whatever else is in the inventory.
+///     sum(w * sqrt(percentile(v))) / sum(|w|), each stat first scored as its
+///     percentile within the item's class over the whole catalog
+///     (<see cref="ItemStatPercentiles" />) — self-calibrating, mod-aware,
+///     and unit-free. The square root makes gains near the bottom of a stat
+///     worth more than gains near the top, so balanced items beat
+///     one-huge-stat freaks — a linear sum lets any surplus buy off any
+///     deficit, which is not how a player judges gear. The score depends
+///     only on the item, never on what else is in the inventory, so picks
+///     are stable across equips.
 /// </summary>
 public sealed class WeightedItemScorer : IItemScorer
 {
@@ -25,17 +26,18 @@ public sealed class WeightedItemScorer : IItemScorer
     private const float StatEpsilon = 0.001f;
 
     private readonly ItemStatCache _stats;
+    private readonly ItemStatPercentiles _percentiles;
 
-    public WeightedItemScorer(ItemStatCache stats)
+    public WeightedItemScorer(ItemStatCache stats, ItemStatPercentiles percentiles)
     {
         _stats = stats;
+        _percentiles = percentiles;
     }
 
     public float Score(EquipmentElement element, in SearchContext context)
     {
         var weights = context.Query.Weights.Raw;
         var stats = _stats.GetStats(element, context.Equipment[EquipmentIndex.HorseHarness]);
-        var invScale = ParamScales.Inverse;
 
         var weightedSum = 0f;
         var weightTotal = 0f;
@@ -45,7 +47,7 @@ public sealed class WeightedItemScorer : IItemScorer
             var weight = weights[i];
             if (weight == 0f) continue;
 
-            var normalized = stats[i] * invScale[i];
+            var normalized = _percentiles.Normalize(element.Item, i, stats[i]);
             weightedSum += (float)Math.Sqrt(normalized) * weight;
             weightTotal += Math.Abs(weight);
         }

@@ -23,6 +23,7 @@ public sealed class EquipBestService
     private readonly EffectivenessItemScorer _effectivenessScorer;
     private readonly PriorityItemComparer _priorityComparer;
     private readonly ItemStatCache _statCache;
+    private readonly ItemStatPercentiles _percentiles;
     private readonly ModSettings _settings;
 
     public EquipBestService(
@@ -31,6 +32,7 @@ public sealed class EquipBestService
         EffectivenessItemScorer effectivenessScorer,
         PriorityItemComparer priorityComparer,
         ItemStatCache statCache,
+        ItemStatPercentiles percentiles,
         ModSettings settings)
     {
         _finder = finder;
@@ -38,6 +40,7 @@ public sealed class EquipBestService
         _effectivenessScorer = effectivenessScorer;
         _priorityComparer = priorityComparer;
         _statCache = statCache;
+        _percentiles = percentiles;
         _settings = settings;
     }
 
@@ -116,5 +119,8 @@ public sealed class EquipBestService
     public void InvalidateCaches()
     {
         _statCache.Invalidate();
+        // Crafting registers new items mid-campaign; a size check keeps the
+        // percentile tables current for pennies.
+        _percentiles.Refresh();
     }
 }
