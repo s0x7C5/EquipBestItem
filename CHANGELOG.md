@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.1.0 — 2026-07-12
+
+Two new mechanics ship as **experimental** — they work, but the details may
+still change based on feedback.
+
+- **Priority-based search** (experimental): a third search method — items are
+  ranked by a per-slot stat order instead of weights: the top stat decides,
+  ties fall through to the next one. In the slot filter the stats become
+  draggable chips: drop between rows to reorder, drop onto a row to link
+  stats as equal-rank (equals are judged by their combined value); an
+  insertion line and a row glow preview exactly what a drop will do. Orders
+  follow Default / Make default / Lock like weights do.
+- **Reworked weighted scoring** (experimental): a stat now scores as its
+  percentile within the item's class across the whole item catalog (modded
+  items included) with diminishing returns — balanced items beat
+  one-huge-stat ones, and no hand-tuned scales are involved. A swap is only
+  suggested when the item is clearly better: no downside on any weighted
+  stat, or a noticeably higher score — no more sidegrade churn.
+- The search method is now a single dropdown in MCM, with a hint explaining
+  what each method gives you.
+
 ## 3.0.2 — 2026-07-12
 
 - Fixed item ranking: every parameter is now scored on a common scale, so a
