@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Français"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="Aucun meilleur objet trouvé."/>
         <string id="EbiEquippedCount" text="{COUNT} objet(s) équipé(s)."/>
         <string id="EbiClassAsEquipped" text="Comme équipé"/>
+        <string id="EbiShortBow" text="Arc court"/>
+        <string id="EbiLongBow" text="Arc long"/>
         <string id="ebi_default" text="Défaut"/>
         <string id="ebi_lock" text="Verrouiller"/>
         <string id="ebi_hint_default" text="Réinitialiser aux valeurs par défaut"/>

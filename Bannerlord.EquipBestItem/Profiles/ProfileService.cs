@@ -34,18 +34,17 @@ public sealed class ProfileService
 
         if (profile is null) return new ItemQuery(DefaultWeights.For(slot));
 
-        WeaponClass? pinnedClass =
-            System.Enum.TryParse(profile.WeaponClass, true, out WeaponClass weaponClass) ? weaponClass : null;
+        var pinnedCategory = WeaponCategory.Parse(profile.WeaponClass);
 
         // Null weights = never customized (only a weapon class was pinned):
         // fall back to that class's defaults. An empty dictionary is different —
         // it is a locked slot (the player zeroed everything).
         var weights = profile.Weights is null
-            ? DefaultWeights.For(slot, pinnedClass)
+            ? DefaultWeights.For(slot, pinnedCategory?.Class)
             : ParamWeights.FromDictionary(profile.Weights);
 
         var query = new ItemQuery(weights);
-        if (pinnedClass is { } pinned) query.WeaponClass = pinned;
+        if (pinnedCategory is { } pinned) query.WeaponCategory = pinned;
         if (!string.IsNullOrEmpty(profile.Culture)) query.CultureId = profile.Culture;
         if (profile.MaxItemWeight is { } maxWeight and > 0f) query.MaxItemWeight = maxWeight;
         return query;
@@ -56,9 +55,9 @@ public sealed class ProfileService
         GetOrCreateSlotProfile(character, equipment, slot).Weights = weights.ToDictionary();
     }
 
-    public void SetWeaponClass(CharacterObject character, Equipment equipment, EquipmentIndex slot, WeaponClass? weaponClass)
+    public void SetWeaponCategory(CharacterObject character, Equipment equipment, EquipmentIndex slot, WeaponCategory? category)
     {
-        GetOrCreateSlotProfile(character, equipment, slot).WeaponClass = weaponClass?.ToString();
+        GetOrCreateSlotProfile(character, equipment, slot).WeaponClass = category?.ToString();
     }
 
     /// <summary>Hard constraints; null clears the constraint.</summary>
@@ -87,7 +86,7 @@ public sealed class ProfileService
         _data.Defaults[slot.ToString()] = new SlotProfileData
         {
             Weights = query.Weights.ToDictionary(),
-            WeaponClass = query.WeaponClass?.ToString(),
+            WeaponClass = query.WeaponCategory?.ToString(),
             Culture = query.CultureId,
             MaxItemWeight = query.MaxItemWeight > 0f ? query.MaxItemWeight : null
         };

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Русский"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>
+        <string id="EbiShortBow" text="Короткий лук"/>
+        <string id="EbiLongBow" text="Длинный лук"/>
         <string id="ebi_default" text="По умолчанию"/>
         <string id="ebi_lock" text="Отключить"/>
         <string id="ebi_hint_default" text="Сбросить к значениям по умолчанию"/>

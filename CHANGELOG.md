@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.0.2 — 2026-07-12
+
+- Fixed item ranking: every parameter is now scored on a common scale, so a
+  single large stat (a mount's or shield's hit points) no longer drowns out the
+  rest. Better mounts and shields are picked correctly instead of just the
+  highest-HP one.
+- Bows are split into **Short Bow** and **Long Bow**: the mod no longer replaces
+  a horseback-usable short bow with a long bow that cannot be fired mounted, and
+  each can be pinned separately per weapon slot.
+- Shields, bows and crossbows now tune **Swing Speed** — the "Speed" the game
+  shows on them — instead of a hidden thrust-speed value. Shield defaults match
+  the game's tooltip (hit points and swing speed); thrust speed and length stay
+  available as optional sliders.
+- Marked compatible with Bannerlord v1.4.7.
+
 ## 3.0.1 — 2026-07-12
 
 - Fixed: the character model in the inventory now updates immediately when

@@ -37,16 +37,21 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.WeaponLength, ItemParam.Handling, ItemParam.Weight
     };
 
+    // The "Speed" the game prints on bows, crossbows and shields is the SWING
+    // speed (speed_rating in the item XML). Their thrust_speed and (for
+    // ranged) weapon_length are hidden from the game's tooltip but filled and
+    // varying in the data, so they stay tunable — just at 0 by default.
     private static readonly ItemParam[] BowParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.ThrustSpeed, ItemParam.Weight
+        ItemParam.SwingSpeed, ItemParam.ThrustSpeed, ItemParam.WeaponLength, ItemParam.Weight
     };
 
     private static readonly ItemParam[] CrossbowParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.ThrustSpeed, ItemParam.MaxAmmo, ItemParam.Weight
+        ItemParam.SwingSpeed, ItemParam.ThrustSpeed, ItemParam.WeaponLength,
+        ItemParam.MaxAmmo, ItemParam.Weight
     };
 
     private static readonly ItemParam[] ThrownParams =
@@ -62,34 +67,57 @@ public sealed class SlotWeightsVM : ViewModel
 
     private static readonly ItemParam[] ShieldParams =
     {
-        ItemParam.HitPoints, ItemParam.BodyArmor, ItemParam.ThrustSpeed,
-        ItemParam.WeaponLength, ItemParam.Weight
+        ItemParam.HitPoints, ItemParam.BodyArmor, ItemParam.SwingSpeed,
+        ItemParam.ThrustSpeed, ItemParam.WeaponLength, ItemParam.Weight
     };
 
-    private static readonly WeaponClass?[] WeaponClassChoices =
+    private static readonly WeaponCategory?[] WeaponCategoryChoices =
     {
         null,
-        TaleWorlds.Core.WeaponClass.OneHandedSword, TaleWorlds.Core.WeaponClass.TwoHandedSword,
-        TaleWorlds.Core.WeaponClass.OneHandedAxe, TaleWorlds.Core.WeaponClass.TwoHandedAxe,
-        TaleWorlds.Core.WeaponClass.Mace, TaleWorlds.Core.WeaponClass.TwoHandedMace,
-        TaleWorlds.Core.WeaponClass.Dagger,
-        TaleWorlds.Core.WeaponClass.OneHandedPolearm, TaleWorlds.Core.WeaponClass.TwoHandedPolearm,
-        TaleWorlds.Core.WeaponClass.Bow, TaleWorlds.Core.WeaponClass.Crossbow,
-        TaleWorlds.Core.WeaponClass.Arrow, TaleWorlds.Core.WeaponClass.Bolt,
-        TaleWorlds.Core.WeaponClass.Javelin, TaleWorlds.Core.WeaponClass.ThrowingAxe,
-        TaleWorlds.Core.WeaponClass.ThrowingKnife,
-        TaleWorlds.Core.WeaponClass.SmallShield, TaleWorlds.Core.WeaponClass.LargeShield
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedSword),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedSword),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Mace),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedMace),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Dagger),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedPolearm),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedPolearm),
+        WeaponCategory.ShortBow, WeaponCategory.LongBow,
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Crossbow),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Arrow),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Bolt),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Javelin),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.ThrowingAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.ThrowingKnife),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.SmallShield),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.LargeShield)
     };
 
-    /// <summary>Every weapon class a slot can pin (the popup's selector, minus "as equipped").</summary>
-    internal static IEnumerable<WeaponClass> PinnableWeaponClasses
+    /// <summary>Every weapon category a slot can pin (the popup's selector, minus "as equipped").</summary>
+    internal static IEnumerable<WeaponCategory> PinnableWeaponCategories
     {
         get
         {
-            foreach (var choice in WeaponClassChoices)
-                if (choice is { } weaponClass)
-                    yield return weaponClass;
+            foreach (var choice in WeaponCategoryChoices)
+                if (choice is { } category)
+                    yield return category;
         }
+    }
+
+    /// <summary>
+    ///     The localized category name: the game's own weapon class string,
+    ///     except the bow split, which is the mod's.
+    /// </summary>
+    internal static string GetCategoryName(WeaponCategory category)
+    {
+        if (category.Class != TaleWorlds.Core.WeaponClass.Bow)
+            // The game's tooltip uses the enum NAME as the text variation.
+            return GameTexts.FindText("str_inventory_weapon", category.Class.ToString()).ToString();
+
+        return (category.IsLongBow
+            ? new TextObject("{=EbiLongBow}Long Bow")
+            : new TextObject("{=EbiShortBow}Short Bow")).ToString();
     }
 
     private readonly ProfileService _profiles;
@@ -228,9 +256,8 @@ public sealed class SlotWeightsVM : ViewModel
     public bool IsWeaponSlot => _slot >= EquipmentIndex.Weapon0 && _slot <= EquipmentIndex.Weapon3;
 
     [DataSourceProperty]
-    public string WeaponClassText => WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-        // The game's tooltip uses the enum NAME as the text variation.
-        ? GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString()
+    public string WeaponClassText => WeaponCategoryChoices[_weaponClassIndex] is { } category
+        ? GetCategoryName(category)
         : new TextObject("{=EbiClassAsEquipped}As equipped").ToString();
 
     public void Open(CharacterObject character, Equipment equipment, EquipmentIndex slot)
@@ -240,7 +267,7 @@ public sealed class SlotWeightsVM : ViewModel
         _slot = slot;
 
         var query = _profiles.GetQuery(character, equipment, slot);
-        _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponClassChoices, query.WeaponClass));
+        _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponCategoryChoices, query.WeaponCategory));
         _cultureIndex = Math.Max(0, Array.IndexOf(CultureChoices, query.CultureId));
         _maxItemWeight = query.MaxItemWeight;
 
@@ -330,10 +357,10 @@ public sealed class SlotWeightsVM : ViewModel
     {
         if (_character is null || _equipment is null) return;
 
-        var count = WeaponClassChoices.Length;
+        var count = WeaponCategoryChoices.Length;
         _weaponClassIndex = (_weaponClassIndex + step + count) % count;
 
-        _profiles.SetWeaponClass(_character, _equipment, _slot, WeaponClassChoices[_weaponClassIndex]);
+        _profiles.SetWeaponCategory(_character, _equipment, _slot, WeaponCategoryChoices[_weaponClassIndex]);
         OnPropertyChanged(nameof(WeaponClassText));
         RefreshDefaultMarker();
 
@@ -395,8 +422,8 @@ public sealed class SlotWeightsVM : ViewModel
     private IReadOnlyList<ItemParam> GetVisibleParams()
     {
         if (IsWeaponSlot)
-            return WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-                ? GetParamsForWeaponClass(weaponClass)
+            return WeaponCategoryChoices[_weaponClassIndex] is { } category
+                ? GetParamsForWeaponClass(category.Class)
                 : WeaponParams;
 
         if (_slot == EquipmentIndex.Horse) return HorseParams;

@@ -230,7 +230,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
       "weights": { "<param>": <float -1..1> },
       "maxItemWeight": <optional float, kg>,
       "culture": "<optional: empire|sturgia|aserai|vlandia|battania|khuzait>",
-      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, Bow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>"
+      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, ShortBow, LongBow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>"
     }
   ]
 }
@@ -256,7 +256,9 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
             "weaponClass only makes sense for weapon slots. Match the grip exactly, whatever the request " +
             "language: one-handed -> OneHanded…, two-handed -> TwoHanded…, never swap them; " +
-            "when the player does not say which, pick the OneHanded… variant.");
+            "when the player does not say which, pick the OneHanded… variant. " +
+            "Bows are two classes: LongBow cannot be fired from horseback; when the player just says " +
+            "\"a bow\", pick ShortBow (usable everywhere) unless they clearly fight on foot.");
         builder.AppendLine(
             "When the request names one specific piece of gear (a helmet, gloves, boots, a cape, a cuirass — " +
             "in any language), emit exactly one directive for that piece's slot " +
@@ -272,7 +274,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine();
         builder.AppendLine("Examples:");
         builder.AppendLine("""User: "dress me in the lightest imperial armor" -> {"explanation":"Looking for the lightest imperial armor.","directives":[{"slot":"AllArmor","weights":{"Weight":-1.0},"culture":"empire"}]}""");
-        builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"Bow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
+        builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"ShortBow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
         builder.AppendLine("""User: "find a helmet with the best leg protection" -> {"explanation":"Picking the best-protecting helmet (a helmet cannot protect legs).","directives":[{"slot":"Head","weights":{"HeadArmor":1.0}}]}""");
         builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
         builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");

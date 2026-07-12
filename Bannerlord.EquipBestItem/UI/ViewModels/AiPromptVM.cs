@@ -197,7 +197,7 @@ public sealed class AiPromptVM : ViewModel
             else
                 _profiles.ResetSlot(targetCharacter, targetEquipment, directive.Slot);
 
-            _profiles.SetWeaponClass(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponClass);
+            _profiles.SetWeaponCategory(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponCategory);
             _profiles.SetConstraints(
                 targetCharacter, targetEquipment, directive.Slot,
                 directive.Query.CultureId, directive.Query.MaxItemWeight);
@@ -276,8 +276,8 @@ public sealed class AiPromptVM : ViewModel
             parts.Add(new TextObject("{=ebi_default}Default").ToString());
         }
 
-        if (directive.Query.WeaponClass is { } weaponClass)
-            parts.Add(GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString());
+        if (directive.Query.WeaponCategory is { } category)
+            parts.Add(SlotWeightsVM.GetCategoryName(category));
 
         if (directive.Query.CultureId is { } cultureId)
             parts.Add(SlotWeightsVM.GetCultureName(cultureId));

@@ -5,9 +5,15 @@ using TaleWorlds.Core;
 namespace Bannerlord.EquipBestItem.Domain.Scoring;
 
 /// <summary>
-///     Normalized weighted sum of item stats: sum(w * v) / sum(|w|).
-///     Stat vectors are cached per (item, modifier) pair until the inventory
-///     is refreshed, so repeated searches stay O(items) with no re-extraction.
+///     Normalized weighted sum of item stats: sum(w * v/scale) / sum(|w|),
+///     where each stat is divided by a fixed per-parameter reference
+///     (<see cref="ParamScales" />). The reference puts parameters on a common
+///     range so a weight of 1 on hit points is comparable to a weight of 1 on
+///     maneuver, while preserving magnitude and keeping the score independent
+///     of whatever else is in the inventory (so the pick is stable across
+///     equips). Stat vectors are cached per (item, modifier) pair until the
+///     inventory is refreshed, so repeated searches stay O(items) with no
+///     re-extraction.
 /// </summary>
 public sealed class WeightedItemScorer : IItemScorer
 {
@@ -18,6 +24,7 @@ public sealed class WeightedItemScorer : IItemScorer
     {
         var weights = context.Query.Weights.Raw;
         var stats = GetStats(element, context.Equipment[EquipmentIndex.HorseHarness]);
+        var invScale = ParamScales.Inverse;
 
         var weightedSum = 0f;
         var weightTotal = 0f;
@@ -27,7 +34,7 @@ public sealed class WeightedItemScorer : IItemScorer
             var weight = weights[i];
             if (weight == 0f) continue;
 
-            weightedSum += stats[i] * weight;
+            weightedSum += stats[i] * invScale[i] * weight;
             weightTotal += Math.Abs(weight);
         }
 

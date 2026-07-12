@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="한국어"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="더 나은 아이템을 찾지 못했습니다."/>
         <string id="EbiEquippedCount" text="아이템 {COUNT}개를 장착했습니다."/>
         <string id="EbiClassAsEquipped" text="장착 중인 것과 동일"/>
+        <string id="EbiShortBow" text="단궁"/>
+        <string id="EbiLongBow" text="장궁"/>
         <string id="ebi_default" text="기본값"/>
         <string id="ebi_lock" text="잠금"/>
         <string id="ebi_hint_default" text="기본값으로 초기화"/>

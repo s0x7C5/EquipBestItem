@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="日本語"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="より良い装備は見つかりませんでした。"/>
         <string id="EbiEquippedCount" text="{COUNT} 個の装備を装着しました。"/>
         <string id="EbiClassAsEquipped" text="装備中のものと同じ"/>
+        <string id="EbiShortBow" text="短弓"/>
+        <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="デフォルト"/>
         <string id="ebi_lock" text="ロック"/>
         <string id="ebi_hint_default" text="デフォルト値にリセット"/>

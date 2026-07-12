@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="繁體中文"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="未找到更好的物品。"/>
         <string id="EbiEquippedCount" text="已裝備 {COUNT} 件物品。"/>
         <string id="EbiClassAsEquipped" text="與目前裝備相同"/>
+        <string id="EbiShortBow" text="短弓"/>
+        <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="預設"/>
         <string id="ebi_lock" text="鎖定"/>
         <string id="ebi_hint_default" text="重設為預設值"/>

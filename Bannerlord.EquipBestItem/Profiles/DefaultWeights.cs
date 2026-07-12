@@ -81,17 +81,20 @@ public static class DefaultWeights
     {
         switch (weaponClass)
         {
+            // The "Speed" the game prints on bows, crossbows and shields is the
+            // SWING speed (speed_rating); their thrust_speed is a separate,
+            // never-displayed number.
             case WeaponClass.Bow:
                 weights[ItemParam.MissileDamage] = 1f;
                 weights[ItemParam.MissileSpeed] = 1f;
                 weights[ItemParam.Accuracy] = 1f;
-                weights[ItemParam.ThrustSpeed] = 1f;
+                weights[ItemParam.SwingSpeed] = 1f;
                 break;
             case WeaponClass.Crossbow:
                 weights[ItemParam.MissileDamage] = 1f;
                 weights[ItemParam.MissileSpeed] = 1f;
                 weights[ItemParam.Accuracy] = 1f;
-                weights[ItemParam.ThrustSpeed] = 1f;
+                weights[ItemParam.SwingSpeed] = 1f;
                 weights[ItemParam.MaxAmmo] = 1f;
                 break;
             case WeaponClass.Arrow:
@@ -108,12 +111,14 @@ public static class DefaultWeights
                 weights[ItemParam.WeaponLength] = 1f;
                 weights[ItemParam.MaxAmmo] = 1f;
                 break;
+            // The game's shield tooltip shows only Hit Points and Swing Speed.
+            // Body armor and length are hidden and quirky for shields — an oval
+            // shield's length is 435 in the data, a mesh artifact, not reach —
+            // so they stay off by default (available as optional sliders).
             case WeaponClass.SmallShield:
             case WeaponClass.LargeShield:
                 weights[ItemParam.HitPoints] = 1f;
-                weights[ItemParam.BodyArmor] = 1f;
-                weights[ItemParam.ThrustSpeed] = 1f;
-                weights[ItemParam.WeaponLength] = 1f;
+                weights[ItemParam.SwingSpeed] = 1f;
                 break;
             default: // melee: swords, axes, maces, polearms, daggers
                 weights[ItemParam.ThrustDamage] = 1f;

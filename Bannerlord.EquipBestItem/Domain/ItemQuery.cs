@@ -1,5 +1,3 @@
-using TaleWorlds.Core;
-
 namespace Bannerlord.EquipBestItem.Domain;
 
 /// <summary>
@@ -16,8 +14,8 @@ public sealed class ItemQuery
 
     public ParamWeights Weights { get; }
 
-    /// <summary>Restrict the search to a specific weapon class (weapon slots only).</summary>
-    public WeaponClass? WeaponClass { get; set; }
+    /// <summary>Restrict the search to a specific weapon category (weapon slots only).</summary>
+    public WeaponCategory? WeaponCategory { get; set; }
 
     /// <summary>Skip items heavier than this. Non-positive value disables the constraint.</summary>
     public float MaxItemWeight { get; set; }

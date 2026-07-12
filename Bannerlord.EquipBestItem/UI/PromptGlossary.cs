@@ -37,13 +37,13 @@ internal static class PromptGlossary
 
         builder.Append(".\nWeapon classes: ");
         var first = true;
-        foreach (var weaponClass in SlotWeightsVM.PinnableWeaponClasses)
+        foreach (var category in SlotWeightsVM.PinnableWeaponCategories)
         {
             if (!first) builder.Append(", ");
             first = false;
             builder.Append('"')
-                .Append(GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString())
-                .Append("\" = ").Append(weaponClass);
+                .Append(SlotWeightsVM.GetCategoryName(category))
+                .Append("\" = ").Append(category);
         }
 
         builder.Append(".\nSlots: ");

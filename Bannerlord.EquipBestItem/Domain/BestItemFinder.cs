@@ -73,15 +73,22 @@ public sealed class BestItemFinder
 
     private static float GetCurrentSlotScore(in SearchContext context, IItemScorer scorer)
     {
+        return CurrentSetsBaseline(context) ? scorer.Score(context.Equipment[context.Slot], context) : 0f;
+    }
+
+    /// <summary>
+    ///     A pinned weapon category the current item does not match means the
+    ///     player wants a replacement, so the current item sets no baseline.
+    /// </summary>
+    private static bool CurrentSetsBaseline(in SearchContext context)
+    {
         var current = context.Equipment[context.Slot];
-        if (current.IsEmpty || current.Item is null) return 0f;
+        if (current.IsEmpty || current.Item is null) return false;
 
-        // A pinned weapon class different from the current item means the player
-        // wants a replacement, so the current item sets no baseline.
-        if (context.Query.WeaponClass is { } pinnedClass &&
-            current.Item.PrimaryWeapon?.WeaponClass != pinnedClass)
-            return 0f;
+        if (context.Query.WeaponCategory is { } pinned &&
+            (current.Item.PrimaryWeapon is not { } currentWeapon || !pinned.Matches(currentWeapon)))
+            return false;
 
-        return scorer.Score(current, context);
+        return true;
     }
 }

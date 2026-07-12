@@ -4,8 +4,8 @@ using TaleWorlds.Core;
 namespace Bannerlord.EquipBestItem.Domain.Filtering;
 
 /// <summary>
-///     For weapon slots: a candidate must either match the weapon class pinned
-///     in the query, or be interchangeable with the currently equipped weapon
+///     For weapon slots: a candidate must either match the weapon category
+///     pinned in the query, or be interchangeable with the currently equipped weapon
 ///     (same class, usage and component layout), so that "find best" never
 ///     silently swaps a bow for a mace.
 /// </summary>
@@ -21,8 +21,8 @@ public sealed class WeaponMatchFilter : IItemFilter
         if (candidateWeapon is null) return false;
         if (candidateWeapon.WeaponClass == WeaponClass.Banner) return false;
 
-        if (context.Query.WeaponClass is { } pinnedClass)
-            return candidateWeapon.WeaponClass == pinnedClass;
+        if (context.Query.WeaponCategory is { } pinned)
+            return pinned.Matches(candidateWeapon);
 
         var current = context.Equipment[slot].Item;
         var currentWeapon = current?.PrimaryWeapon;

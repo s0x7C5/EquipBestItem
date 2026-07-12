@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Türkçe"/>
@@ -7,6 +7,8 @@
         <string id="EbiNothingBetter" text="Daha iyi bir eşya bulunamadı."/>
         <string id="EbiEquippedCount" text="{COUNT} eşya kuşanıldı."/>
         <string id="EbiClassAsEquipped" text="Kuşanıldığı gibi"/>
+        <string id="EbiShortBow" text="Kısa yay"/>
+        <string id="EbiLongBow" text="Uzun yay"/>
         <string id="ebi_default" text="Varsayılan"/>
         <string id="ebi_lock" text="Kilitle"/>
         <string id="ebi_hint_default" text="Varsayılan değerlere sıfırla"/>
