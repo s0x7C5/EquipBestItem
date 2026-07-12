@@ -28,6 +28,7 @@ public sealed class AiPromptVM : ViewModel
     private readonly IRequestInterpreter _interpreter;
     private readonly ProfileService _profiles;
     private readonly InventoryGateway _gateway;
+    private readonly Settings.ModSettings _settings;
     private readonly Action _onApplied;
 
     private CancellationTokenSource? _pendingRequest;
@@ -40,14 +41,15 @@ public sealed class AiPromptVM : ViewModel
         IRequestInterpreter interpreter,
         ProfileService profiles,
         InventoryGateway gateway,
-        Action onApplied,
-        bool isConfigured)
+        Settings.ModSettings settings,
+        Action onApplied)
     {
         _interpreter = interpreter;
         _profiles = profiles;
         _gateway = gateway;
+        _settings = settings;
         _onApplied = onApplied;
-        IsConfigured = isConfigured;
+        IsConfigured = settings.Ai.IsConfigured;
     }
 
     [DataSourceProperty]
@@ -118,7 +120,8 @@ public sealed class AiPromptVM : ViewModel
             CollectNotableSkills(character),
             PromptGlossary.Text,
             CollectPartyHeroes(),
-            MBTextManager.ActiveTextLanguage);
+            MBTextManager.ActiveTextLanguage,
+            _settings.UsePriority ? "priority" : _settings.UseEffectiveness ? "effectiveness" : "weights");
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();
@@ -191,11 +194,16 @@ public sealed class AiPromptVM : ViewModel
         foreach (var (targetCharacter, targetEquipment) in targets)
         foreach (var directive in plan.Directives)
         {
-            // Directives without explicit weights fall back to the slot defaults.
-            if (directive.Query.HasExplicitWeights)
-                _profiles.SetWeights(targetCharacter, targetEquipment, directive.Slot, directive.Query.Weights);
-            else
+            var hasWeights = directive.Query.HasExplicitWeights;
+            var hasPriorities = directive.Query.Priorities is { Count: > 0 };
+
+            // Directives without explicit preferences fall back to the slot defaults.
+            if (!hasWeights && !hasPriorities)
                 _profiles.ResetSlot(targetCharacter, targetEquipment, directive.Slot);
+            if (hasWeights)
+                _profiles.SetWeights(targetCharacter, targetEquipment, directive.Slot, directive.Query.Weights);
+            if (hasPriorities)
+                _profiles.SetPriorities(targetCharacter, targetEquipment, directive.Slot, directive.Query.Priorities);
 
             _profiles.SetWeaponCategory(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponCategory);
             _profiles.SetConstraints(
@@ -255,7 +263,7 @@ public sealed class AiPromptVM : ViewModel
         return names;
     }
 
-    /// <summary>"Helm: Head Armor +1, Weight -0.5" in the game's language.</summary>
+    /// <summary>"Helm: Head Armor +1, Weight -0.5" (or "Hit Points > Speed = Armor") in the game's language.</summary>
     private static string DescribeChange(EquipDirective directive)
     {
         var parts = new List<string>();
@@ -271,10 +279,22 @@ public sealed class AiPromptVM : ViewModel
                               value.ToString("+0.##;-0.##", CultureInfo.InvariantCulture));
             }
         }
-        else
+
+        if (directive.Query.Priorities is { Count: > 0 } priorities)
         {
-            parts.Add(new TextObject("{=ebi_default}Default").ToString());
+            var ranks = new List<string>(priorities.Count);
+            foreach (var group in priorities)
+            {
+                var names = new List<string>(group.Count);
+                foreach (var param in group) names.Add(SlotWeightsVM.GetParamName(param));
+                ranks.Add(string.Join(" = ", names));
+            }
+
+            parts.Add(string.Join(" > ", ranks));
         }
+
+        if (parts.Count == 0)
+            parts.Add(new TextObject("{=ebi_default}Default").ToString());
 
         if (directive.Query.WeaponCategory is { } category)
             parts.Add(SlotWeightsVM.GetCategoryName(category));

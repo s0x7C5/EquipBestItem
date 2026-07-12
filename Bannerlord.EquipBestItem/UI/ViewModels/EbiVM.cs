@@ -33,7 +33,7 @@ public sealed class EbiVM : ViewModel
         SlotSettings = new SlotWeightsVM(services.Profiles, services.Settings, RecomputeBestItems);
         Ai = new AiPromptVM(
             services.Interpreter, services.Profiles, gateway,
-            RecomputeBestItems, services.Settings.Ai.IsConfigured);
+            services.Settings, RecomputeBestItems);
 
         var buttonColor = ParseColor(services.Settings.SlotButtonColor);
         EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings, buttonColor);

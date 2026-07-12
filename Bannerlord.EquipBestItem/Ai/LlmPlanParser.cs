@@ -70,7 +70,35 @@ public static class LlmPlanParser
             query.CultureId = dto.Culture;
 
         query.WeaponCategory = pinnedCategory;
+        query.Priorities = ParsePriorities(dto.Priorities);
         return query;
+    }
+
+    /// <summary>
+    ///     One entry per rank, most important first; '+' joins equal-rank
+    ///     stats ("HitPoints+BodyArmor"). Unknown names are dropped, and so is
+    ///     Weight — "prefer heavy" is never the intent; lightness is expressed
+    ///     through the maxItemWeight cap.
+    /// </summary>
+    private static IReadOnlyList<IReadOnlyList<ItemParam>>? ParsePriorities(List<string>? entries)
+    {
+        if (entries is null || entries.Count == 0) return null;
+
+        var seen = new HashSet<ItemParam>();
+        var groups = new List<IReadOnlyList<ItemParam>>();
+        foreach (var entry in entries)
+        {
+            if (string.IsNullOrWhiteSpace(entry)) continue;
+
+            var group = new List<ItemParam>();
+            foreach (var part in entry.Split('+'))
+                if (Enum.TryParse(part.Trim(), true, out ItemParam param) &&
+                    param != ItemParam.Weight && seen.Add(param))
+                    group.Add(param);
+            if (group.Count > 0) groups.Add(group);
+        }
+
+        return groups.Count > 0 ? groups : null;
     }
 
     private static IEnumerable<EquipmentIndex> ExpandSlots(string slot)
@@ -125,5 +153,7 @@ public static class LlmPlanParser
         [JsonProperty("culture")] public string? Culture { get; set; }
 
         [JsonProperty("weaponClass")] public string? WeaponClass { get; set; }
+
+        [JsonProperty("priorities")] public List<string>? Priorities { get; set; }
     }
 }

@@ -230,7 +230,8 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
       "weights": { "<param>": <float -1..1> },
       "maxItemWeight": <optional float, kg>,
       "culture": "<optional: empire|sturgia|aserai|vlandia|battania|khuzait>",
-      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, ShortBow, LongBow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>"
+      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, ShortBow, LongBow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>",
+      "priorities": ["<optional: ranked stat groups, most important first; join equal-rank stats with +, e.g. \"HeadArmor\", \"HitPoints+BodyArmor\">"]
     }
   ]
 }
@@ -245,6 +246,11 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Positive weight = maximize, negative = minimize (e.g. Weight: -1 prefers light items). " +
             "Only spell out weights when the player expressed a preference; an empty weights object " +
             "means \"just find the best with default balanced weights\".");
+        builder.AppendLine(
+            $"The player's search method is \"{context.SearchMethod}\". When it is \"priority\", express " +
+            "stat preferences as \"priorities\" — an ordered list, most important first, \"A+B\" meaning " +
+            "equal rank — and leave \"weights\" empty; otherwise use \"weights\" and omit \"priorities\". " +
+            "Never put Weight into priorities: lightness is a maxItemWeight cap, not a rank.");
         builder.AppendLine(
             "Words meaning protection/armor (in any language) map to the matching *Armor param for that " +
             "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
@@ -279,6 +285,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
         builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");
         builder.AppendLine("""User: "set every hero except me up with a large shield in the first weapon slot" -> {"explanation":"Large shields in the first weapon slot for every other hero.","target":"others","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield"}]}""");
+        builder.AppendLine("""User (search method "priority"): "shield: hit points above all, then speed and armor equally" -> {"explanation":"Shield ranked by hit points, then speed and armor as equals.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield","priorities":["HitPoints","SwingSpeed+BodyArmor"]}]}""");
         builder.AppendLine();
         builder.AppendLine(
             $"Write the \"explanation\" value in {context.GameLanguage} (the game's language), " +
@@ -286,6 +293,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");
+        builder.AppendLine($"Search method: {context.SearchMethod}.");
 
         if (context.PartyHeroes.Count > 1)
             builder.AppendLine($"Party heroes: {string.Join(", ", context.PartyHeroes)}.");

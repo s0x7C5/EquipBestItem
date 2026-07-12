@@ -11,7 +11,7 @@ public sealed class InterpretationContext
     public InterpretationContext(
         string characterName, string equipmentSetKey, IReadOnlyList<string> notableSkills,
         string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null,
-        string gameLanguage = "English")
+        string gameLanguage = "English", string searchMethod = "weights")
     {
         CharacterName = characterName;
         EquipmentSetKey = equipmentSetKey;
@@ -19,6 +19,7 @@ public sealed class InterpretationContext
         LanguageGlossary = languageGlossary;
         PartyHeroes = partyHeroes ?? System.Array.Empty<string>();
         GameLanguage = gameLanguage;
+        SearchMethod = searchMethod;
     }
 
     public string CharacterName { get; }
@@ -47,4 +48,11 @@ public sealed class InterpretationContext
     ///     whatever language the player typed in.
     /// </summary>
     public string GameLanguage { get; }
+
+    /// <summary>
+    ///     The player's active search method — "weights", "priority" or
+    ///     "effectiveness" — so the model expresses stat preferences in the
+    ///     form the search will actually use.
+    /// </summary>
+    public string SearchMethod { get; }
 }
