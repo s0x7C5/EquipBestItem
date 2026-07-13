@@ -30,10 +30,14 @@ public sealed class AiPromptVM : ViewModel
     private readonly InventoryGateway _gateway;
     private readonly Settings.ModSettings _settings;
     private readonly Action _onApplied;
+    private readonly Func<string> _collectSlotExplanations;
+    private readonly Action<EquipmentIndex, string> _explainNamedItem;
 
     private CancellationTokenSource? _pendingRequest;
 
     private string _lastRequest = "";
+    private string _promptText = "";
+    private bool _isPromptVisible;
     private bool _isBusy;
 
     public AiPromptVM(
@@ -41,13 +45,17 @@ public sealed class AiPromptVM : ViewModel
         ProfileService profiles,
         InventoryGateway gateway,
         Settings.ModSettings settings,
-        Action onApplied)
+        Action onApplied,
+        Func<string> collectSlotExplanations,
+        Action<EquipmentIndex, string> explainNamedItem)
     {
         _interpreter = interpreter;
         _profiles = profiles;
         _gateway = gateway;
         _settings = settings;
         _onApplied = onApplied;
+        _collectSlotExplanations = collectSlotExplanations;
+        _explainNamedItem = explainNamedItem;
         IsConfigured = settings.Ai.IsConfigured;
     }
 
@@ -56,6 +64,45 @@ public sealed class AiPromptVM : ViewModel
 
     [DataSourceProperty]
     public HintViewModel AskHint { get; } = new(new TextObject("{=EbiAiInterpret}Ask AI"));
+
+    [DataSourceProperty]
+    public string PromptTitleText { get; } = new TextObject("{=EbiAiInterpret}Ask AI").ToString();
+
+    [DataSourceProperty]
+    public string PromptHintText { get; } = new TextObject(
+        "{=EbiAiPromptHint}Describe the gear you want — or ask why an item was picked.").ToString();
+
+    [DataSourceProperty]
+    public string SubmitButtonText { get; } = GameTexts.FindText("str_ok").ToString();
+
+    [DataSourceProperty]
+    public string CancelButtonText { get; } = GameTexts.FindText("str_cancel").ToString();
+
+    /// <summary>The mod's own prompt dialog with a full-width input field.</summary>
+    [DataSourceProperty]
+    public bool IsPromptVisible
+    {
+        get => _isPromptVisible;
+        set
+        {
+            if (value == _isPromptVisible) return;
+            _isPromptVisible = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
+    /// <summary>Two-way bound to the input widget.</summary>
+    [DataSourceProperty]
+    public string PromptText
+    {
+        get => _promptText;
+        set
+        {
+            if (value == _promptText) return;
+            _promptText = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
 
     [DataSourceProperty]
     public bool IsBusy
@@ -70,24 +117,31 @@ public sealed class AiPromptVM : ViewModel
     }
 
     /// <summary>
-    ///     Opens the game's native text inquiry — proper keyboard focus, no
-    ///     inventory hotkeys firing mid-typing — prefilled with the previous
-    ///     request so it is easy to iterate on.
+    ///     Opens the mod's own prompt dialog — a full-width input instead of
+    ///     the cramped native inquiry — prefilled with the previous request so
+    ///     it is easy to iterate on. Typing is safe: the inventory screen
+    ///     skips its hotkeys while any text widget of the layer has focus.
     /// </summary>
     public void ExecuteOpenPrompt()
     {
         if (_isBusy) return;
 
-        InformationManager.ShowTextInquiry(new TextInquiryData(
-            new TextObject("{=EbiAiInterpret}Ask AI").ToString(),
-            new TextObject("{=EbiAiPromptHint}Describe the gear you want, in your own words.").ToString(),
-            true, true,
-            GameTexts.FindText("str_ok").ToString(),
-            GameTexts.FindText("str_cancel").ToString(),
-            Interpret,
-            null,
-            textCondition: text => Tuple.Create(!string.IsNullOrWhiteSpace(text), ""),
-            defaultInputText: _lastRequest));
+        PromptText = _lastRequest;
+        IsPromptVisible = true;
+    }
+
+    public void ExecuteSubmitPrompt()
+    {
+        var request = _promptText?.Trim() ?? "";
+        if (request.Length == 0) return;
+
+        IsPromptVisible = false;
+        Interpret(request);
+    }
+
+    public void ExecuteCancelPrompt()
+    {
+        IsPromptVisible = false;
     }
 
     private void Interpret(string requestText)
@@ -108,7 +162,8 @@ public sealed class AiPromptVM : ViewModel
             PromptGlossary.Text,
             CollectPartyHeroes(),
             MBTextManager.ActiveTextLanguage,
-            _settings.UsePriority ? "priority" : _settings.UseEffectiveness ? "effectiveness" : "weights");
+            _settings.UsePriority ? "priority" : _settings.UseEffectiveness ? "effectiveness" : "weights",
+            _collectSlotExplanations());
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();
@@ -173,6 +228,20 @@ public sealed class AiPromptVM : ViewModel
     /// </summary>
     private void ApplyPlan(InterpretedPlan plan, CharacterObject character, Equipment equipment)
     {
+        // A "why not X" query: look the named item up and explain it deterministically.
+        if (plan.ExplainItem.Length > 0 && plan.ExplainSlot is { } explainSlot)
+        {
+            _explainNamedItem(explainSlot, plan.ExplainItem);
+            return;
+        }
+
+        // A "why/how" question: the model answered instead of changing filters.
+        if (plan.Directives.Count == 0 && plan.Answer.Length > 0)
+        {
+            GameLog.Ai(plan.Answer);
+            return;
+        }
+
         var targets = ResolveTargets(plan.Target, character, equipment);
         if (targets.Count == 0)
         {

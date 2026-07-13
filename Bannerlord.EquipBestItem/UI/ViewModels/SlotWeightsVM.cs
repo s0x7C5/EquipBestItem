@@ -165,7 +165,15 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string MakeDefaultButtonText { get; } =
-        new TextObject("{=EbiMakeDefault}Make default").ToString();
+        new TextObject("{=EbiMakeDefault}Set as default").ToString();
+
+    [DataSourceProperty]
+    public string ClearButtonText { get; } =
+        new TextObject("{=EbiClear}Clear").ToString();
+
+    [DataSourceProperty]
+    public HintViewModel ClearButtonHint { get; } = new(new TextObject(
+        "{=EbiClearHint}Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"));
 
     [DataSourceProperty]
     public string ExplainButtonText { get; } =
@@ -369,6 +377,27 @@ public sealed class SlotWeightsVM : ViewModel
 
         _profiles.SaveAsDefault(_character, _equipment, _slot);
         Open(_character, _equipment, _slot);
+        _onChanged();
+    }
+
+    /// <summary>
+    ///     Resets only the stat preferences — weights (or the priority order)
+    ///     back to the slot's defaults for the currently pinned class. The
+    ///     weapon class, culture and weight limit are untouched, unlike
+    ///     Default, which drops the whole override.
+    /// </summary>
+    public void ExecuteClear()
+    {
+        if (_character is null || _equipment is null) return;
+
+        if (IsPriorityMode)
+            _profiles.SetPriorities(_character, _equipment, _slot, null);
+        else
+            _profiles.SetWeights(_character, _equipment, _slot,
+                DefaultWeights.For(_slot, WeaponCategoryChoices[_weaponClassIndex]?.Class));
+
+        RebuildRows();
+        RefreshDefaultMarker();
         _onChanged();
     }
 
