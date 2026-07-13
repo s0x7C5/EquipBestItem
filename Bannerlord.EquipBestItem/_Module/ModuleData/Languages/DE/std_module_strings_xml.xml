@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="{COUNT} Gegenstand/Gegenstände ausgerüstet."/>
         <string id="EbiClassAsEquipped" text="Wie ausgerüstet"/>
         <string id="EbiEffectivenessNote" text="Gegenstände werden nach der spieleigenen Effektivitätswertung sortiert; Wertegewichte gelten nicht."/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="Warum?"/>
+        <string id="EbiClear" text="Leeren"/>
+        <string id="EbiClearHint" text="Setzt die Wertegewichte/Reihenfolge auf die Slot-Vorgaben zurück; Waffenklasse, Kultur und Gewichtslimit bleiben"/>
+        <string id="EbiExplainHint" text="Erklärt die Wahl für diesen Slot im Nachrichtenprotokoll"/>
         <string id="EbiShortBow" text="Kurzbogen"/>
         <string id="EbiLongBow" text="Langbogen"/>
         <string id="ebi_default" text="Standard"/>

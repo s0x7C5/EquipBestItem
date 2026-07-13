@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="{COUNT} objet(s) équipé(s)."/>
         <string id="EbiClassAsEquipped" text="Comme équipé"/>
         <string id="EbiEffectivenessNote" text="Les objets sont classés selon le score d'efficacité intégré du jeu ; les poids des stats ne s'appliquent pas."/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="Pourquoi ?"/>
+        <string id="EbiClear" text="Effacer"/>
+        <string id="EbiClearHint" text="Réinitialise les poids/l'ordre aux valeurs par défaut ; classe d'arme, culture et limite de poids conservées"/>
+        <string id="EbiExplainHint" text="Explique le choix de cet emplacement dans le journal des messages"/>
         <string id="EbiShortBow" text="Arc court"/>
         <string id="EbiLongBow" text="Arc long"/>
         <string id="ebi_default" text="Défaut"/>

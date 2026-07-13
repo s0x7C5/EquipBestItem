@@ -36,14 +36,15 @@ internal static class ModRuntime
         // Write the file back so players can discover and edit the options.
         store.Save("settings.json", settings);
 
-        var finder = new BestItemFinder(new IItemFilter[]
+        var filters = new IItemFilter[]
         {
             new EquippableFilter(),
             new SlotFilter(),
             new WeaponMatchFilter(),
             new ShieldOncePerSetFilter(),
             new QueryConstraintFilter()
-        });
+        };
+        var finder = new BestItemFinder(filters);
 
         var statCache = new ItemStatCache();
         var percentiles = new ItemStatPercentiles();
@@ -61,7 +62,7 @@ internal static class ModRuntime
                 statCache,
                 percentiles,
                 settings),
-            new ItemExplainer(statCache, percentiles, weightedScorer, priorityComparer),
+            new ItemExplainer(statCache, percentiles, weightedScorer, priorityComparer, filters),
             new LlmRequestInterpreter(settings.Ai),
             () => store.Save("settings.json", settings));
     }

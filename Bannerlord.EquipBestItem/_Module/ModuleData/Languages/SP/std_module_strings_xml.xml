@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="Se equiparon {COUNT} objeto(s)."/>
         <string id="EbiClassAsEquipped" text="Como equipado"/>
         <string id="EbiEffectivenessNote" text="Los objetos se clasifican con la puntuación de efectividad integrada del juego; los pesos de estadísticas no se aplican."/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="¿Por qué?"/>
+        <string id="EbiClear" text="Limpiar"/>
+        <string id="EbiClearHint" text="Restablece los pesos/el orden a los valores predeterminados; clase de arma, cultura y límite de peso se conservan"/>
+        <string id="EbiExplainHint" text="Explica la elección de esta ranura en el registro de mensajes"/>
         <string id="EbiShortBow" text="Arco corto"/>
         <string id="EbiLongBow" text="Arco largo"/>
         <string id="ebi_default" text="Predeterminado"/>

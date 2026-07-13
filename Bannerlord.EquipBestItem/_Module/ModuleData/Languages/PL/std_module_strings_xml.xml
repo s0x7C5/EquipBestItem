@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="Założono przedmioty: {COUNT}."/>
         <string id="EbiClassAsEquipped" text="Jak założone"/>
         <string id="EbiEffectivenessNote" text="Przedmioty są oceniane wbudowaną oceną efektywności gry; wagi statystyk nie mają zastosowania."/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="Dlaczego?"/>
+        <string id="EbiClear" text="Wyczyść"/>
+        <string id="EbiClearHint" text="Przywraca wagi/kolejność do domyślnych dla slotu; klasa broni, kultura i limit wagi zostają"/>
+        <string id="EbiExplainHint" text="Wyjaśnia wybór dla tego slotu w dzienniku wiadomości"/>
         <string id="EbiShortBow" text="Krótki łuk"/>
         <string id="EbiLongBow" text="Długi łuk"/>
         <string id="ebi_default" text="Domyślne"/>

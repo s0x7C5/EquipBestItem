@@ -22,7 +22,34 @@ public enum ExplanationKind
     NothingBetter,
 
     /// <summary>The slot is excluded from searching (locked).</summary>
-    SlotLocked
+    SlotLocked,
+
+    /// <summary>A "why not X" query: the named item is not in the searched panels.</summary>
+    NamedNotFound,
+
+    /// <summary>The named item is exactly what the search already recommends.</summary>
+    NamedIsBest,
+
+    /// <summary>The named item was rejected by a filter; <see cref="SearchExplanation.FilterReason" /> says which.</summary>
+    NamedFilteredOut,
+
+    /// <summary>The named item qualifies but is beaten; factors compare the winner against it.</summary>
+    NamedLoses,
+
+    /// <summary>The named item scores higher than the equipped one, but not by the clear margin the guard needs.</summary>
+    NamedMarginal
+}
+
+/// <summary>Why a named item was rejected before scoring (a filter), for a "why not X" query.</summary>
+public enum RejectionReason
+{
+    None,
+    NotEquippable,
+    WrongTypeForSlot,
+    WrongWeaponClass,
+    ShieldAlreadyEquipped,
+    OverWeightLimit,
+    WrongCulture
 }
 
 public enum FactorRole
@@ -95,4 +122,10 @@ public sealed class SearchExplanation
 
     /// <summary>A stat the player could weigh more / rank higher to change the pick, if any.</summary>
     public ItemParam? TweakParam { get; set; }
+
+    /// <summary>For NamedNotFound: the name the player asked about.</summary>
+    public string QueriedName { get; set; } = "";
+
+    /// <summary>For NamedFilteredOut: why the named item was rejected.</summary>
+    public RejectionReason FilterReason { get; set; }
 }

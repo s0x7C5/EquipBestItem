@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="아이템 {COUNT}개를 장착했습니다."/>
         <string id="EbiClassAsEquipped" text="장착 중인 것과 동일"/>
         <string id="EbiEffectivenessNote" text="아이템은 게임 내장 효율 점수로 순위가 매겨지며, 능력치 가중치는 적용되지 않습니다."/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="왜?"/>
+        <string id="EbiClear" text="지우기"/>
+        <string id="EbiClearHint" text="가중치/순서를 슬롯 기본값으로 되돌립니다. 무기 종류, 문화, 무게 제한은 유지됩니다"/>
+        <string id="EbiExplainHint" text="메시지 로그에서 이 슬롯의 선택을 설명합니다"/>
         <string id="EbiShortBow" text="단궁"/>
         <string id="EbiLongBow" text="장궁"/>
         <string id="ebi_default" text="기본값"/>

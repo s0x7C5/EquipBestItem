@@ -44,10 +44,25 @@ public static class LlmPlanParser
                 directives.Add(new EquipDirective(slot, BuildQuery(directiveDto, slot)));
         }
 
-        if (directives.Count == 0)
+        var answer = dto.Answer?.Trim() ?? "";
+        var explainItem = dto.ExplainItem?.Trim() ?? "";
+        EquipmentIndex? explainSlot =
+            Enum.TryParse(dto.ExplainSlot, true, out EquipmentIndex parsedSlot) ? parsedSlot : null;
+
+        // A "why not X" query needs both the slot and the item.
+        if (explainItem.Length == 0 || explainSlot is null)
+        {
+            explainItem = "";
+            explainSlot = null;
+        }
+
+        // A question (answer) or a "why not X" query with no directives is a
+        // valid reply, not an error.
+        if (directives.Count == 0 && answer.Length == 0 && explainItem.Length == 0)
             throw new FormatException("The AI response contains no usable directives.");
 
-        return new InterpretedPlan(directives, dto.Explanation ?? "", dto.Target ?? "");
+        return new InterpretedPlan(
+            directives, dto.Explanation ?? "", dto.Target ?? "", answer, explainSlot, explainItem);
     }
 
     private static ItemQuery BuildQuery(DirectiveDto dto, EquipmentIndex slot)
@@ -136,6 +151,12 @@ public static class LlmPlanParser
     private sealed class PlanDto
     {
         [JsonProperty("explanation")] public string? Explanation { get; set; }
+
+        [JsonProperty("answer")] public string? Answer { get; set; }
+
+        [JsonProperty("explainSlot")] public string? ExplainSlot { get; set; }
+
+        [JsonProperty("explainItem")] public string? ExplainItem { get; set; }
 
         [JsonProperty("target")] public string? Target { get; set; }
 

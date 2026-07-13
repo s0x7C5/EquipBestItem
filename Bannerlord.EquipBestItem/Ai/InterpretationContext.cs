@@ -11,7 +11,7 @@ public sealed class InterpretationContext
     public InterpretationContext(
         string characterName, string equipmentSetKey, IReadOnlyList<string> notableSkills,
         string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null,
-        string gameLanguage = "English", string searchMethod = "weights")
+        string gameLanguage = "English", string searchMethod = "weights", string slotExplanations = "")
     {
         CharacterName = characterName;
         EquipmentSetKey = equipmentSetKey;
@@ -20,6 +20,7 @@ public sealed class InterpretationContext
         PartyHeroes = partyHeroes ?? System.Array.Empty<string>();
         GameLanguage = gameLanguage;
         SearchMethod = searchMethod;
+        SlotExplanations = slotExplanations;
     }
 
     public string CharacterName { get; }
@@ -55,4 +56,11 @@ public sealed class InterpretationContext
     ///     form the search will actually use.
     /// </summary>
     public string SearchMethod { get; }
+
+    /// <summary>
+    ///     Deterministic per-slot recommendation facts (what the search picked
+    ///     and why), one line per slot with an upgrade. The model narrates
+    ///     these verbatim to answer "why" questions; it never invents numbers.
+    /// </summary>
+    public string SlotExplanations { get; }
 }

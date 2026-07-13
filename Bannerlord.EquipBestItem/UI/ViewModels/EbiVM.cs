@@ -34,7 +34,7 @@ public sealed class EbiVM : ViewModel
         SlotSettings = new SlotWeightsVM(services.Profiles, services.Settings, RecomputeBestItems, ExplainSlot);
         Ai = new AiPromptVM(
             services.Interpreter, services.Profiles, gateway,
-            services.Settings, RecomputeBestItems);
+            services.Settings, RecomputeBestItems, CollectSlotExplanations, ExplainNamedItem);
 
         var buttonColor = ParseColor(services.Settings.SlotButtonColor);
         EbiSlotVM Create(EquipmentIndex slot) => new(slot, EquipFound, OpenSettings, buttonColor);
@@ -117,10 +117,12 @@ public sealed class EbiVM : ViewModel
     /// <summary>
     ///     The right plaque's background fits three sockets; without an AI
     ///     backend only two are used, so the plaque slides right by one
-    ///     socket-width — mirroring the left plaque's fixed shift.
+    ///     socket-width — mirroring the left plaque's fixed shift. With the
+    ///     AI socket shown, an extra 8px tucks the wider plaque flush against
+    ///     the panel edge.
     /// </summary>
     [DataSourceProperty]
-    public float RightPlaqueOffset => _services.Settings.Ai.IsConfigured ? 0f : 43f;
+    public float RightPlaqueOffset => _services.Settings.Ai.IsConfigured ? 8f : 43f;
 
     [DataSourceProperty]
     public bool IsLeftPanelSearched => _services.Settings.SearchLeftPanel;
@@ -257,14 +259,95 @@ public sealed class EbiVM : ViewModel
     private void ExplainSlot(CharacterObject character, Equipment equipment, EquipmentIndex slot)
     {
         var query = _services.Profiles.GetQuery(character, equipment, slot);
-        var mode = _services.Settings.UsePriority ? SearchMode.Priority
-            : _services.Settings.UseEffectiveness ? SearchMode.Effectiveness
-            : SearchMode.Weights;
-
         var found = _services.EquipBest.FindBest(_gateway, query, slot, character, equipment);
-        var explanation = _services.Explainer.Explain(character, equipment, slot, query, mode, found);
+        var explanation = _services.Explainer.Explain(character, equipment, slot, query, ActiveMode(), found);
         ExplanationFormatter.Log(explanation);
     }
+
+    /// <summary>
+    ///     Deterministic recommendation facts for the shown hero's active set,
+    ///     one line per slot with an upgrade — fed to the AI so it can narrate
+    ///     "why" answers without inventing numbers. Runs on the main thread.
+    /// </summary>
+    private string CollectSlotExplanations()
+    {
+        var character = _gateway.CurrentCharacter;
+        var equipment = _gateway.ActiveEquipment;
+        if (character is null || equipment is null) return "";
+
+        var mode = ActiveMode();
+        var lines = new List<string>();
+        foreach (var slot in _slots)
+        {
+            var query = _services.Profiles.GetQuery(character, equipment, slot.Slot);
+            var found = _services.EquipBest.FindBest(_gateway, query, slot.Slot, character, equipment);
+            if (found is null) continue;
+
+            var explanation = _services.Explainer.Explain(character, equipment, slot.Slot, query, mode, found);
+            var fact = ExplanationFormatter.ToPromptFact(explanation);
+            if (fact.Length > 0) lines.Add(fact);
+        }
+
+        return string.Join("\n", lines);
+    }
+
+    /// <summary>
+    ///     "Why not [named item]" for a slot (asked through the AI): finds the
+    ///     item by name in the searched panels and explains deterministically
+    ///     why it wasn't picked. No native-widget hooks needed — the AI only
+    ///     supplies the slot and the name.
+    /// </summary>
+    private void ExplainNamedItem(EquipmentIndex slot, string name)
+    {
+        var character = _gateway.CurrentCharacter;
+        var equipment = _gateway.ActiveEquipment;
+        if (character is null || equipment is null) return;
+
+        var candidate = FindCandidateByName(name);
+        if (candidate is null)
+        {
+            ExplanationFormatter.Log(new SearchExplanation
+            {
+                Slot = slot, Mode = ActiveMode(), Kind = ExplanationKind.NamedNotFound, QueriedName = name
+            });
+            return;
+        }
+
+        var query = _services.Profiles.GetQuery(character, equipment, slot);
+        var found = _services.EquipBest.FindBest(_gateway, query, slot, character, equipment);
+        var explanation = _services.Explainer.ExplainRejection(
+            character, equipment, slot, query, ActiveMode(), candidate, found, name);
+        ExplanationFormatter.Log(explanation);
+    }
+
+    /// <summary>First item in a searched panel whose name contains the query (case-insensitive).</summary>
+    private SPItemVM? FindCandidateByName(string name)
+    {
+        var needle = name.Trim();
+        var left = _services.Settings.SearchLeftPanel ? _gateway.LeftItems : null;
+        var right = _services.Settings.SearchRightPanel ? _gateway.RightItems : null;
+        return MatchByName(right, needle) ?? MatchByName(left, needle);
+    }
+
+    private static SPItemVM? MatchByName(MBBindingList<SPItemVM>? list, string needle)
+    {
+        if (list is null) return null;
+
+        for (var i = 0; i < list.Count; i++)
+        {
+            var item = list[i];
+            var itemName = item?.ItemRosterElement.EquipmentElement.GetModifiedItemName()?.ToString();
+            if (itemName is not null && itemName.IndexOf(needle, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                return item;
+        }
+
+        return null;
+    }
+
+    private SearchMode ActiveMode() =>
+        _services.Settings.UsePriority ? SearchMode.Priority
+        : _services.Settings.UseEffectiveness ? SearchMode.Effectiveness
+        : SearchMode.Weights;
 
     private void EquipFound(EbiSlotVM slot)
     {

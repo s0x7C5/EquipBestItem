@@ -8,8 +8,10 @@
         <string id="EbiEquippedCount" text="{COUNT} 個の装備を装着しました。"/>
         <string id="EbiClassAsEquipped" text="装備中のものと同じ"/>
         <string id="EbiEffectivenessNote" text="アイテムはゲーム内蔵の有効性スコアで順位付けされ、ステータスの重みは適用されません。"/>
-        <string id="E" text="b"/>
-        <string id="E" text="b"/>
+        <string id="EbiExplain" text="なぜ？"/>
+        <string id="EbiClear" text="クリア"/>
+        <string id="EbiClearHint" text="重み／順序をスロットの既定値に戻します。武器クラス・文化・重量制限は維持されます"/>
+        <string id="EbiExplainHint" text="この枠の選択をメッセージログで説明します"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="デフォルト"/>

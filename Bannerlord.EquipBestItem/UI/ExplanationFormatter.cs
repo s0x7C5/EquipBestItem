@@ -13,40 +13,77 @@ namespace Bannerlord.EquipBestItem.UI;
 /// </summary>
 internal static class ExplanationFormatter
 {
-    public static void Log(SearchExplanation explanation)
+    public static void Log(SearchExplanation e)
     {
-        var slot = SlotWeightsVM.GetSlotName(explanation.Slot);
+        var slot = SlotWeightsVM.GetSlotName(e.Slot);
 
-        switch (explanation.Kind)
+        switch (e.Kind)
         {
             case ExplanationKind.SlotLocked:
                 GameLog.Ai($"{slot}: {Text("{=EbiWhySlotLocked}This slot is excluded from searching.")}");
                 return;
-
             case ExplanationKind.NothingBetter:
-                GameLog.Ai($"{slot}: {NothingBetterText(explanation)}");
+                GameLog.Ai($"{slot}: {NothingBetterText(e)}");
                 return;
-
             case ExplanationKind.FirstItem:
-                GameLog.Ai($"{slot}: {FirstItemText(explanation)}");
+                GameLog.Ai($"{slot}: {FirstItemText(e)}");
+                return;
+            case ExplanationKind.NamedNotFound:
+                GameLog.Ai($"{slot}: {Var("{=EbiWhyNamedNotFound}\"{ITEM}\" is not in your searched inventory.", "ITEM", e.QueriedName)}");
+                return;
+            case ExplanationKind.NamedIsBest:
+                GameLog.Ai($"{slot}: {Var("{=EbiWhyNamedIsBest}\"{ITEM}\" is exactly what's recommended here.", "ITEM", e.CurrentItemName)}");
+                return;
+            case ExplanationKind.NamedFilteredOut:
+                GameLog.Ai($"{slot}: {FilteredOutText(e)}");
                 return;
         }
 
-        // Upgrade.
-        GameLog.Ai($"{slot}: {HeadlineText(explanation)}");
+        // Upgrade, NamedLoses, NamedMarginal — a winner and a stat breakdown.
+        GameLog.Ai($"{slot}: {WinnerHeadline(e)}");
 
-        if (explanation.Mode == SearchMode.Effectiveness)
+        if (e.Mode == SearchMode.Effectiveness)
         {
-            GameLog.Ai(EffectivenessText(explanation));
+            GameLog.Ai(EffectivenessText(e));
             return;
         }
 
-        foreach (var line in DetailLines(explanation))
+        foreach (var line in DetailLines(e))
             GameLog.Ai(line);
 
-        if (explanation.TweakParam is { } tweak)
-            GameLog.Info(TweakText(explanation.Mode, tweak));
+        // The tweak only makes sense when raising a weight/rank would flip the pick.
+        if (e.TweakParam is { } tweak && e.Kind is ExplanationKind.Upgrade or ExplanationKind.NamedLoses)
+            GameLog.Info(TweakText(e.Mode, tweak));
     }
+
+    private static string WinnerHeadline(SearchExplanation e) => e.Kind switch
+    {
+        ExplanationKind.NamedLoses => Text("{=EbiWhyNamedLoses}{WINNER} is picked over \"{ITEM}\"")
+            .SetTextVariable("WINNER", e.FoundItemName).SetTextVariable("ITEM", e.CurrentItemName).ToString(),
+        ExplanationKind.NamedMarginal => Text(
+                "{=EbiWhyNamedMarginal}\"{ITEM}\" scores a bit higher than {CURRENT}, but not by the clear margin needed to suggest a swap.")
+            .SetTextVariable("ITEM", e.FoundItemName).SetTextVariable("CURRENT", e.CurrentItemName).ToString(),
+        _ => HeadlineText(e)
+    };
+
+    private static string FilteredOutText(SearchExplanation e) =>
+        Text("{=EbiWhyNamedFiltered}\"{ITEM}\" doesn't qualify: {REASON}")
+            .SetTextVariable("ITEM", e.FoundItemName)
+            .SetTextVariable("REASON", ReasonText(e.FilterReason)).ToString();
+
+    private static string ReasonText(RejectionReason reason) => reason switch
+    {
+        RejectionReason.WrongTypeForSlot => Text("{=EbiRejectType}wrong item type for this slot").ToString(),
+        RejectionReason.WrongWeaponClass => Text("{=EbiRejectWeaponClass}wrong weapon type for this slot").ToString(),
+        RejectionReason.ShieldAlreadyEquipped => Text("{=EbiRejectShield}a shield is already in another weapon slot").ToString(),
+        RejectionReason.NotEquippable => Text("{=EbiRejectEquip}this hero can't equip it here").ToString(),
+        RejectionReason.OverWeightLimit => Text("{=EbiRejectWeight}over the slot's weight limit").ToString(),
+        RejectionReason.WrongCulture => Text("{=EbiRejectCulture}wrong culture for the slot's filter").ToString(),
+        _ => Text("{=EbiRejectOther}it does not match the slot's filter").ToString()
+    };
+
+    private static string Var(string idAndFallback, string name, string value) =>
+        new TextObject(idAndFallback).SetTextVariable(name, value).ToString();
 
     private static IEnumerable<string> DetailLines(SearchExplanation explanation)
     {
@@ -116,4 +153,56 @@ internal static class ExplanationFormatter
         $"vs {f.CurrentValue.ToString("0", CultureInfo.InvariantCulture)}";
 
     private static TextObject Text(string idAndFallback) => new(idAndFallback);
+
+    /// <summary>
+    ///     A compact, English, stable-identifier line for the AI prompt, or ""
+    ///     for slots with no recommendation to narrate. Item names stay as
+    ///     shown; stats use enum names so the model can cite them precisely.
+    /// </summary>
+    public static string ToPromptFact(SearchExplanation e)
+    {
+        if (e.Kind != ExplanationKind.Upgrade && e.Kind != ExplanationKind.FirstItem) return "";
+
+        var slot = e.Slot.ToString();
+        if (e.Kind == ExplanationKind.FirstItem)
+            return $"{slot}: best is \"{e.FoundItemName}\" for an empty slot.";
+
+        var head = $"{slot}: best is \"{e.FoundItemName}\" over \"{e.CurrentItemName}\"";
+
+        if (e.Mode == SearchMode.Effectiveness)
+            return $"{head} by game Effectiveness {e.FoundScore:0} vs {e.CurrentScore:0} (no stat breakdown).";
+
+        if (e.Mode == SearchMode.Priority)
+        {
+            var decided = PromptFactors(e, FactorRole.Decides, PromptRaw);
+            var ties = PromptFactors(e, FactorRole.Tie, PromptRaw);
+            var parts = new List<string>();
+            if (decided.Length > 0) parts.Add("decided by " + decided);
+            if (ties.Length > 0) parts.Add("tied on " + ties + " (lower ranks not checked)");
+            return $"{head}: {string.Join("; ", parts)}.";
+        }
+
+        var ahead = PromptFactors(e, FactorRole.Advantage, PromptPercentiles);
+        var behind = PromptFactors(e, FactorRole.Disadvantage, PromptPercentiles);
+        var weightParts = new List<string>();
+        if (ahead.Length > 0) weightParts.Add("ahead " + ahead);
+        if (behind.Length > 0) weightParts.Add("behind " + behind);
+        return $"{head}: {string.Join("; ", weightParts)}.";
+    }
+
+    private static string PromptFactors(SearchExplanation e, FactorRole role, System.Func<ExplanationFactor, string> render)
+    {
+        var parts = new List<string>();
+        foreach (var factor in e.Factors)
+            if (factor.Role == role)
+                parts.Add(render(factor));
+        return string.Join(", ", parts);
+    }
+
+    private static string PromptPercentiles(ExplanationFactor f) =>
+        $"{f.Param} {f.FoundPercentile}%/{f.CurrentPercentile}%";
+
+    private static string PromptRaw(ExplanationFactor f) =>
+        $"{f.Param} {f.FoundValue.ToString("0", CultureInfo.InvariantCulture)}/" +
+        $"{f.CurrentValue.ToString("0", CultureInfo.InvariantCulture)}";
 }

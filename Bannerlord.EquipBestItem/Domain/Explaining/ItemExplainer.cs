@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Bannerlord.EquipBestItem.Domain.Filtering;
 using Bannerlord.EquipBestItem.Domain.Scoring;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
@@ -23,15 +24,18 @@ public sealed class ItemExplainer
     private readonly ItemStatPercentiles _percentiles;
     private readonly WeightedItemScorer _weighted;
     private readonly PriorityItemComparer _priority;
+    private readonly IReadOnlyList<IItemFilter> _filters;
 
     public ItemExplainer(
         ItemStatCache stats, ItemStatPercentiles percentiles,
-        WeightedItemScorer weighted, PriorityItemComparer priority)
+        WeightedItemScorer weighted, PriorityItemComparer priority,
+        IReadOnlyList<IItemFilter> filters)
     {
         _stats = stats;
         _percentiles = percentiles;
         _weighted = weighted;
         _priority = priority;
+        _filters = filters;
     }
 
     public SearchExplanation Explain(
@@ -78,6 +82,111 @@ public sealed class ItemExplainer
         }
 
         return explanation;
+    }
+
+    /// <summary>
+    ///     A "why not this named item" account: whether the candidate was
+    ///     filtered out (and by what), is itself the pick, or qualifies but is
+    ///     beaten — with the same breakdown as the positive case. The winner
+    ///     is the recommended item, or the equipped one when nothing was
+    ///     recommended.
+    /// </summary>
+    public SearchExplanation ExplainRejection(
+        CharacterObject character, Equipment equipment, EquipmentIndex slot,
+        ItemQuery query, SearchMode mode, SPItemVM candidate, SPItemVM? found, string queriedName)
+    {
+        var context = new SearchContext(character, equipment, slot, query);
+        var current = equipment[slot];
+        var candidateElement = candidate.ItemRosterElement.EquipmentElement;
+        var explanation = new SearchExplanation
+        {
+            Slot = slot,
+            Mode = mode,
+            QueriedName = queriedName,
+            CurrentItemName = ItemName(current),
+            FoundItemName = ItemName(candidateElement)
+        };
+
+        // Rejected before scoring? Report which gate.
+        foreach (var filter in _filters)
+            if (!filter.IsSatisfiedBy(candidate, context))
+            {
+                explanation.Kind = ExplanationKind.NamedFilteredOut;
+                explanation.FilterReason = ReasonFor(filter, candidate, query);
+                return explanation;
+            }
+
+        if (found is not null && ReferenceEquals(found.ItemRosterElement.EquipmentElement.Item, candidateElement.Item))
+        {
+            explanation.Kind = ExplanationKind.NamedIsBest;
+            return explanation;
+        }
+
+        // The item qualifies. Compare the winner (the pick, or the equipped
+        // item when nothing was picked) against it.
+        if (found is not null)
+        {
+            explanation.Kind = ExplanationKind.NamedLoses;
+            explanation.FoundItemName = ItemName(found.ItemRosterElement.EquipmentElement);
+            explanation.CurrentItemName = ItemName(candidateElement);
+            CompareInto(explanation, context, mode, found.ItemRosterElement.EquipmentElement, candidateElement);
+            return explanation;
+        }
+
+        // Nothing was recommended: the equipped item held its place.
+        explanation.CurrentItemName = ItemName(candidateElement);
+        if (mode == SearchMode.Weights &&
+            _weighted.Score(candidateElement, context) > _weighted.Score(current, context))
+        {
+            // Scores higher, but not by the margin the upgrade guard demands.
+            explanation.Kind = ExplanationKind.NamedMarginal;
+            explanation.FoundItemName = ItemName(candidateElement);
+            CompareInto(explanation, context, mode, candidateElement, current);
+        }
+        else
+        {
+            explanation.Kind = ExplanationKind.NamedLoses;
+            explanation.FoundItemName = ItemName(current);
+            CompareInto(explanation, context, mode, current, candidateElement);
+        }
+
+        return explanation;
+    }
+
+    private void CompareInto(
+        SearchExplanation explanation, in SearchContext context, SearchMode mode,
+        EquipmentElement better, EquipmentElement worse)
+    {
+        switch (mode)
+        {
+            case SearchMode.Priority:
+                ExplainPriority(explanation, context, better, worse);
+                break;
+            case SearchMode.Effectiveness:
+                explanation.FoundScore = better.Item?.Effectiveness ?? 0f;
+                explanation.CurrentScore = worse.Item?.Effectiveness ?? 0f;
+                break;
+            default:
+                ExplainWeights(explanation, context, better, worse);
+                break;
+        }
+    }
+
+    private static RejectionReason ReasonFor(IItemFilter filter, SPItemVM item, ItemQuery query)
+    {
+        switch (filter)
+        {
+            case SlotFilter: return RejectionReason.WrongTypeForSlot;
+            case WeaponMatchFilter: return RejectionReason.WrongWeaponClass;
+            case ShieldOncePerSetFilter: return RejectionReason.ShieldAlreadyEquipped;
+            case EquippableFilter: return RejectionReason.NotEquippable;
+            case QueryConstraintFilter:
+                var element = item.ItemRosterElement.EquipmentElement;
+                return query.MaxItemWeight > 0f && element.Item?.Weight > query.MaxItemWeight
+                    ? RejectionReason.OverWeightLimit
+                    : RejectionReason.WrongCulture;
+            default: return RejectionReason.None;
+        }
     }
 
     private static bool IsSlotLocked(ItemQuery query, SearchMode mode) => mode switch
