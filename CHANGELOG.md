@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.2.0 — 2026-07-14
+
+- **"Why this?"** button in the slot filter: the mod explains its pick in the
+  message log — which stats decided, by how much, and what to tweak if you
+  disagree. Fully deterministic, no AI required.
+- **The AI assistant answers questions** — "why this helmet?", "why not the
+  Nord Great Sword in slot 1?" — grounded in that same deterministic
+  breakdown, so it never invents numbers. Ask about any item by name and it
+  reports the exact reason: loses on stats, wrong culture, over the weight
+  cap, wrong weapon class for the slot, and so on.
+- The AI's replies now go to the message log instead of a status line.
+- **New AI input dialog**: a wide in-inventory prompt with autofocus in place
+  of the cramped native text popup; typing in it never triggers inventory
+  hotkeys.
+- **Clear** button in the slot filter: resets only the weights (or the
+  priority order) to the slot's defaults, keeping weapon class, culture and
+  the weight limit. Actions now sit in two rows; "Make default" is renamed
+  to "Set as default".
+- The filter popup is denser, so the tallest (weapon-slot) variant fits a
+  1920×1080 screen.
+- **Custom icons** for equip-current-character and the panel locks; the locks
+  are brighter and step up further on hover. The plaques now slide in with
+  the inventory side panels instead of popping into place.
+
 ## 3.1.0 — 2026-07-12
 
 Two new mechanics ship as **experimental** — they work, but the details may
