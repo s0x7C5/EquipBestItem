@@ -107,7 +107,7 @@
     </Brush>
     <Brush Name="EquipBestItem.EquipCurrentCharacterButton">
         <Layers>
-            <BrushLayer Name="Default" Sprite="Inventory\equip"/>
+            <BrushLayer Name="Default" Sprite="equipbestitem_button_equip_current"/>
         </Layers>
         <Styles>
             <Style Name="Default">
@@ -175,6 +175,14 @@
             <Style Name="Disabled" FontColor="#F8E3BEFF" TextAlphaFactor="0.5" FontSize="24"/>
         </Styles>
     </Brush>
+    <!-- AI prompt input: smaller type than the popup labels so a long
+         request fits, left-aligned like any text field. -->
+    <Brush Name="EquipBestItem.PromptInput" Font="Galahad" TextHorizontalAlignment="Left"
+           TextVerticalAlignment="Center">
+        <Styles>
+            <Style Name="Default" FontColor="#F8E3BEFF" FontSize="22"/>
+        </Styles>
+    </Brush>
     <!-- Up/down arrows for the priority rows, built from the always-loaded
          StdAssets triangle the game's own sort arrows use. -->
     <Brush Name="EquipBestItem.Sort.Up">
@@ -227,17 +235,17 @@
     </Brush>
     <Brush Name="EquipBestItem.LockPanelButton.Opened">
         <Layers>
-            <BrushLayer Name="Default" Sprite="StdAssets\lock_opened"/>
+            <BrushLayer Name="Default" Sprite="equipbestitem_button_lock_opened"/>
         </Layers>
         <Styles>
             <Style Name="Default">
-                <BrushLayer Name="Default" ColorFactor="1"/>
+                <BrushLayer Name="Default" ColorFactor="1.4"/>
             </Style>
             <Style Name="Hovered">
-                <BrushLayer Name="Default" ColorFactor="1.4"/>
+                <BrushLayer Name="Default" ColorFactor="1.9"/>
             </Style>
             <Style Name="Pressed">
-                <BrushLayer Name="Default" ColorFactor="1.4"/>
+                <BrushLayer Name="Default" ColorFactor="1.9"/>
             </Style>
             <Style Name="Disabled">
                 <BrushLayer Name="Default" ColorFactor="0.1"/>
@@ -253,17 +261,17 @@
     </Brush>
     <Brush Name="EquipBestItem.LockPanelButton.Closed">
         <Layers>
-            <BrushLayer Name="Default" Sprite="StdAssets\lock_closed"/>
+            <BrushLayer Name="Default" Sprite="equipbestitem_button_lock_closed"/>
         </Layers>
         <Styles>
             <Style Name="Default">
-                <BrushLayer Name="Default" ColorFactor="1"/>
+                <BrushLayer Name="Default" ColorFactor="1.4"/>
             </Style>
             <Style Name="Hovered">
-                <BrushLayer Name="Default" ColorFactor="1.4"/>
+                <BrushLayer Name="Default" ColorFactor="1.9"/>
             </Style>
             <Style Name="Pressed">
-                <BrushLayer Name="Default" ColorFactor="1.4"/>
+                <BrushLayer Name="Default" ColorFactor="1.9"/>
             </Style>
             <Style Name="Disabled">
                 <BrushLayer Name="Default" ColorFactor="0.1"/>

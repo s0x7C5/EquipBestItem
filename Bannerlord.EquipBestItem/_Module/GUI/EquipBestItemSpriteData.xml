@@ -5,7 +5,7 @@
       <Name>ui_equipbestitem</Name>
       <AlwaysLoad />
       <SpriteSheetCount>1</SpriteSheetCount>
-      <SpriteSheetSize ID="1" Width="128" Height="64" />
+      <SpriteSheetSize ID="1" Width="256" Height="64" />
     </SpriteCategory>
   </SpriteCategories>
   <SpriteParts>
@@ -27,6 +27,33 @@
       <SheetY>4</SheetY>
       <CategoryName>ui_equipbestitem</CategoryName>
     </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>equipbestitem_button_equip_current</Name>
+      <Width>35</Width>
+      <Height>36</Height>
+      <SheetX>72</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_equipbestitem</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>equipbestitem_button_lock_opened</Name>
+      <Width>42</Width>
+      <Height>42</Height>
+      <SheetX>110</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_equipbestitem</CategoryName>
+    </SpritePart>
+    <SpritePart>
+      <SheetID>1</SheetID>
+      <Name>equipbestitem_button_lock_closed</Name>
+      <Width>42</Width>
+      <Height>42</Height>
+      <SheetX>156</SheetX>
+      <SheetY>4</SheetY>
+      <CategoryName>ui_equipbestitem</CategoryName>
+    </SpritePart>
   </SpriteParts>
   <Sprites>
     <GenericSprite>
@@ -36,6 +63,18 @@
     <GenericSprite>
       <Name>equipbestitem_button_equip_all</Name>
       <SpritePartName>equipbestitem_button_equip_all</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>equipbestitem_button_equip_current</Name>
+      <SpritePartName>equipbestitem_button_equip_current</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>equipbestitem_button_lock_opened</Name>
+      <SpritePartName>equipbestitem_button_lock_opened</SpritePartName>
+    </GenericSprite>
+    <GenericSprite>
+      <Name>equipbestitem_button_lock_closed</Name>
+      <SpritePartName>equipbestitem_button_lock_closed</SpritePartName>
     </GenericSprite>
   </Sprites>
 </SpriteData>
