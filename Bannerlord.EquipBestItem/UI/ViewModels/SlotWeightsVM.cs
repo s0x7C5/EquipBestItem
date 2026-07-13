@@ -124,6 +124,7 @@ public sealed class SlotWeightsVM : ViewModel
     private readonly ProfileService _profiles;
     private readonly Settings.ModSettings _settings;
     private readonly Action _onChanged;
+    private readonly Action<CharacterObject, Equipment, EquipmentIndex> _explain;
 
     /// <summary>Selectable culture restrictions; null = any culture.</summary>
     private static readonly string?[] CultureChoices =
@@ -144,11 +145,14 @@ public sealed class SlotWeightsVM : ViewModel
     private MBBindingList<PriorityRowVM> _priorityRows = new();
     private readonly List<List<ItemParam>> _priorityGroups = new();
 
-    public SlotWeightsVM(ProfileService profiles, Settings.ModSettings settings, Action onChanged)
+    public SlotWeightsVM(
+        ProfileService profiles, Settings.ModSettings settings, Action onChanged,
+        Action<CharacterObject, Equipment, EquipmentIndex> explain)
     {
         _profiles = profiles;
         _settings = settings;
         _onChanged = onChanged;
+        _explain = explain;
     }
 
     [DataSourceProperty]
@@ -162,6 +166,14 @@ public sealed class SlotWeightsVM : ViewModel
     [DataSourceProperty]
     public string MakeDefaultButtonText { get; } =
         new TextObject("{=EbiMakeDefault}Make default").ToString();
+
+    [DataSourceProperty]
+    public string ExplainButtonText { get; } =
+        new TextObject("{=EbiExplain}Why this?").ToString();
+
+    [DataSourceProperty]
+    public HintViewModel ExplainButtonHint { get; } = new(new TextObject(
+        "{=EbiExplainHint}Explain this slot's pick in the message log"));
 
     [DataSourceProperty]
     public string OnDefaultText { get; } =
@@ -375,6 +387,15 @@ public sealed class SlotWeightsVM : ViewModel
         RebuildRows();
         RefreshDefaultMarker();
         _onChanged();
+    }
+
+    /// <summary>Prints a deterministic account of this slot's pick to the message log, then closes.</summary>
+    public void ExecuteExplain()
+    {
+        if (_character is null || _equipment is null) return;
+
+        _explain(_character, _equipment, _slot);
+        ExecuteClose();
     }
 
     public void ExecutePreviousWeaponClass() => CycleWeaponClass(-1);

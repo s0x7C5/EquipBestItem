@@ -56,6 +56,30 @@ public sealed class WeightedItemScorer : IItemScorer
     }
 
     /// <summary>
+    ///     Each parameter's signed contribution to the score:
+    ///     w·√percentile / Σ|w|. The sum equals <see cref="Score" /> exactly
+    ///     (same formula), so an explanation built from this can never disagree
+    ///     with the ranking. Zero-weight parameters contribute 0.
+    /// </summary>
+    public void Breakdown(EquipmentElement element, in SearchContext context, float[] into)
+    {
+        var weights = context.Query.Weights.Raw;
+        var stats = _stats.GetStats(element, context.Equipment[EquipmentIndex.HorseHarness]);
+
+        var weightTotal = 0f;
+        for (var i = 0; i < weights.Length; i++)
+            weightTotal += Math.Abs(weights[i]);
+
+        for (var i = 0; i < into.Length; i++)
+        {
+            var weight = weights[i];
+            into[i] = weight == 0f || weightTotal <= 0f
+                ? 0f
+                : (float)Math.Sqrt(_percentiles.Normalize(element.Item, i, stats[i])) * weight / weightTotal;
+        }
+    }
+
+    /// <summary>
     ///     A candidate that is at least as good on every weighted stat (and
     ///     better overall) is always a safe suggestion. A trade-off candidate
     ///     must clear the score margin instead.

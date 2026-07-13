@@ -8,6 +8,8 @@
         <string id="EbiEquippedCount" text="已裝備 {COUNT} 件物品。"/>
         <string id="EbiClassAsEquipped" text="與目前裝備相同"/>
         <string id="EbiEffectivenessNote" text="物品按遊戲內建的效能評分排序；屬性權重不生效。"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="預設"/>

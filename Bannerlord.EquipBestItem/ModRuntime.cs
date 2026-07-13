@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using Bannerlord.EquipBestItem.Ai;
 using Bannerlord.EquipBestItem.Domain;
+using Bannerlord.EquipBestItem.Domain.Explaining;
 using Bannerlord.EquipBestItem.Domain.Filtering;
 using Bannerlord.EquipBestItem.Domain.Scoring;
 using Bannerlord.EquipBestItem.Inventory;
@@ -46,18 +47,21 @@ internal static class ModRuntime
 
         var statCache = new ItemStatCache();
         var percentiles = new ItemStatPercentiles();
+        var weightedScorer = new WeightedItemScorer(statCache, percentiles);
+        var priorityComparer = new PriorityItemComparer(statCache);
 
         Services = new ModServices(
             settings,
             new ProfileService(store),
             new EquipBestService(
                 finder,
-                new WeightedItemScorer(statCache, percentiles),
+                weightedScorer,
                 new EffectivenessItemScorer(),
-                new PriorityItemComparer(statCache),
+                priorityComparer,
                 statCache,
                 percentiles,
                 settings),
+            new ItemExplainer(statCache, percentiles, weightedScorer, priorityComparer),
             new LlmRequestInterpreter(settings.Ai),
             () => store.Save("settings.json", settings));
     }
@@ -70,12 +74,14 @@ internal sealed class ModServices
         ModSettings settings,
         ProfileService profiles,
         EquipBestService equipBest,
+        ItemExplainer explainer,
         IRequestInterpreter interpreter,
         Action persistSettings)
     {
         Settings = settings;
         Profiles = profiles;
         EquipBest = equipBest;
+        Explainer = explainer;
         Interpreter = interpreter;
         PersistSettings = persistSettings;
     }
@@ -85,6 +91,8 @@ internal sealed class ModServices
     internal ProfileService Profiles { get; }
 
     internal EquipBestService EquipBest { get; }
+
+    internal ItemExplainer Explainer { get; }
 
     internal IRequestInterpreter Interpreter { get; }
 

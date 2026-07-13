@@ -8,6 +8,8 @@
         <string id="EbiEquippedCount" text="{COUNT} objet(s) équipé(s)."/>
         <string id="EbiClassAsEquipped" text="Comme équipé"/>
         <string id="EbiEffectivenessNote" text="Les objets sont classés selon le score d'efficacité intégré du jeu ; les poids des stats ne s'appliquent pas."/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
         <string id="EbiShortBow" text="Arc court"/>
         <string id="EbiLongBow" text="Arc long"/>
         <string id="ebi_default" text="Défaut"/>

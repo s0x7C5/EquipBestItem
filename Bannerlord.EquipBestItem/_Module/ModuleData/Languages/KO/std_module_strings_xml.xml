@@ -8,6 +8,8 @@
         <string id="EbiEquippedCount" text="아이템 {COUNT}개를 장착했습니다."/>
         <string id="EbiClassAsEquipped" text="장착 중인 것과 동일"/>
         <string id="EbiEffectivenessNote" text="아이템은 게임 내장 효율 점수로 순위가 매겨지며, 능력치 가중치는 적용되지 않습니다."/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
         <string id="EbiShortBow" text="단궁"/>
         <string id="EbiLongBow" text="장궁"/>
         <string id="ebi_default" text="기본값"/>

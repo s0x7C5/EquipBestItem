@@ -300,6 +300,24 @@
                                             </ItemTemplate>
                                         </EbiPriorityListWidget>
 
+                                        <!-- Explain the current pick to the message log (all modes) -->
+                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                      HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="50"
+                                                      MarginTop="14" HorizontalAlignment="Center"
+                                                      Brush="Popup.Button.Base" Command.Click="ExecuteExplain"
+                                                      UpdateChildrenStates="true">
+                                            <Children>
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{ExplainButtonHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Brush="Popup.Button.Text" Text="@ExplainButtonText"/>
+                                            </Children>
+                                        </ButtonWidget>
+
                                         <!-- Actions: Default restores the (player-editable) defaults,
                                              Make default saves the current filter as that default,
                                              Lock zeroes the weights which excludes the slot -->

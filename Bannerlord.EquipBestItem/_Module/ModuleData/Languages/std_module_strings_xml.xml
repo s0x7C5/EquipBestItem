@@ -8,6 +8,20 @@
         <string id="EbiEquippedCount" text="Equipped {COUNT} item(s)."/>
         <string id="EbiClassAsEquipped" text="As equipped"/>
         <string id="EbiEffectivenessNote" text="Items are ranked by the game's built-in Effectiveness score; stat weights do not apply."/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
+        <string id="E" text="b"/>
         <string id="EbiShortBow" text="Short Bow"/>
         <string id="EbiLongBow" text="Long Bow"/>
         <string id="ebi_default" text="Default"/>

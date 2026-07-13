@@ -1,6 +1,27 @@
+using System.Collections.Generic;
 using TaleWorlds.Core;
 
 namespace Bannerlord.EquipBestItem.Domain.Scoring;
+
+/// <summary>The outcome of a priority comparison: the order used and which rank decided it.</summary>
+public readonly struct PriorityDecision
+{
+    public PriorityDecision(IReadOnlyList<IReadOnlyList<ItemParam>> order, int decidingRank, int winner)
+    {
+        Order = order;
+        DecidingRank = decidingRank;
+        Winner = winner;
+    }
+
+    /// <summary>The resolved rank order (each entry a group of equal-rank stats), most important first.</summary>
+    public IReadOnlyList<IReadOnlyList<ItemParam>> Order { get; }
+
+    /// <summary>Index into <see cref="Order" /> of the rank that broke the tie, or -1 if fully tied.</summary>
+    public int DecidingRank { get; }
+
+    /// <summary>+1 when a wins, -1 when b wins, 0 on a full tie.</summary>
+    public int Winner { get; }
+}
 
 /// <summary>
 ///     Lexicographic ranking by the slot's stat-priority order: candidates are
@@ -24,7 +45,15 @@ public sealed class PriorityItemComparer : IItemComparer
         _stats = stats;
     }
 
-    public int Compare(EquipmentElement a, EquipmentElement b, in SearchContext context)
+    public int Compare(EquipmentElement a, EquipmentElement b, in SearchContext context) =>
+        Explain(a, b, context).Winner;
+
+    /// <summary>
+    ///     The full comparison: the resolved order and the rank that decided
+    ///     it. Sharing this with <see cref="Compare" /> keeps an explanation in
+    ///     lockstep with the ranking.
+    /// </summary>
+    public PriorityDecision Explain(EquipmentElement a, EquipmentElement b, in SearchContext context)
     {
         var harness = context.Equipment[EquipmentIndex.HorseHarness];
         var statsA = _stats.GetStats(a, harness);
@@ -57,10 +86,10 @@ public sealed class PriorityItemComparer : IItemComparer
                 }
             }
 
-            if (diff > Epsilon) return 1;
-            if (diff < -Epsilon) return -1;
+            if (diff > Epsilon) return new PriorityDecision(order, i, 1);
+            if (diff < -Epsilon) return new PriorityDecision(order, i, -1);
         }
 
-        return 0;
+        return new PriorityDecision(order, -1, 0);
     }
 }

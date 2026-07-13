@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bannerlord.EquipBestItem.Domain.Explaining;
 using Bannerlord.EquipBestItem.Inventory;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Inventory;
@@ -30,7 +31,7 @@ public sealed class EbiVM : ViewModel
 
         // Recompute the slot buttons on every weights change: the player has
         // just changed what "best" means, so the previews follow live.
-        SlotSettings = new SlotWeightsVM(services.Profiles, services.Settings, RecomputeBestItems);
+        SlotSettings = new SlotWeightsVM(services.Profiles, services.Settings, RecomputeBestItems, ExplainSlot);
         Ai = new AiPromptVM(
             services.Interpreter, services.Profiles, gateway,
             services.Settings, RecomputeBestItems);
@@ -246,6 +247,23 @@ public sealed class EbiVM : ViewModel
                 _services.EquipBest.FindBest(_gateway, query, slot.Slot),
                 _gateway.GetEquippedItemVM(slot.Slot));
         }
+    }
+
+    /// <summary>
+    ///     Explains the slot's current pick to the message log: why the found
+    ///     item beats the equipped one (or why nothing was found), under the
+    ///     active search method. Deterministic — same scoring as the search.
+    /// </summary>
+    private void ExplainSlot(CharacterObject character, Equipment equipment, EquipmentIndex slot)
+    {
+        var query = _services.Profiles.GetQuery(character, equipment, slot);
+        var mode = _services.Settings.UsePriority ? SearchMode.Priority
+            : _services.Settings.UseEffectiveness ? SearchMode.Effectiveness
+            : SearchMode.Weights;
+
+        var found = _services.EquipBest.FindBest(_gateway, query, slot, character, equipment);
+        var explanation = _services.Explainer.Explain(character, equipment, slot, query, mode, found);
+        ExplanationFormatter.Log(explanation);
     }
 
     private void EquipFound(EbiSlotVM slot)
