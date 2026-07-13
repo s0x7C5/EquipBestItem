@@ -34,7 +34,6 @@ public sealed class AiPromptVM : ViewModel
     private CancellationTokenSource? _pendingRequest;
 
     private string _lastRequest = "";
-    private string _statusText = "";
     private bool _isBusy;
 
     public AiPromptVM(
@@ -57,18 +56,6 @@ public sealed class AiPromptVM : ViewModel
 
     [DataSourceProperty]
     public HintViewModel AskHint { get; } = new(new TextObject("{=EbiAiInterpret}Ask AI"));
-
-    [DataSourceProperty]
-    public string StatusText
-    {
-        get => _statusText;
-        set
-        {
-            if (value == _statusText) return;
-            _statusText = value;
-            OnPropertyChangedWithValue(value);
-        }
-    }
 
     [DataSourceProperty]
     public bool IsBusy
@@ -127,7 +114,7 @@ public sealed class AiPromptVM : ViewModel
         var cancellation = _pendingRequest = new CancellationTokenSource();
 
         IsBusy = true;
-        StatusText = new TextObject("{=EbiAiThinking}Interpreting request...").ToString();
+        GameLog.Info(new TextObject("{=EbiAiThinking}Interpreting request...").ToString());
 
         Task.Run(async () =>
         {
@@ -147,7 +134,7 @@ public sealed class AiPromptVM : ViewModel
                     }
                     catch (Exception exception)
                     {
-                        StatusText = exception.Message;
+                        GameLog.Error(exception.Message);
                     }
                     finally
                     {
@@ -164,10 +151,16 @@ public sealed class AiPromptVM : ViewModel
             {
                 // Includes the interpreter's own timeout, which surfaces as an
                 // OperationCanceledException while our token is NOT cancelled.
-                StatusText = exception is OperationCanceledException
+                var message = exception is OperationCanceledException
                     ? new TextObject("{=EbiAiTimeout}The AI did not respond in time.").ToString()
                     : exception.Message;
-                IsBusy = false;
+
+                // Off the game thread here; the log and IsBusy touch UI state.
+                MainThread.Post(() =>
+                {
+                    GameLog.Error(message);
+                    IsBusy = false;
+                });
             }
         });
     }
@@ -183,7 +176,7 @@ public sealed class AiPromptVM : ViewModel
         var targets = ResolveTargets(plan.Target, character, equipment);
         if (targets.Count == 0)
         {
-            StatusText = new TextObject("{=EbiAiTargetNotFound}Could not find that hero in the party.").ToString();
+            GameLog.Warn(new TextObject("{=EbiAiTargetNotFound}Could not find that hero in the party.").ToString());
             return;
         }
 
@@ -216,7 +209,10 @@ public sealed class AiPromptVM : ViewModel
 
         var summary = string.Join("; ", changes);
         if (targets.Count > 1) summary += $" (x{targets.Count})";
-        StatusText = plan.Explanation.Length > 0 ? $"{plan.Explanation} {summary}" : summary;
+
+        // The assistant's answer, then the concrete per-slot changes.
+        if (plan.Explanation.Length > 0) GameLog.Ai(plan.Explanation);
+        GameLog.Ai(summary);
     }
 
     /// <summary>

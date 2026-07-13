@@ -173,10 +173,7 @@
                     </Children>
                 </BrushWidget>
 
-                <!-- AI status line: bottom of the center panel -->
-                <TextWidget DataSource="{Ai}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                            VerticalAlignment="Bottom" MarginBottom="115"
-                            Brush="Popup.Button.Text" Text="@StatusText"/>
+                <!-- The AI assistant's replies go to the game message log (chat), not a panel line. -->
 
             </Children>
         </Widget>
