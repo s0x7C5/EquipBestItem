@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Varsayılan yap"/>
         <string id="EbiHintMakeDefault" text="Bu yuvanın filtresini kendi ayarı olmayan tüm kahramanlar için varsayılan olarak kaydeder"/>
         <string id="EbiOnDefault" text="Varsayılan değerler"/>
+        <string id="EbiWhySlotLocked" text="Bu yuva aramanın dışında tutuluyor."/>
+        <string id="EbiWhyNothingBetter" text="{CURRENT} eşyasından belirgin şekilde iyisi yok."/>
+        <string id="EbiWhyNothingFound" text="Bu yuva için bir şey bulunamadı."/>
+        <string id="EbiWhyFirstItem" text="Boş yuva için {FOUND}."/>
+        <string id="EbiWhyUpgrade" text="{FOUND}, {CURRENT} eşyasını geçiyor"/>
+        <string id="EbiWhyAhead" text="Önde: {STATS}"/>
+        <string id="EbiWhyBehind" text="Geride (daha az sayılıyor): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Kararı veren: {STATS}"/>
+        <string id="EbiWhyTiedOn" text="{STATS} üzerinde berabere; daha düşük öncelikler kontrol edilmedi"/>
+        <string id="EbiWhyEffectiveness" text="Oyun ona toplamda {CURRENT} karşısında {FOUND} veriyor — kendi puanı, değer dökümü yok."/>
+        <string id="EbiWhyTweakWeight" text="İpucu: daha çok önemsemek için {STAT} ağırlığını artır."/>
+        <string id="EbiWhyTweakPriority" text="İpucu: öncelik vermek için {STAT} değerini yukarı taşı."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}” aranan envanterde yok."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}” tam da burada önerilen şey."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}” uygun değil: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="“{ITEM}” yerine {WINNER} seçiliyor"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}”, {CURRENT} eşyasından biraz daha yüksek puan alıyor, ama takas önermek için gereken net fark yok."/>
+        <string id="EbiRejectType" text="bu yuva için yanlış eşya türü"/>
+        <string id="EbiRejectWeaponClass" text="bu yuva için yanlış silah türü"/>
+        <string id="EbiRejectShield" text="başka bir silah yuvasında zaten kalkan var"/>
+        <string id="EbiRejectEquip" text="bu kahraman bunu buraya kuşanamaz"/>
+        <string id="EbiRejectWeight" text="yuvanın ağırlık sınırının üzerinde"/>
+        <string id="EbiRejectCulture" text="yuvanın filtresi için yanlış kültür"/>
+        <string id="EbiRejectOther" text="yuvanın filtresine uymuyor"/>
     </strings>
 </base>

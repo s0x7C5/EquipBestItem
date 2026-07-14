@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Als Standard"/>
         <string id="EbiHintMakeDefault" text="Speichert den Filter dieses Slots als Standard für alle Helden ohne eigene Einstellungen"/>
         <string id="EbiOnDefault" text="Standardwerte"/>
+        <string id="EbiWhySlotLocked" text="Dieser Slot ist von der Suche ausgeschlossen."/>
+        <string id="EbiWhyNothingBetter" text="Nichts ist deutlich besser als {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Für diesen Slot wurde nichts gefunden."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} für einen leeren Slot."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} schlägt {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Voraus: {STATS}"/>
+        <string id="EbiWhyBehind" text="Zurück (zählt weniger): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Entschieden durch {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Gleichstand bei {STATS}; niedrigere Prioritäten wurden nicht geprüft"/>
+        <string id="EbiWhyEffectiveness" text="Das Spiel bewertet ihn insgesamt mit {FOUND} gegenüber {CURRENT} — eigene Wertung, ohne Aufschlüsselung nach Werten."/>
+        <string id="EbiWhyTweakWeight" text="Tipp: Gib {STAT} mehr Gewicht, um ihn stärker zu werten."/>
+        <string id="EbiWhyTweakPriority" text="Tipp: Schiebe {STAT} nach oben, um ihn zu priorisieren."/>
+        <string id="EbiWhyNamedNotFound" text="„{ITEM}“ ist nicht im durchsuchten Inventar."/>
+        <string id="EbiWhyNamedIsBest" text="„{ITEM}“ ist genau das, was hier empfohlen wird."/>
+        <string id="EbiWhyNamedFiltered" text="„{ITEM}“ kommt nicht in Frage: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} wird „{ITEM}“ vorgezogen"/>
+        <string id="EbiWhyNamedMarginal" text="„{ITEM}“ hat eine etwas höhere Wertung als {CURRENT}, aber nicht den klaren Vorsprung, der für einen Tauschvorschlag nötig ist."/>
+        <string id="EbiRejectType" text="falscher Gegenstandstyp für diesen Slot"/>
+        <string id="EbiRejectWeaponClass" text="falscher Waffentyp für diesen Slot"/>
+        <string id="EbiRejectShield" text="ein Schild liegt bereits in einem anderen Waffenslot"/>
+        <string id="EbiRejectEquip" text="dieser Held kann es hier nicht anlegen"/>
+        <string id="EbiRejectWeight" text="über dem Gewichtslimit des Slots"/>
+        <string id="EbiRejectCulture" text="falsche Kultur für den Filter des Slots"/>
+        <string id="EbiRejectOther" text="es entspricht nicht dem Filter des Slots"/>
     </strings>
 </base>

@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="设为默认"/>
         <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为所有未自定义英雄的默认值"/>
         <string id="EbiOnDefault" text="默认值"/>
+        <string id="EbiWhySlotLocked" text="该槽位已被排除在搜索之外。"/>
+        <string id="EbiWhyNothingBetter" text="没有明显优于{CURRENT}的物品。"/>
+        <string id="EbiWhyNothingFound" text="该槽位没有找到任何物品。"/>
+        <string id="EbiWhyFirstItem" text="空槽位装上{FOUND}。"/>
+        <string id="EbiWhyUpgrade" text="{FOUND}胜过{CURRENT}"/>
+        <string id="EbiWhyAhead" text="领先：{STATS}"/>
+        <string id="EbiWhyBehind" text="落后（权重较小）：{STATS}"/>
+        <string id="EbiWhyDecidedBy" text="决定因素：{STATS}"/>
+        <string id="EbiWhyTiedOn" text="在{STATS}上打平；未继续比较更低的优先级"/>
+        <string id="EbiWhyEffectiveness" text="游戏对它的总体评分为{FOUND}对{CURRENT} — 游戏自带评分，没有按属性的明细。"/>
+        <string id="EbiWhyTweakWeight" text="提示：提高{STAT}的权重，让它更受重视。"/>
+        <string id="EbiWhyTweakPriority" text="提示：把{STAT}上移以提高其优先级。"/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}”不在所搜索的物品栏中。"/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}”正是这里推荐的物品。"/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}”不符合条件：{REASON}"/>
+        <string id="EbiWhyNamedLoses" text="选择了{WINNER}而不是“{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}”的评分略高于{CURRENT}，但差距不足以建议更换。"/>
+        <string id="EbiRejectType" text="物品类型不适合该槽位"/>
+        <string id="EbiRejectWeaponClass" text="武器类型不适合该槽位"/>
+        <string id="EbiRejectShield" text="另一个武器槽位已有盾牌"/>
+        <string id="EbiRejectEquip" text="该英雄无法在此装备它"/>
+        <string id="EbiRejectWeight" text="超过该槽位的重量上限"/>
+        <string id="EbiRejectCulture" text="文化不符合该槽位的筛选"/>
+        <string id="EbiRejectOther" text="不符合该槽位的筛选条件"/>
     </strings>
 </base>

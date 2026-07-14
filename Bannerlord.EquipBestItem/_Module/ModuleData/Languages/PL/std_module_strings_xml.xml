@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Ustaw jako domyślne"/>
         <string id="EbiHintMakeDefault" text="Zapisuje filtr tego slotu jako domyślny dla wszystkich bohaterów bez własnych ustawień"/>
         <string id="EbiOnDefault" text="Wartości domyślne"/>
+        <string id="EbiWhySlotLocked" text="Ten slot jest wyłączony z wyszukiwania."/>
+        <string id="EbiWhyNothingBetter" text="Nic wyraźnie lepszego niż {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Nic nie znaleziono dla tego slotu."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} do pustego slotu."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} wygrywa z {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Przewaga: {STATS}"/>
+        <string id="EbiWhyBehind" text="Słabiej (liczy się mniej): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Zdecydowało {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Remis w {STATS}; niższych priorytetów nie sprawdzano"/>
+        <string id="EbiWhyEffectiveness" text="Gra ocenia go łącznie na {FOUND} wobec {CURRENT} — jej własna ocena, bez rozbicia na statystyki."/>
+        <string id="EbiWhyTweakWeight" text="Wskazówka: zwiększ wagę {STAT}, aby liczył się bardziej."/>
+        <string id="EbiWhyTweakPriority" text="Wskazówka: przesuń {STAT} wyżej, aby nadać mu priorytet."/>
+        <string id="EbiWhyNamedNotFound" text="„{ITEM}” nie ma w przeszukiwanym ekwipunku."/>
+        <string id="EbiWhyNamedIsBest" text="„{ITEM}” to dokładnie to, co jest tu polecane."/>
+        <string id="EbiWhyNamedFiltered" text="„{ITEM}” nie spełnia warunków: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} zostaje wybrany zamiast „{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="„{ITEM}” punktuje nieco wyżej niż {CURRENT}, ale bez wyraźnej przewagi potrzebnej, by zaproponować zamianę."/>
+        <string id="EbiRejectType" text="zły typ przedmiotu do tego slotu"/>
+        <string id="EbiRejectWeaponClass" text="zły typ broni do tego slotu"/>
+        <string id="EbiRejectShield" text="tarcza zajmuje już inny slot na broń"/>
+        <string id="EbiRejectEquip" text="ten bohater nie może tego tu założyć"/>
+        <string id="EbiRejectWeight" text="powyżej limitu wagi slotu"/>
+        <string id="EbiRejectCulture" text="zła kultura dla filtra slotu"/>
+        <string id="EbiRejectOther" text="nie pasuje do filtra slotu"/>
     </strings>
 </base>

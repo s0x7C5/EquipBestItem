@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Tornar padrão"/>
         <string id="EbiHintMakeDefault" text="Salva o filtro deste espaço como padrão para todos os heróis sem configurações próprias"/>
         <string id="EbiOnDefault" text="Valores padrão"/>
+        <string id="EbiWhySlotLocked" text="Este espaço está excluído da busca."/>
+        <string id="EbiWhyNothingBetter" text="Nada claramente melhor que {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Nada encontrado para este espaço."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} para um espaço vazio."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} supera {CURRENT}"/>
+        <string id="EbiWhyAhead" text="À frente: {STATS}"/>
+        <string id="EbiWhyBehind" text="Atrás (conta menos): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Decidido por {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Empate em {STATS}; prioridades inferiores não foram verificadas"/>
+        <string id="EbiWhyEffectiveness" text="O jogo o avalia em {FOUND} contra {CURRENT} no geral — nota própria, sem detalhamento por atributo."/>
+        <string id="EbiWhyTweakWeight" text="Dica: dê mais peso a {STAT} para valorizá-lo mais."/>
+        <string id="EbiWhyTweakPriority" text="Dica: suba {STAT} para priorizá-lo."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}” não está no inventário pesquisado."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}” é exatamente o que se recomenda aqui."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}” não se qualifica: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} é escolhido no lugar de “{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}” pontua um pouco mais que {CURRENT}, mas não com a margem clara necessária para sugerir a troca."/>
+        <string id="EbiRejectType" text="tipo de item errado para este espaço"/>
+        <string id="EbiRejectWeaponClass" text="tipo de arma errado para este espaço"/>
+        <string id="EbiRejectShield" text="já há um escudo em outro espaço de arma"/>
+        <string id="EbiRejectEquip" text="este herói não pode equipá-lo aqui"/>
+        <string id="EbiRejectWeight" text="acima do limite de peso do espaço"/>
+        <string id="EbiRejectCulture" text="cultura errada para o filtro do espaço"/>
+        <string id="EbiRejectOther" text="não corresponde ao filtro do espaço"/>
     </strings>
 </base>

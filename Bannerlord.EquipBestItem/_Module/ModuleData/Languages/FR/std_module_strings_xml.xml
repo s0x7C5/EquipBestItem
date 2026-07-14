@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Définir par défaut"/>
         <string id="EbiHintMakeDefault" text="Enregistre le filtre de cet emplacement comme valeur par défaut pour tous les héros sans réglages propres"/>
         <string id="EbiOnDefault" text="Valeurs par défaut"/>
+        <string id="EbiWhySlotLocked" text="Cet emplacement est exclu de la recherche."/>
+        <string id="EbiWhyNothingBetter" text="Rien de nettement meilleur que {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Rien trouvé pour cet emplacement."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} pour un emplacement vide."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} bat {CURRENT}"/>
+        <string id="EbiWhyAhead" text="En tête : {STATS}"/>
+        <string id="EbiWhyBehind" text="En retrait (compte moins) : {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Décidé par {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Égalité sur {STATS} ; les priorités inférieures n'ont pas été vérifiées"/>
+        <string id="EbiWhyEffectiveness" text="Le jeu l'évalue à {FOUND} contre {CURRENT} au total — sa propre note, sans détail par caractéristique."/>
+        <string id="EbiWhyTweakWeight" text="Astuce : donnez plus de poids à {STAT} pour le valoriser davantage."/>
+        <string id="EbiWhyTweakPriority" text="Astuce : montez {STAT} pour le prioriser."/>
+        <string id="EbiWhyNamedNotFound" text="« {ITEM} » n'est pas dans l'inventaire fouillé."/>
+        <string id="EbiWhyNamedIsBest" text="« {ITEM} » est exactement ce qui est recommandé ici."/>
+        <string id="EbiWhyNamedFiltered" text="« {ITEM} » ne convient pas : {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} est choisi plutôt que « {ITEM} »"/>
+        <string id="EbiWhyNamedMarginal" text="« {ITEM} » obtient une note un peu plus élevée que {CURRENT}, mais pas l'écart net requis pour proposer un échange."/>
+        <string id="EbiRejectType" text="mauvais type d'objet pour cet emplacement"/>
+        <string id="EbiRejectWeaponClass" text="mauvais type d'arme pour cet emplacement"/>
+        <string id="EbiRejectShield" text="un bouclier occupe déjà un autre emplacement d'arme"/>
+        <string id="EbiRejectEquip" text="ce héros ne peut pas l'équiper ici"/>
+        <string id="EbiRejectWeight" text="au-dessus de la limite de poids de l'emplacement"/>
+        <string id="EbiRejectCulture" text="mauvaise culture pour le filtre de l'emplacement"/>
+        <string id="EbiRejectOther" text="il ne correspond pas au filtre de l'emplacement"/>
     </strings>
 </base>

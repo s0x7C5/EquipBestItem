@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="Set as default"/>
         <string id="EbiHintMakeDefault" text="Save this slot's filter as the default for every hero without their own settings"/>
         <string id="EbiOnDefault" text="Default values"/>
+        <string id="EbiWhySlotLocked" text="This slot is excluded from searching."/>
+        <string id="EbiWhyNothingBetter" text="Nothing clearly better than {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Nothing found for this slot."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} for an empty slot."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} beats {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Ahead: {STATS}"/>
+        <string id="EbiWhyBehind" text="Behind (counts less): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Decided by {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Tied on {STATS}; lower priorities were not checked"/>
+        <string id="EbiWhyEffectiveness" text="The game rates it {FOUND} vs {CURRENT} overall — its own score, with no stat breakdown."/>
+        <string id="EbiWhyTweakWeight" text="Tip: give {STAT} more weight to value it more."/>
+        <string id="EbiWhyTweakPriority" text="Tip: move {STAT} up to prioritize it."/>
+        <string id="EbiWhyNamedNotFound" text="&quot;{ITEM}&quot; is not in your searched inventory."/>
+        <string id="EbiWhyNamedIsBest" text="&quot;{ITEM}&quot; is exactly what's recommended here."/>
+        <string id="EbiWhyNamedFiltered" text="&quot;{ITEM}&quot; doesn't qualify: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} is picked over &quot;{ITEM}&quot;"/>
+        <string id="EbiWhyNamedMarginal" text="&quot;{ITEM}&quot; scores a bit higher than {CURRENT}, but not by the clear margin needed to suggest a swap."/>
+        <string id="EbiRejectType" text="wrong item type for this slot"/>
+        <string id="EbiRejectWeaponClass" text="wrong weapon type for this slot"/>
+        <string id="EbiRejectShield" text="a shield is already in another weapon slot"/>
+        <string id="EbiRejectEquip" text="this hero can't equip it here"/>
+        <string id="EbiRejectWeight" text="over the slot's weight limit"/>
+        <string id="EbiRejectCulture" text="wrong culture for the slot's filter"/>
+        <string id="EbiRejectOther" text="it does not match the slot's filter"/>
     </strings>
 </base>

@@ -69,5 +69,29 @@
         <string id="EbiMakeDefault" text="기본값으로"/>
         <string id="EbiHintMakeDefault" text="이 슬롯의 필터를 자체 설정이 없는 모든 영웅의 기본값으로 저장합니다"/>
         <string id="EbiOnDefault" text="기본값"/>
+        <string id="EbiWhySlotLocked" text="이 슬롯은 검색에서 제외되어 있습니다."/>
+        <string id="EbiWhyNothingBetter" text="{CURRENT}보다 확실히 나은 것이 없습니다."/>
+        <string id="EbiWhyNothingFound" text="이 슬롯에 맞는 것을 찾지 못했습니다."/>
+        <string id="EbiWhyFirstItem" text="빈 슬롯에 {FOUND}."/>
+        <string id="EbiWhyUpgrade" text="{FOUND}이(가) {CURRENT}보다 낫습니다"/>
+        <string id="EbiWhyAhead" text="우세: {STATS}"/>
+        <string id="EbiWhyBehind" text="열세(비중 낮음): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="결정 요인: {STATS}"/>
+        <string id="EbiWhyTiedOn" text="{STATS}에서 동점, 더 낮은 우선순위는 확인하지 않았습니다"/>
+        <string id="EbiWhyEffectiveness" text="게임의 종합 평가는 {CURRENT} 대비 {FOUND}입니다 — 자체 점수로, 능력치별 세부 내역은 없습니다."/>
+        <string id="EbiWhyTweakWeight" text="팁: {STAT}의 가중치를 높이면 더 중요하게 반영됩니다."/>
+        <string id="EbiWhyTweakPriority" text="팁: {STAT}을(를) 위로 올리면 우선순위가 높아집니다."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}”은(는) 검색 중인 인벤토리에 없습니다."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}”이(가) 바로 여기서 추천되는 것입니다."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}”은(는) 조건에 맞지 않습니다: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="“{ITEM}” 대신 {WINNER}이(가) 선택되었습니다"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}”의 점수가 {CURRENT}보다 조금 높지만, 교체를 제안할 만큼 확실한 차이는 아닙니다."/>
+        <string id="EbiRejectType" text="이 슬롯에 맞지 않는 아이템 종류입니다"/>
+        <string id="EbiRejectWeaponClass" text="이 슬롯에 맞지 않는 무기 종류입니다"/>
+        <string id="EbiRejectShield" text="다른 무기 슬롯에 이미 방패가 있습니다"/>
+        <string id="EbiRejectEquip" text="이 영웅은 여기에 착용할 수 없습니다"/>
+        <string id="EbiRejectWeight" text="슬롯의 무게 제한을 초과합니다"/>
+        <string id="EbiRejectCulture" text="슬롯 필터와 문화가 맞지 않습니다"/>
+        <string id="EbiRejectOther" text="슬롯 필터와 일치하지 않습니다"/>
     </strings>
 </base>
