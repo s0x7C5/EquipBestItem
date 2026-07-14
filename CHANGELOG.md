@@ -5,8 +5,10 @@
 - Fixed localization never loading: the module was missing the
   language_data.xml registration files, so all mod text showed in English
   regardless of the game language. All thirteen shipped translations now
-  actually load (explanation texts are currently localized for English and
-  Russian; other languages fall back to English for those lines only).
+  actually load.
+- The "Why this?" explanation lines and rejection reasons are now localized
+  in all thirteen languages (they previously existed only in English and
+  Russian).
 - The shipped module no longer includes the bake-time SpriteParts sources.
 
 ## 3.2.0 — 2026-07-14
