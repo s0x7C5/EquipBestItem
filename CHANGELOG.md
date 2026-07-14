@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.2.1 — 2026-07-14
+
+- Fixed localization never loading: the module was missing the
+  language_data.xml registration files, so all mod text showed in English
+  regardless of the game language. All thirteen shipped translations now
+  actually load (explanation texts are currently localized for English and
+  Russian; other languages fall back to English for those lines only).
+- The shipped module no longer includes the bake-time SpriteParts sources.
+
 ## 3.2.0 — 2026-07-14
 
 - **"Why this?"** button in the slot filter: the mod explains its pick in the
