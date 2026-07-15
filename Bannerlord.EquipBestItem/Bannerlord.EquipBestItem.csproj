@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>3.0.0</Version>
+        <Version>3.2.1</Version>
         <TargetFramework>net472</TargetFramework>
         <Platforms>x64</Platforms>
         <LangVersion>11.0</LangVersion>
@@ -46,7 +46,10 @@
             <StageDir>$(OutputPath)Module\$(ModuleId)\</StageDir>
         </PropertyGroup>
         <ItemGroup>
-            <ModuleFiles Include="_Module\**\*" Exclude="_Module\SubModule.xml" />
+            <!-- SpriteParts are the bake-time sources for GUI\SpriteSheets;
+                 the game never reads them, so they stay out of the module. -->
+            <ModuleFiles Include="_Module\**\*"
+                         Exclude="_Module\SubModule.xml;_Module\GUI\SpriteParts\**" />
         </ItemGroup>
         <ItemGroup>
             <RuntimeLibs Include="$(OutputPath)*.dll" />

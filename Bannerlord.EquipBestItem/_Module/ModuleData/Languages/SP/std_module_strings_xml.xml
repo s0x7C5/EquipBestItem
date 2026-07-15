@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Español (LA)"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="No se encontró un objeto mejor."/>
         <string id="EbiEquippedCount" text="Se equiparon {COUNT} objeto(s)."/>
         <string id="EbiClassAsEquipped" text="Como equipado"/>
+        <string id="EbiEffectivenessNote" text="Los objetos se clasifican con la puntuación de efectividad integrada del juego; los pesos de estadísticas no se aplican."/>
+        <string id="EbiExplain" text="¿Por qué?"/>
+        <string id="EbiClear" text="Limpiar"/>
+        <string id="EbiClearHint" text="Restablece los pesos/el orden a los valores predeterminados; clase de arma, cultura y límite de peso se conservan"/>
+        <string id="EbiExplainHint" text="Explica la elección de esta ranura en el registro de mensajes"/>
+        <string id="EbiShortBow" text="Arco corto"/>
+        <string id="EbiLongBow" text="Arco largo"/>
         <string id="ebi_default" text="Predeterminado"/>
         <string id="ebi_lock" text="Bloquear"/>
         <string id="ebi_hint_default" text="Restablecer a los valores predeterminados"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="General"/>
         <string id="EbiMcmEffectiveness" text="Usar la puntuación de Eficacia del juego"/>
         <string id="EbiMcmEffectivenessHint" text="Puntuar los objetos con el valor agregado propio del juego en lugar de los pesos de parámetros por ranura. Los pesos solicitados explícitamente a la IA siguen teniendo prioridad."/>
+        <string id="EbiMcmPriority" text="Búsqueda por prioridad"/>
+        <string id="EbiMcmPriorityHint" text="Compara los objetos estadística por estadística según el orden de prioridad de la ranura en lugar de la puntuación ponderada: decide la primera, en caso de empate la siguiente. Reordena las estadísticas en la ventana de filtro de la ranura."/>
+        <string id="EbiMcmMethod" text="Método de búsqueda"/>
+        <string id="EbiMcmMethodHint" text="Pesos de parámetros: elección equilibrada - cuentan todas las estadísticas ponderadas, una sola estadística enorme no supera al resto, el cambio solo se sugiere con una clara mejora. Prioridad de estadísticas: orden estricto - decide la primera, las demás solo en caso de empate; ordena y vincula estadísticas en el filtro de la ranura. Efectividad del juego: la puntuación global integrada del juego - sin ajustes, pero tosca."/>
+        <string id="EbiMcmMethodWeights" text="Pesos de parámetros"/>
+        <string id="EbiMcmMethodPriority" text="Prioridad de estadísticas"/>
+        <string id="EbiMcmMethodEffectiveness" text="Efectividad del juego"/>
         <string id="EbiMcmButtonColor" text="Color de los botones de ranura"/>
         <string id="EbiMcmButtonColorHint" text="Tinte de los botones de equipar por ranura, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene el aspecto original. Se aplica al reabrir el inventario."/>
         <string id="EbiMcmButtonColorReset" text="Restablecer el color de los botones"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="Hacer predeterminado"/>
         <string id="EbiHintMakeDefault" text="Guarda el filtro de esta ranura como predeterminado para todos los héroes sin ajustes propios"/>
         <string id="EbiOnDefault" text="Valores predeterminados"/>
+        <string id="EbiWhySlotLocked" text="Esta ranura está excluida de la búsqueda."/>
+        <string id="EbiWhyNothingBetter" text="Nada claramente mejor que {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="No se encontró nada para esta ranura."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} para una ranura vacía."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} supera a {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Por delante: {STATS}"/>
+        <string id="EbiWhyBehind" text="Por detrás (cuenta menos): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Decidido por {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Empate en {STATS}; las prioridades inferiores no se revisaron"/>
+        <string id="EbiWhyEffectiveness" text="El juego lo valora en {FOUND} contra {CURRENT} en total: su propia puntuación, sin desglose por estadística."/>
+        <string id="EbiWhyTweakWeight" text="Consejo: dale más peso a {STAT} para valorarlo más."/>
+        <string id="EbiWhyTweakPriority" text="Consejo: sube {STAT} para darle prioridad."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}” no está en el inventario donde se busca."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}” es exactamente lo que se recomienda aquí."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}” no califica: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} se elige en lugar de “{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}” puntúa un poco más que {CURRENT}, pero no con el margen claro necesario para sugerir el cambio."/>
+        <string id="EbiRejectType" text="tipo de objeto incorrecto para esta ranura"/>
+        <string id="EbiRejectWeaponClass" text="tipo de arma incorrecto para esta ranura"/>
+        <string id="EbiRejectShield" text="ya hay un escudo en otra ranura de arma"/>
+        <string id="EbiRejectEquip" text="este héroe no puede equiparlo aquí"/>
+        <string id="EbiRejectWeight" text="supera el límite de peso de la ranura"/>
+        <string id="EbiRejectCulture" text="cultura incorrecta para el filtro de la ranura"/>
+        <string id="EbiRejectOther" text="no coincide con el filtro de la ranura"/>
     </strings>
 </base>

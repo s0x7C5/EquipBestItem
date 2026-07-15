@@ -1,4 +1,16 @@
 <Prefab>
+    <!-- Same slide-in the native side panels use (Inventory.xml LeftMenu/
+         RightMenu): the wrapper starts 578 units off to the side - the game's
+         SidePanel.Width (554px tuple_right sprite + 24) - and eases to its
+         resting spot when the screen opens. -->
+    <VisualDefinitions>
+        <VisualDefinition Name="EbiLeftSlide" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.45">
+            <VisualState PositionXOffset="0" State="Default"/>
+        </VisualDefinition>
+        <VisualDefinition Name="EbiRightSlide" EaseType="EaseOut" EaseFunction="Quint" TransitionDuration="0.45">
+            <VisualState PositionXOffset="0" State="Default"/>
+        </VisualDefinition>
+    </VisualDefinitions>
     <Window>
         <Widget DataSource="{ModInventory}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
                 DoNotAcceptEvents="true">
@@ -15,6 +27,10 @@
                      The background is drawn for three sockets but holds two, so it is
                      pushed one socket-width past the edge and the sockets are laid out
                      evenly on the visible part. -->
+                <Widget VisualDefinition="EbiLeftSlide" WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent" PositionXOffset="-578"
+                        DoNotAcceptEvents="true">
+                    <Children>
                 <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="146"
                              SuggestedHeight="69" HorizontalAlignment="Left" MarginTop="82"
                              PositionXOffset="-43"
@@ -75,11 +91,17 @@
                         </ListPanel>
                     </Children>
                 </BrushWidget>
+                    </Children>
+                </Widget>
 
                 <!-- Right plaque: equip current character + lock for the right panel
                      + ask AI in the rightmost socket. Without an AI backend the
                      plaque slides right by one socket (@RightPlaqueOffset),
                      hiding the unused space just like the left plaque. -->
+                <Widget VisualDefinition="EbiRightSlide" WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent" PositionXOffset="578"
+                        DoNotAcceptEvents="true">
+                    <Children>
                 <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="146"
                              SuggestedHeight="69" HorizontalAlignment="Right" MarginTop="82"
                              PositionXOffset="@RightPlaqueOffset"
@@ -172,11 +194,10 @@
                         </ListPanel>
                     </Children>
                 </BrushWidget>
+                    </Children>
+                </Widget>
 
-                <!-- AI status line: bottom of the center panel -->
-                <TextWidget DataSource="{Ai}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                            VerticalAlignment="Bottom" MarginBottom="115"
-                            Brush="Popup.Button.Text" Text="@StatusText"/>
+                <!-- The AI assistant's replies go to the game message log (chat), not a panel line. -->
 
             </Children>
         </Widget>

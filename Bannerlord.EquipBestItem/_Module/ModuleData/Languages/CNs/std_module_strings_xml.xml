@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="简体中文"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="未找到更好的物品。"/>
         <string id="EbiEquippedCount" text="已装备 {COUNT} 件物品。"/>
         <string id="EbiClassAsEquipped" text="与当前装备相同"/>
+        <string id="EbiEffectivenessNote" text="物品按游戏内置的效能评分排序；属性权重不生效。"/>
+        <string id="EbiExplain" text="为什么？"/>
+        <string id="EbiClear" text="清除"/>
+        <string id="EbiClearHint" text="将权重/顺序重置为该槽位的默认值；武器类别、文化和重量限制保持不变"/>
+        <string id="EbiExplainHint" text="在消息日志中解释此槽位的选择"/>
+        <string id="EbiShortBow" text="短弓"/>
+        <string id="EbiLongBow" text="长弓"/>
         <string id="ebi_default" text="默认"/>
         <string id="ebi_lock" text="锁定"/>
         <string id="ebi_hint_default" text="重置为默认值"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="常规"/>
         <string id="EbiMcmEffectiveness" text="使用游戏的效能评分"/>
         <string id="EbiMcmEffectivenessHint" text="使用游戏内置的综合评分而非各槽位的参数权重来评估物品。向 AI 明确请求的权重仍然优先。"/>
+        <string id="EbiMcmPriority" text="按属性优先级搜索"/>
+        <string id="EbiMcmPriorityHint" text="按槽位的优先级顺序逐项比较物品属性，而不是加权评分：最上面的属性优先，相同时比较下一项。可在槽位的筛选窗口中调整顺序。"/>
+        <string id="EbiMcmMethod" text="搜索方式"/>
+        <string id="EbiMcmMethodHint" text="参数权重：均衡选择——所有加权属性都参与计算，单一超高属性不会压倒其余，只有明显更好时才建议更换。属性优先级：严格排序——最上面的属性起决定作用，其余仅在相同时比较；在槽位筛选中调整顺序或连接为同级。游戏效能：游戏内置的综合评分——无需设置，但较粗糙。"/>
+        <string id="EbiMcmMethodWeights" text="参数权重"/>
+        <string id="EbiMcmMethodPriority" text="属性优先级"/>
+        <string id="EbiMcmMethodEffectiveness" text="游戏效能评分"/>
         <string id="EbiMcmButtonColor" text="槽位按钮颜色"/>
         <string id="EbiMcmButtonColorHint" text="各槽位装备按钮的色调，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外观。重新打开物品栏时生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按钮颜色"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="设为默认"/>
         <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为所有未自定义英雄的默认值"/>
         <string id="EbiOnDefault" text="默认值"/>
+        <string id="EbiWhySlotLocked" text="该槽位已被排除在搜索之外。"/>
+        <string id="EbiWhyNothingBetter" text="没有明显优于{CURRENT}的物品。"/>
+        <string id="EbiWhyNothingFound" text="该槽位没有找到任何物品。"/>
+        <string id="EbiWhyFirstItem" text="空槽位装上{FOUND}。"/>
+        <string id="EbiWhyUpgrade" text="{FOUND}胜过{CURRENT}"/>
+        <string id="EbiWhyAhead" text="领先：{STATS}"/>
+        <string id="EbiWhyBehind" text="落后（权重较小）：{STATS}"/>
+        <string id="EbiWhyDecidedBy" text="决定因素：{STATS}"/>
+        <string id="EbiWhyTiedOn" text="在{STATS}上打平；未继续比较更低的优先级"/>
+        <string id="EbiWhyEffectiveness" text="游戏对它的总体评分为{FOUND}对{CURRENT} — 游戏自带评分，没有按属性的明细。"/>
+        <string id="EbiWhyTweakWeight" text="提示：提高{STAT}的权重，让它更受重视。"/>
+        <string id="EbiWhyTweakPriority" text="提示：把{STAT}上移以提高其优先级。"/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}”不在所搜索的物品栏中。"/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}”正是这里推荐的物品。"/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}”不符合条件：{REASON}"/>
+        <string id="EbiWhyNamedLoses" text="选择了{WINNER}而不是“{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}”的评分略高于{CURRENT}，但差距不足以建议更换。"/>
+        <string id="EbiRejectType" text="物品类型不适合该槽位"/>
+        <string id="EbiRejectWeaponClass" text="武器类型不适合该槽位"/>
+        <string id="EbiRejectShield" text="另一个武器槽位已有盾牌"/>
+        <string id="EbiRejectEquip" text="该英雄无法在此装备它"/>
+        <string id="EbiRejectWeight" text="超过该槽位的重量上限"/>
+        <string id="EbiRejectCulture" text="文化不符合该槽位的筛选"/>
+        <string id="EbiRejectOther" text="不符合该槽位的筛选条件"/>
     </strings>
 </base>

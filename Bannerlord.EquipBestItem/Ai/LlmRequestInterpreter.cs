@@ -222,7 +222,10 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine("JSON shape:");
         builder.AppendLine("""
 {
-  "explanation": "one short sentence describing what you set up",
+  "explanation": "one short sentence describing what you set up (only when you emit directives)",
+  "answer": "<optional: a short reply to a why/how QUESTION, in the game's language; leave empty and use directives when changing gear>",
+  "explainSlot": "<optional: for a 'why not X' question, the slot: Head|Cape|Body|Gloves|Leg|Horse|HorseHarness|Weapon0|Weapon1|Weapon2|Weapon3>",
+  "explainItem": "<optional: the exact item name the player named in a 'why not X' question; set together with explainSlot and leave directives and answer empty>",
   "target": "<optional, whose gear the request is about: current (default) | others (every party hero except the main one) | all (every party hero) | an exact hero name from the party list>",
   "directives": [
     {
@@ -230,7 +233,8 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
       "weights": { "<param>": <float -1..1> },
       "maxItemWeight": <optional float, kg>,
       "culture": "<optional: empire|sturgia|aserai|vlandia|battania|khuzait>",
-      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, Bow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>"
+      "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, ShortBow, LongBow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>",
+      "priorities": ["<optional: ranked stat groups, most important first; join equal-rank stats with +, e.g. \"HeadArmor\", \"HitPoints+BodyArmor\">"]
     }
   ]
 }
@@ -246,6 +250,15 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Only spell out weights when the player expressed a preference; an empty weights object " +
             "means \"just find the best with default balanced weights\".");
         builder.AppendLine(
+            $"The player's search method is \"{context.SearchMethod}\". When it is \"priority\", express " +
+            "stat preferences as \"priorities\" — an ordered list, most important first, \"A+B\" meaning " +
+            "equal rank — and leave \"weights\" empty; otherwise use \"weights\" and omit \"priorities\". " +
+            "Never put Weight into priorities: lightness is a maxItemWeight cap, not a rank. " +
+            "When the method is \"effectiveness\", items are ranked by the game's built-in score: emit only " +
+            "weaponClass/culture/maxItemWeight and leave weights and priorities out — unless the player " +
+            "explicitly asks to rank by specific stats, in which case emit weights (that switches the slot " +
+            "to weighted scoring).");
+        builder.AppendLine(
             "Words meaning protection/armor (in any language) map to the matching *Armor param for that " +
             "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
             "mount->MountArmor. Never use Weight to express protection.");
@@ -256,12 +269,22 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Use one directive per distinct intent. Prefer group slots (AllArmor) when the request is broad. " +
             "weaponClass only makes sense for weapon slots. Match the grip exactly, whatever the request " +
             "language: one-handed -> OneHanded…, two-handed -> TwoHanded…, never swap them; " +
-            "when the player does not say which, pick the OneHanded… variant.");
+            "when the player does not say which, pick the OneHanded… variant. " +
+            "Bows are two classes: LongBow cannot be fired from horseback; when the player just says " +
+            "\"a bow\", pick ShortBow (usable everywhere) unless they clearly fight on foot.");
         builder.AppendLine(
             "When the request names one specific piece of gear (a helmet, gloves, boots, a cape, a cuirass — " +
             "in any language), emit exactly one directive for that piece's slot " +
             "and do not invent directives for slots the player did not mention. If the request also names a " +
             "body area that slot cannot cover, keep the named slot and apply the protection to what it covers.");
+        builder.AppendLine(
+            "Questions, not changes: do NOT emit directives. Two cases. (1) The player asks about a SPECIFIC " +
+            "named item (\"why not the Nord Great Sword in slot 1\", \"why isn't X chosen\"): set explainSlot " +
+            "and explainItem (the item's name as written) and leave answer empty — the game looks the item up " +
+            "and explains it exactly, so you need no facts for it. (2) A general question (\"why is this best\", " +
+            "\"how do I change it\"): put a short reply (2–3 sentences) in \"answer\", in the game's language, " +
+            "using ONLY the recommendation facts below — never invent item names or numbers; you may suggest a " +
+            "filter tweak. The player's 'weapon slot 1/2/3/4' means Weapon0/Weapon1/Weapon2/Weapon3.");
 
         if (context.LanguageGlossary.Length > 0)
         {
@@ -272,11 +295,14 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine();
         builder.AppendLine("Examples:");
         builder.AppendLine("""User: "dress me in the lightest imperial armor" -> {"explanation":"Looking for the lightest imperial armor.","directives":[{"slot":"AllArmor","weights":{"Weight":-1.0},"culture":"empire"}]}""");
-        builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"Bow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
+        builder.AppendLine("""User: "give me a better bow and plenty of arrows" -> {"explanation":"Better bow, arrows with the biggest stack.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"ShortBow"},{"slot":"Weapon1","weights":{"MaxAmmo":1.0},"weaponClass":"Arrow"}]}""");
         builder.AppendLine("""User: "find a helmet with the best leg protection" -> {"explanation":"Picking the best-protecting helmet (a helmet cannot protect legs).","directives":[{"slot":"Head","weights":{"HeadArmor":1.0}}]}""");
         builder.AppendLine("""User: "put a one-handed axe in the first weapon slot" -> {"explanation":"Looking for a one-handed axe for the first weapon slot.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"OneHandedAxe"}]}""");
         builder.AppendLine("""User: "just give me better gear" -> {"explanation":"Picking the best items for every slot.","directives":[{"slot":"All","weights":{}}]}""");
         builder.AppendLine("""User: "set every hero except me up with a large shield in the first weapon slot" -> {"explanation":"Large shields in the first weapon slot for every other hero.","target":"others","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield"}]}""");
+        builder.AppendLine("""User (search method "priority"): "shield: hit points above all, then speed and armor equally" -> {"explanation":"Shield ranked by hit points, then speed and armor as equals.","directives":[{"slot":"Weapon0","weights":{},"weaponClass":"LargeShield","priorities":["HitPoints","SwingSpeed+BodyArmor"]}]}""");
+        builder.AppendLine("""User (a question, given a fact 'Weapon0: best is "Steel Round Shield" over "Oval Shield": ahead HitPoints 95%/60%; behind WeaponLength 20%/40%'): "why the steel shield?" -> {"answer":"It wins mainly on Hit Points (top 5% of shields vs 60%); it's a bit shorter, but length barely counts. Raise Length's weight if you'd rather keep the oval."}""");
+        builder.AppendLine("""User: "why is slot 1 not the Nord Great Sword?" -> {"explainSlot":"Weapon0","explainItem":"Nord Great Sword"}""");
         builder.AppendLine();
         builder.AppendLine(
             $"Write the \"explanation\" value in {context.GameLanguage} (the game's language), " +
@@ -284,12 +310,22 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
         builder.AppendLine();
         builder.AppendLine($"Current character: {context.CharacterName}.");
         builder.AppendLine($"Active equipment set: {context.EquipmentSetKey}.");
+        builder.AppendLine($"Search method: {context.SearchMethod}.");
 
         if (context.PartyHeroes.Count > 1)
             builder.AppendLine($"Party heroes: {string.Join(", ", context.PartyHeroes)}.");
 
         if (context.NotableSkills.Count > 0)
             builder.AppendLine($"Notable skills: {string.Join(", ", context.NotableSkills)}.");
+
+        if (context.SlotExplanations.Length > 0)
+        {
+            builder.AppendLine();
+            builder.AppendLine(
+                "Current recommendations and why (deterministic facts — cite these for \"why\" questions, " +
+                "never invent numbers; percentiles are within the item's class):");
+            builder.AppendLine(context.SlotExplanations);
+        }
 
         return builder.ToString();
     }

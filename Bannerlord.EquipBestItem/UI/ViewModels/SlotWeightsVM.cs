@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Bannerlord.EquipBestItem.Domain;
 using Bannerlord.EquipBestItem.Profiles;
 using TaleWorlds.CampaignSystem;
@@ -37,16 +38,21 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.WeaponLength, ItemParam.Handling, ItemParam.Weight
     };
 
+    // The "Speed" the game prints on bows, crossbows and shields is the SWING
+    // speed (speed_rating in the item XML). Their thrust_speed and (for
+    // ranged) weapon_length are hidden from the game's tooltip but filled and
+    // varying in the data, so they stay tunable — just at 0 by default.
     private static readonly ItemParam[] BowParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.ThrustSpeed, ItemParam.Weight
+        ItemParam.SwingSpeed, ItemParam.ThrustSpeed, ItemParam.WeaponLength, ItemParam.Weight
     };
 
     private static readonly ItemParam[] CrossbowParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.ThrustSpeed, ItemParam.MaxAmmo, ItemParam.Weight
+        ItemParam.SwingSpeed, ItemParam.ThrustSpeed, ItemParam.WeaponLength,
+        ItemParam.MaxAmmo, ItemParam.Weight
     };
 
     private static readonly ItemParam[] ThrownParams =
@@ -62,38 +68,63 @@ public sealed class SlotWeightsVM : ViewModel
 
     private static readonly ItemParam[] ShieldParams =
     {
-        ItemParam.HitPoints, ItemParam.BodyArmor, ItemParam.ThrustSpeed,
-        ItemParam.WeaponLength, ItemParam.Weight
+        ItemParam.HitPoints, ItemParam.BodyArmor, ItemParam.SwingSpeed,
+        ItemParam.ThrustSpeed, ItemParam.WeaponLength, ItemParam.Weight
     };
 
-    private static readonly WeaponClass?[] WeaponClassChoices =
+    private static readonly WeaponCategory?[] WeaponCategoryChoices =
     {
         null,
-        TaleWorlds.Core.WeaponClass.OneHandedSword, TaleWorlds.Core.WeaponClass.TwoHandedSword,
-        TaleWorlds.Core.WeaponClass.OneHandedAxe, TaleWorlds.Core.WeaponClass.TwoHandedAxe,
-        TaleWorlds.Core.WeaponClass.Mace, TaleWorlds.Core.WeaponClass.TwoHandedMace,
-        TaleWorlds.Core.WeaponClass.Dagger,
-        TaleWorlds.Core.WeaponClass.OneHandedPolearm, TaleWorlds.Core.WeaponClass.TwoHandedPolearm,
-        TaleWorlds.Core.WeaponClass.Bow, TaleWorlds.Core.WeaponClass.Crossbow,
-        TaleWorlds.Core.WeaponClass.Arrow, TaleWorlds.Core.WeaponClass.Bolt,
-        TaleWorlds.Core.WeaponClass.Javelin, TaleWorlds.Core.WeaponClass.ThrowingAxe,
-        TaleWorlds.Core.WeaponClass.ThrowingKnife,
-        TaleWorlds.Core.WeaponClass.SmallShield, TaleWorlds.Core.WeaponClass.LargeShield
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedSword),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedSword),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Mace),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedMace),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Dagger),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.OneHandedPolearm),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.TwoHandedPolearm),
+        WeaponCategory.ShortBow, WeaponCategory.LongBow,
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Crossbow),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Arrow),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Bolt),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.Javelin),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.ThrowingAxe),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.ThrowingKnife),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.SmallShield),
+        WeaponCategory.Of(TaleWorlds.Core.WeaponClass.LargeShield)
     };
 
-    /// <summary>Every weapon class a slot can pin (the popup's selector, minus "as equipped").</summary>
-    internal static IEnumerable<WeaponClass> PinnableWeaponClasses
+    /// <summary>Every weapon category a slot can pin (the popup's selector, minus "as equipped").</summary>
+    internal static IEnumerable<WeaponCategory> PinnableWeaponCategories
     {
         get
         {
-            foreach (var choice in WeaponClassChoices)
-                if (choice is { } weaponClass)
-                    yield return weaponClass;
+            foreach (var choice in WeaponCategoryChoices)
+                if (choice is { } category)
+                    yield return category;
         }
     }
 
+    /// <summary>
+    ///     The localized category name: the game's own weapon class string,
+    ///     except the bow split, which is the mod's.
+    /// </summary>
+    internal static string GetCategoryName(WeaponCategory category)
+    {
+        if (category.Class != TaleWorlds.Core.WeaponClass.Bow)
+            // The game's tooltip uses the enum NAME as the text variation.
+            return GameTexts.FindText("str_inventory_weapon", category.Class.ToString()).ToString();
+
+        return (category.IsLongBow
+            ? new TextObject("{=EbiLongBow}Long Bow")
+            : new TextObject("{=EbiShortBow}Short Bow")).ToString();
+    }
+
     private readonly ProfileService _profiles;
+    private readonly Settings.ModSettings _settings;
     private readonly Action _onChanged;
+    private readonly Action<CharacterObject, Equipment, EquipmentIndex> _explain;
 
     /// <summary>Selectable culture restrictions; null = any culture.</summary>
     private static readonly string?[] CultureChoices =
@@ -111,11 +142,17 @@ public sealed class SlotWeightsVM : ViewModel
     private bool _isOnDefault;
     private string _headerText = "";
     private MBBindingList<ParamRowVM> _rows = new();
+    private MBBindingList<PriorityRowVM> _priorityRows = new();
+    private readonly List<List<ItemParam>> _priorityGroups = new();
 
-    public SlotWeightsVM(ProfileService profiles, Action onChanged)
+    public SlotWeightsVM(
+        ProfileService profiles, Settings.ModSettings settings, Action onChanged,
+        Action<CharacterObject, Equipment, EquipmentIndex> explain)
     {
         _profiles = profiles;
+        _settings = settings;
         _onChanged = onChanged;
+        _explain = explain;
     }
 
     [DataSourceProperty]
@@ -128,7 +165,23 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string MakeDefaultButtonText { get; } =
-        new TextObject("{=EbiMakeDefault}Make default").ToString();
+        new TextObject("{=EbiMakeDefault}Set as default").ToString();
+
+    [DataSourceProperty]
+    public string ClearButtonText { get; } =
+        new TextObject("{=EbiClear}Clear").ToString();
+
+    [DataSourceProperty]
+    public HintViewModel ClearButtonHint { get; } = new(new TextObject(
+        "{=EbiClearHint}Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"));
+
+    [DataSourceProperty]
+    public string ExplainButtonText { get; } =
+        new TextObject("{=EbiExplain}Why this?").ToString();
+
+    [DataSourceProperty]
+    public HintViewModel ExplainButtonHint { get; } = new(new TextObject(
+        "{=EbiExplainHint}Explain this slot's pick in the message log"));
 
     [DataSourceProperty]
     public string OnDefaultText { get; } =
@@ -225,12 +278,46 @@ public sealed class SlotWeightsVM : ViewModel
     }
 
     [DataSourceProperty]
+    public MBBindingList<PriorityRowVM> PriorityRows
+    {
+        get => _priorityRows;
+        set
+        {
+            if (ReferenceEquals(value, _priorityRows)) return;
+            _priorityRows = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
+    /// <summary>Priority mode replaces the weight sliders with a reorderable stat list.</summary>
+    [DataSourceProperty]
+    public bool IsPriorityMode => _settings.UsePriority;
+
+    [DataSourceProperty]
+    public bool IsWeightsMode => !_settings.UsePriority && !_settings.UseEffectiveness;
+
+    /// <summary>
+    ///     Effectiveness mode ignores weights and priorities, so the popup
+    ///     shows only what still applies: the weapon class pin, the culture
+    ///     restriction and the weight cap.
+    /// </summary>
+    [DataSourceProperty]
+    public bool IsEffectivenessMode => _settings.UseEffectiveness;
+
+    /// <summary>Lock works by zeroing weights, which effectiveness searches ignore.</summary>
+    [DataSourceProperty]
+    public bool IsLockVisible => !_settings.UseEffectiveness;
+
+    [DataSourceProperty]
+    public string EffectivenessNoteText { get; } = new TextObject(
+        "{=EbiEffectivenessNote}Items are ranked by the game's built-in Effectiveness score; stat weights do not apply.").ToString();
+
+    [DataSourceProperty]
     public bool IsWeaponSlot => _slot >= EquipmentIndex.Weapon0 && _slot <= EquipmentIndex.Weapon3;
 
     [DataSourceProperty]
-    public string WeaponClassText => WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-        // The game's tooltip uses the enum NAME as the text variation.
-        ? GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString()
+    public string WeaponClassText => WeaponCategoryChoices[_weaponClassIndex] is { } category
+        ? GetCategoryName(category)
         : new TextObject("{=EbiClassAsEquipped}As equipped").ToString();
 
     public void Open(CharacterObject character, Equipment equipment, EquipmentIndex slot)
@@ -240,7 +327,7 @@ public sealed class SlotWeightsVM : ViewModel
         _slot = slot;
 
         var query = _profiles.GetQuery(character, equipment, slot);
-        _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponClassChoices, query.WeaponClass));
+        _weaponClassIndex = Math.Max(0, Array.IndexOf(WeaponCategoryChoices, query.WeaponCategory));
         _cultureIndex = Math.Max(0, Array.IndexOf(CultureChoices, query.CultureId));
         _maxItemWeight = query.MaxItemWeight;
 
@@ -253,6 +340,11 @@ public sealed class SlotWeightsVM : ViewModel
         OnPropertyChanged(nameof(CultureText));
         OnPropertyChanged(nameof(MaxItemWeight));
         OnPropertyChanged(nameof(MaxItemWeightText));
+        // The search method may have changed in MCM since the popup last opened.
+        OnPropertyChanged(nameof(IsPriorityMode));
+        OnPropertyChanged(nameof(IsWeightsMode));
+        OnPropertyChanged(nameof(IsEffectivenessMode));
+        OnPropertyChanged(nameof(IsLockVisible));
         RefreshDefaultMarker();
         IsVisible = true;
     }
@@ -288,15 +380,51 @@ public sealed class SlotWeightsVM : ViewModel
         _onChanged();
     }
 
-    /// <summary>Zeroes every weight: an all-zero slot is excluded from searching.</summary>
+    /// <summary>
+    ///     Resets only the stat preferences — weights (or the priority order)
+    ///     back to the slot's defaults for the currently pinned class. The
+    ///     weapon class, culture and weight limit are untouched, unlike
+    ///     Default, which drops the whole override.
+    /// </summary>
+    public void ExecuteClear()
+    {
+        if (_character is null || _equipment is null) return;
+
+        if (IsPriorityMode)
+            _profiles.SetPriorities(_character, _equipment, _slot, null);
+        else
+            _profiles.SetWeights(_character, _equipment, _slot,
+                DefaultWeights.For(_slot, WeaponCategoryChoices[_weaponClassIndex]?.Class));
+
+        RebuildRows();
+        RefreshDefaultMarker();
+        _onChanged();
+    }
+
+    /// <summary>
+    ///     Excludes the slot from searching: zeroes every weight (weights
+    ///     mode) or empties the priority order (priority mode).
+    /// </summary>
     public void ExecuteLock()
     {
         if (_character is null || _equipment is null) return;
 
-        _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
+        if (IsPriorityMode)
+            _profiles.SetPriorities(_character, _equipment, _slot, Array.Empty<IReadOnlyList<ItemParam>>());
+        else
+            _profiles.SetWeights(_character, _equipment, _slot, new ParamWeights());
         RebuildRows();
         RefreshDefaultMarker();
         _onChanged();
+    }
+
+    /// <summary>Prints a deterministic account of this slot's pick to the message log, then closes.</summary>
+    public void ExecuteExplain()
+    {
+        if (_character is null || _equipment is null) return;
+
+        _explain(_character, _equipment, _slot);
+        ExecuteClose();
     }
 
     public void ExecutePreviousWeaponClass() => CycleWeaponClass(-1);
@@ -330,10 +458,10 @@ public sealed class SlotWeightsVM : ViewModel
     {
         if (_character is null || _equipment is null) return;
 
-        var count = WeaponClassChoices.Length;
+        var count = WeaponCategoryChoices.Length;
         _weaponClassIndex = (_weaponClassIndex + step + count) % count;
 
-        _profiles.SetWeaponClass(_character, _equipment, _slot, WeaponClassChoices[_weaponClassIndex]);
+        _profiles.SetWeaponCategory(_character, _equipment, _slot, WeaponCategoryChoices[_weaponClassIndex]);
         OnPropertyChanged(nameof(WeaponClassText));
         RefreshDefaultMarker();
 
@@ -346,6 +474,19 @@ public sealed class SlotWeightsVM : ViewModel
     {
         if (_character is null || _equipment is null) return;
 
+        if (IsEffectivenessMode)
+        {
+            Rows = new MBBindingList<ParamRowVM>();
+            PriorityRows = new MBBindingList<PriorityRowVM>();
+            return;
+        }
+
+        if (IsPriorityMode)
+        {
+            RebuildPriorityRows();
+            return;
+        }
+
         var query = _profiles.GetQuery(_character, _equipment, _slot);
 
         var rows = new MBBindingList<ParamRowVM>();
@@ -356,9 +497,108 @@ public sealed class SlotWeightsVM : ViewModel
         UpdateShares();
     }
 
+    private void RebuildPriorityRows()
+    {
+        if (_character is null || _equipment is null) return;
+
+        // GetQuery already normalized the stored order (and its groups) to
+        // the class that matters right now — pinned, or "as equipped" the
+        // equipped item's. A locked (empty) order displays as the defaults.
+        var query = _profiles.GetQuery(_character, _equipment, _slot);
+        var stored = query.Priorities is { Count: > 0 }
+            ? query.Priorities
+            : DefaultPriorities.GroupsFor(_slot,
+                WeaponCategoryChoices[_weaponClassIndex]?.Class
+                ?? _equipment[_slot].Item?.PrimaryWeapon?.WeaponClass);
+
+        _priorityGroups.Clear();
+        foreach (var group in stored)
+            _priorityGroups.Add(new List<ItemParam>(group));
+
+        RefreshPriorityRowsFromGroups();
+    }
+
+    private void RefreshPriorityRowsFromGroups()
+    {
+        var rows = new MBBindingList<PriorityRowVM>();
+        for (var i = 0; i < _priorityGroups.Count; i++)
+        {
+            var chips = new List<PriorityChipVM>(_priorityGroups[i].Count);
+            foreach (var param in _priorityGroups[i])
+                chips.Add(new PriorityChipVM(param, GetParamName(param)));
+            rows.Add(new PriorityRowVM(_priorityGroups[i], i, chips, LinkChip));
+        }
+
+        PriorityRows = rows;
+    }
+
+    /// <summary>
+    ///     Gauntlet drop handler on the rows list: a chip dropped between rows
+    ///     becomes its own rank at that position.
+    /// </summary>
+    public void ExecuteReorderChip(PriorityChipVM chip, int index, string tag)
+    {
+        var insertAt = Math.Max(0, Math.Min(index, _priorityGroups.Count));
+        insertAt -= RemoveChip(chip.Param, insertAt);
+
+        _priorityGroups.Insert(insertAt, new List<ItemParam> { chip.Param });
+        PersistPriorities();
+    }
+
+    private void LinkChip(PriorityChipVM chip, PriorityRowVM row)
+    {
+        if (row.Group.Contains(chip.Param)) return;
+
+        RemoveChip(chip.Param, _priorityGroups.Count);
+        // The row keeps a reference to its backing group, so it stays valid
+        // even when removing the chip collapsed an earlier group.
+        if (!_priorityGroups.Contains(row.Group)) return;
+
+        row.Group.Add(chip.Param);
+        PersistPriorities();
+    }
+
+    /// <summary>
+    ///     Pulls the stat out of whatever group holds it, dropping the group
+    ///     when it empties.
+    /// </summary>
+    /// <returns>1 when a group before <paramref name="insertAt" /> collapsed (the caller's index shifts), else 0.</returns>
+    private int RemoveChip(ItemParam param, int insertAt)
+    {
+        for (var i = 0; i < _priorityGroups.Count; i++)
+        {
+            if (!_priorityGroups[i].Remove(param)) continue;
+
+            if (_priorityGroups[i].Count == 0)
+            {
+                _priorityGroups.RemoveAt(i);
+                return i < insertAt ? 1 : 0;
+            }
+
+            return 0;
+        }
+
+        return 0;
+    }
+
+    private void PersistPriorities()
+    {
+        if (_character is null || _equipment is null) return;
+
+        var order = new List<IReadOnlyList<ItemParam>>(_priorityGroups.Count);
+        foreach (var group in _priorityGroups) order.Add(group.ToArray());
+        _profiles.SetPriorities(_character, _equipment, _slot, order);
+
+        RefreshPriorityRowsFromGroups();
+        RefreshDefaultMarker();
+
+        // Live preview, same as the weight sliders.
+        _onChanged();
+    }
+
     /// <summary>
     ///     Influence share of each visible weight: value / Σ|values|. The
-    ///     scorer computes Σ(w·v) / Σ|w|, so this is exactly the fraction of
+    ///     scorer computes Σ(w·√v̂) / Σ|w|, so this is exactly the fraction of
     ///     the search's attention the parameter gets; the sign shows the
     ///     direction. Absolute shares always add up to 100% and nothing
     ///     explodes when positive and negative weights cancel out (dividing
@@ -395,8 +635,8 @@ public sealed class SlotWeightsVM : ViewModel
     private IReadOnlyList<ItemParam> GetVisibleParams()
     {
         if (IsWeaponSlot)
-            return WeaponClassChoices[_weaponClassIndex] is { } weaponClass
-                ? GetParamsForWeaponClass(weaponClass)
+            return WeaponCategoryChoices[_weaponClassIndex] is { } category
+                ? GetParamsForWeaponClass(category.Class)
                 : WeaponParams;
 
         if (_slot == EquipmentIndex.Horse) return HorseParams;

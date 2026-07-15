@@ -28,26 +28,35 @@ public sealed class AiPromptVM : ViewModel
     private readonly IRequestInterpreter _interpreter;
     private readonly ProfileService _profiles;
     private readonly InventoryGateway _gateway;
+    private readonly Settings.ModSettings _settings;
     private readonly Action _onApplied;
+    private readonly Func<string> _collectSlotExplanations;
+    private readonly Action<EquipmentIndex, string> _explainNamedItem;
 
     private CancellationTokenSource? _pendingRequest;
 
     private string _lastRequest = "";
-    private string _statusText = "";
+    private string _promptText = "";
+    private bool _isPromptVisible;
     private bool _isBusy;
 
     public AiPromptVM(
         IRequestInterpreter interpreter,
         ProfileService profiles,
         InventoryGateway gateway,
+        Settings.ModSettings settings,
         Action onApplied,
-        bool isConfigured)
+        Func<string> collectSlotExplanations,
+        Action<EquipmentIndex, string> explainNamedItem)
     {
         _interpreter = interpreter;
         _profiles = profiles;
         _gateway = gateway;
+        _settings = settings;
         _onApplied = onApplied;
-        IsConfigured = isConfigured;
+        _collectSlotExplanations = collectSlotExplanations;
+        _explainNamedItem = explainNamedItem;
+        IsConfigured = settings.Ai.IsConfigured;
     }
 
     [DataSourceProperty]
@@ -57,13 +66,40 @@ public sealed class AiPromptVM : ViewModel
     public HintViewModel AskHint { get; } = new(new TextObject("{=EbiAiInterpret}Ask AI"));
 
     [DataSourceProperty]
-    public string StatusText
+    public string PromptTitleText { get; } = new TextObject("{=EbiAiInterpret}Ask AI").ToString();
+
+    [DataSourceProperty]
+    public string PromptHintText { get; } = new TextObject(
+        "{=EbiAiPromptHint}Describe the gear you want — or ask why an item was picked.").ToString();
+
+    [DataSourceProperty]
+    public string SubmitButtonText { get; } = GameTexts.FindText("str_ok").ToString();
+
+    [DataSourceProperty]
+    public string CancelButtonText { get; } = GameTexts.FindText("str_cancel").ToString();
+
+    /// <summary>The mod's own prompt dialog with a full-width input field.</summary>
+    [DataSourceProperty]
+    public bool IsPromptVisible
     {
-        get => _statusText;
+        get => _isPromptVisible;
         set
         {
-            if (value == _statusText) return;
-            _statusText = value;
+            if (value == _isPromptVisible) return;
+            _isPromptVisible = value;
+            OnPropertyChangedWithValue(value);
+        }
+    }
+
+    /// <summary>Two-way bound to the input widget.</summary>
+    [DataSourceProperty]
+    public string PromptText
+    {
+        get => _promptText;
+        set
+        {
+            if (value == _promptText) return;
+            _promptText = value;
             OnPropertyChangedWithValue(value);
         }
     }
@@ -81,24 +117,31 @@ public sealed class AiPromptVM : ViewModel
     }
 
     /// <summary>
-    ///     Opens the game's native text inquiry — proper keyboard focus, no
-    ///     inventory hotkeys firing mid-typing — prefilled with the previous
-    ///     request so it is easy to iterate on.
+    ///     Opens the mod's own prompt dialog — a full-width input instead of
+    ///     the cramped native inquiry — prefilled with the previous request so
+    ///     it is easy to iterate on. Typing is safe: the inventory screen
+    ///     skips its hotkeys while any text widget of the layer has focus.
     /// </summary>
     public void ExecuteOpenPrompt()
     {
         if (_isBusy) return;
 
-        InformationManager.ShowTextInquiry(new TextInquiryData(
-            new TextObject("{=EbiAiInterpret}Ask AI").ToString(),
-            new TextObject("{=EbiAiPromptHint}Describe the gear you want, in your own words.").ToString(),
-            true, true,
-            GameTexts.FindText("str_ok").ToString(),
-            GameTexts.FindText("str_cancel").ToString(),
-            Interpret,
-            null,
-            textCondition: text => Tuple.Create(!string.IsNullOrWhiteSpace(text), ""),
-            defaultInputText: _lastRequest));
+        PromptText = _lastRequest;
+        IsPromptVisible = true;
+    }
+
+    public void ExecuteSubmitPrompt()
+    {
+        var request = _promptText?.Trim() ?? "";
+        if (request.Length == 0) return;
+
+        IsPromptVisible = false;
+        Interpret(request);
+    }
+
+    public void ExecuteCancelPrompt()
+    {
+        IsPromptVisible = false;
     }
 
     private void Interpret(string requestText)
@@ -118,13 +161,15 @@ public sealed class AiPromptVM : ViewModel
             CollectNotableSkills(character),
             PromptGlossary.Text,
             CollectPartyHeroes(),
-            MBTextManager.ActiveTextLanguage);
+            MBTextManager.ActiveTextLanguage,
+            _settings.UsePriority ? "priority" : _settings.UseEffectiveness ? "effectiveness" : "weights",
+            _collectSlotExplanations());
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();
 
         IsBusy = true;
-        StatusText = new TextObject("{=EbiAiThinking}Interpreting request...").ToString();
+        GameLog.Info(new TextObject("{=EbiAiThinking}Interpreting request...").ToString());
 
         Task.Run(async () =>
         {
@@ -144,7 +189,7 @@ public sealed class AiPromptVM : ViewModel
                     }
                     catch (Exception exception)
                     {
-                        StatusText = exception.Message;
+                        GameLog.Error(exception.Message);
                     }
                     finally
                     {
@@ -161,10 +206,16 @@ public sealed class AiPromptVM : ViewModel
             {
                 // Includes the interpreter's own timeout, which surfaces as an
                 // OperationCanceledException while our token is NOT cancelled.
-                StatusText = exception is OperationCanceledException
+                var message = exception is OperationCanceledException
                     ? new TextObject("{=EbiAiTimeout}The AI did not respond in time.").ToString()
                     : exception.Message;
-                IsBusy = false;
+
+                // Off the game thread here; the log and IsBusy touch UI state.
+                MainThread.Post(() =>
+                {
+                    GameLog.Error(message);
+                    IsBusy = false;
+                });
             }
         });
     }
@@ -177,10 +228,24 @@ public sealed class AiPromptVM : ViewModel
     /// </summary>
     private void ApplyPlan(InterpretedPlan plan, CharacterObject character, Equipment equipment)
     {
+        // A "why not X" query: look the named item up and explain it deterministically.
+        if (plan.ExplainItem.Length > 0 && plan.ExplainSlot is { } explainSlot)
+        {
+            _explainNamedItem(explainSlot, plan.ExplainItem);
+            return;
+        }
+
+        // A "why/how" question: the model answered instead of changing filters.
+        if (plan.Directives.Count == 0 && plan.Answer.Length > 0)
+        {
+            GameLog.Ai(plan.Answer);
+            return;
+        }
+
         var targets = ResolveTargets(plan.Target, character, equipment);
         if (targets.Count == 0)
         {
-            StatusText = new TextObject("{=EbiAiTargetNotFound}Could not find that hero in the party.").ToString();
+            GameLog.Warn(new TextObject("{=EbiAiTargetNotFound}Could not find that hero in the party.").ToString());
             return;
         }
 
@@ -191,13 +256,18 @@ public sealed class AiPromptVM : ViewModel
         foreach (var (targetCharacter, targetEquipment) in targets)
         foreach (var directive in plan.Directives)
         {
-            // Directives without explicit weights fall back to the slot defaults.
-            if (directive.Query.HasExplicitWeights)
-                _profiles.SetWeights(targetCharacter, targetEquipment, directive.Slot, directive.Query.Weights);
-            else
-                _profiles.ResetSlot(targetCharacter, targetEquipment, directive.Slot);
+            var hasWeights = directive.Query.HasExplicitWeights;
+            var hasPriorities = directive.Query.Priorities is { Count: > 0 };
 
-            _profiles.SetWeaponClass(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponClass);
+            // Directives without explicit preferences fall back to the slot defaults.
+            if (!hasWeights && !hasPriorities)
+                _profiles.ResetSlot(targetCharacter, targetEquipment, directive.Slot);
+            if (hasWeights)
+                _profiles.SetWeights(targetCharacter, targetEquipment, directive.Slot, directive.Query.Weights);
+            if (hasPriorities)
+                _profiles.SetPriorities(targetCharacter, targetEquipment, directive.Slot, directive.Query.Priorities);
+
+            _profiles.SetWeaponCategory(targetCharacter, targetEquipment, directive.Slot, directive.Query.WeaponCategory);
             _profiles.SetConstraints(
                 targetCharacter, targetEquipment, directive.Slot,
                 directive.Query.CultureId, directive.Query.MaxItemWeight);
@@ -208,7 +278,10 @@ public sealed class AiPromptVM : ViewModel
 
         var summary = string.Join("; ", changes);
         if (targets.Count > 1) summary += $" (x{targets.Count})";
-        StatusText = plan.Explanation.Length > 0 ? $"{plan.Explanation} {summary}" : summary;
+
+        // The assistant's answer, then the concrete per-slot changes.
+        if (plan.Explanation.Length > 0) GameLog.Ai(plan.Explanation);
+        GameLog.Ai(summary);
     }
 
     /// <summary>
@@ -255,7 +328,7 @@ public sealed class AiPromptVM : ViewModel
         return names;
     }
 
-    /// <summary>"Helm: Head Armor +1, Weight -0.5" in the game's language.</summary>
+    /// <summary>"Helm: Head Armor +1, Weight -0.5" (or "Hit Points > Speed = Armor") in the game's language.</summary>
     private static string DescribeChange(EquipDirective directive)
     {
         var parts = new List<string>();
@@ -271,13 +344,25 @@ public sealed class AiPromptVM : ViewModel
                               value.ToString("+0.##;-0.##", CultureInfo.InvariantCulture));
             }
         }
-        else
+
+        if (directive.Query.Priorities is { Count: > 0 } priorities)
         {
-            parts.Add(new TextObject("{=ebi_default}Default").ToString());
+            var ranks = new List<string>(priorities.Count);
+            foreach (var group in priorities)
+            {
+                var names = new List<string>(group.Count);
+                foreach (var param in group) names.Add(SlotWeightsVM.GetParamName(param));
+                ranks.Add(string.Join(" = ", names));
+            }
+
+            parts.Add(string.Join(" > ", ranks));
         }
 
-        if (directive.Query.WeaponClass is { } weaponClass)
-            parts.Add(GameTexts.FindText("str_inventory_weapon", weaponClass.ToString()).ToString());
+        if (parts.Count == 0)
+            parts.Add(new TextObject("{=ebi_default}Default").ToString());
+
+        if (directive.Query.WeaponCategory is { } category)
+            parts.Add(SlotWeightsVM.GetCategoryName(category));
 
         if (directive.Query.CultureId is { } cultureId)
             parts.Add(SlotWeightsVM.GetCultureName(cultureId));

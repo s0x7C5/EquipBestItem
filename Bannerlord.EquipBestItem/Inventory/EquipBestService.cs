@@ -21,17 +21,26 @@ public sealed class EquipBestService
     private readonly BestItemFinder _finder;
     private readonly WeightedItemScorer _weightedScorer;
     private readonly EffectivenessItemScorer _effectivenessScorer;
+    private readonly PriorityItemComparer _priorityComparer;
+    private readonly ItemStatCache _statCache;
+    private readonly ItemStatPercentiles _percentiles;
     private readonly ModSettings _settings;
 
     public EquipBestService(
         BestItemFinder finder,
         WeightedItemScorer weightedScorer,
         EffectivenessItemScorer effectivenessScorer,
+        PriorityItemComparer priorityComparer,
+        ItemStatCache statCache,
+        ItemStatPercentiles percentiles,
         ModSettings settings)
     {
         _finder = finder;
         _weightedScorer = weightedScorer;
         _effectivenessScorer = effectivenessScorer;
+        _priorityComparer = priorityComparer;
+        _statCache = statCache;
+        _percentiles = percentiles;
         _settings = settings;
     }
 
@@ -55,16 +64,26 @@ public sealed class EquipBestService
     {
         if (character is null || equipment is null) return null;
 
-        var useWeights = !_settings.UseEffectiveness || query.HasExplicitWeights;
-        if (useWeights && query.Weights.IsEmpty) return null; // slot disabled by the player
-
         var context = new SearchContext(character, equipment, slot, query);
-        var scorer = useWeights ? (IItemScorer)_weightedScorer : _effectivenessScorer;
 
         // The player chooses which panels participate: searching the left
         // (merchant/loot) side means "buy out everything better".
         var leftItems = _settings.SearchLeftPanel ? gateway.LeftItems : null;
         var rightItems = _settings.SearchRightPanel ? gateway.RightItems : null;
+
+        // Priority mode ranks stat by stat; AI directives with explicit
+        // weights still go through the weighted scorer.
+        if (_settings.UsePriority && !query.HasExplicitWeights)
+        {
+            if (query.Priorities is { Count: 0 }) return null; // slot disabled by the player
+
+            return _finder.FindBest(context, _priorityComparer, exclude, leftItems, rightItems, extraCandidates);
+        }
+
+        var useWeights = !_settings.UseEffectiveness || query.HasExplicitWeights;
+        if (useWeights && query.Weights.IsEmpty) return null; // slot disabled by the player
+
+        var scorer = useWeights ? (IItemScorer)_weightedScorer : _effectivenessScorer;
 
         return _finder.FindBest(context, scorer, exclude, leftItems, rightItems, extraCandidates);
     }
@@ -99,6 +118,9 @@ public sealed class EquipBestService
     /// <summary>Drop cached item stats. Call when inventory contents change.</summary>
     public void InvalidateCaches()
     {
-        _weightedScorer.InvalidateCache();
+        _statCache.Invalidate();
+        // Crafting registers new items mid-campaign; a size check keeps the
+        // percentile tables current for pennies.
+        _percentiles.Refresh();
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Русский"/>
@@ -7,6 +7,37 @@
         <string id="EbiNothingBetter" text="Лучше ничего не найдено."/>
         <string id="EbiEquippedCount" text="Надето предметов: {COUNT}."/>
         <string id="EbiClassAsEquipped" text="Как в слоте"/>
+        <string id="EbiEffectivenessNote" text="Предметы ранжируются встроенной оценкой эффективности игры; веса статов не применяются."/>
+        <string id="EbiExplain" text="Почему?"/>
+        <string id="EbiClear" text="Очистить"/>
+        <string id="EbiClearHint" text="Сбросить веса/порядок к значениям по умолчанию; класс оружия, культура и лимит веса сохраняются"/>
+        <string id="EbiExplainHint" text="Объяснить выбор для этого слота в логе сообщений"/>
+        <string id="EbiWhySlotLocked" text="Этот слот исключён из поиска."/>
+        <string id="EbiWhyNothingBetter" text="Ничего заметно лучше, чем {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Для этого слота ничего не найдено."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} в пустой слот."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} лучше, чем {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Впереди: {STATS}"/>
+        <string id="EbiWhyBehind" text="Уступает (весит меньше): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Решил параметр: {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Поровну по: {STATS}; ниже по приоритету не проверялось"/>
+        <string id="EbiWhyEffectiveness" text="Игра оценивает его в {FOUND} против {CURRENT} в целом — своя оценка, без разбивки по статам."/>
+        <string id="EbiWhyTweakWeight" text="Совет: дай больше веса параметру {STAT}, чтобы он значил больше."/>
+        <string id="EbiWhyTweakPriority" text="Совет: подними {STAT} выше, чтобы он был приоритетнее."/>
+        <string id="EbiWhyNamedNotFound" text="«{ITEM}» нет в инвентаре, по которому идёт поиск."/>
+        <string id="EbiWhyNamedIsBest" text="«{ITEM}» — это как раз то, что рекомендуется здесь."/>
+        <string id="EbiWhyNamedFiltered" text="«{ITEM}» не подходит: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} выбран вместо «{ITEM}»"/>
+        <string id="EbiWhyNamedMarginal" text="«{ITEM}» немного лучше по счёту, чем {CURRENT}, но не настолько явно, чтобы предлагать замену."/>
+        <string id="EbiRejectType" text="неподходящий тип предмета для этого слота"/>
+        <string id="EbiRejectWeaponClass" text="неподходящий класс оружия для этого слота"/>
+        <string id="EbiRejectShield" text="щит уже занят в другом слоте оружия"/>
+        <string id="EbiRejectEquip" text="этот герой не может это сюда надеть"/>
+        <string id="EbiRejectWeight" text="превышает лимит веса слота"/>
+        <string id="EbiRejectCulture" text="не та культура для фильтра слота"/>
+        <string id="EbiRejectOther" text="не соответствует фильтру слота"/>
+        <string id="EbiShortBow" text="Короткий лук"/>
+        <string id="EbiLongBow" text="Длинный лук"/>
         <string id="ebi_default" text="По умолчанию"/>
         <string id="ebi_lock" text="Отключить"/>
         <string id="ebi_hint_default" text="Сбросить к значениям по умолчанию"/>
@@ -16,7 +47,7 @@
         <string id="EbiHintLeftLock" text="Искать в левой панели (магазин, добыча). Экипировка купит предмет."/>
         <string id="EbiHintRightLock" text="Искать в своём инвентаре"/>
         <string id="EbiAiInterpret" text="Спросить ИИ"/>
-        <string id="EbiAiPromptHint" text="Опишите своими словами, что хотите надеть."/>
+        <string id="EbiAiPromptHint" text="Опишите нужное снаряжение — или спросите, почему выбран предмет."/>
         <string id="EbiAiThinking" text="Разбираю запрос..."/>
         <string id="EbiAiTimeout" text="ИИ не ответил вовремя."/>
         <string id="EbiAnyCulture" text="Любая культура"/>
@@ -25,6 +56,13 @@
         <string id="EbiMcmGroupGeneral" text="Общие"/>
         <string id="EbiMcmEffectiveness" text="Игровая оценка Effectiveness"/>
         <string id="EbiMcmEffectivenessHint" text="Оценивать предметы встроенной игровой формулой вместо весов параметров по слотам. Веса, явно запрошенные у ИИ, всё равно приоритетнее."/>
+        <string id="EbiMcmPriority" text="Поиск по приоритету статов"/>
+        <string id="EbiMcmPriorityHint" text="Сравнивать предметы стат за статом в порядке приоритета вместо взвешенной оценки: решает верхний стат, при равенстве — следующий. Порядок задаётся в окне фильтра слота."/>
+        <string id="EbiMcmMethod" text="Метод поиска"/>
+        <string id="EbiMcmMethodHint" text="Веса параметров: сбалансированный выбор — учитываются все взвешенные статы, один раздутый стат не перевешивает остальные, замена предлагается только при явном превосходстве. Приоритет статов: жёсткий порядок — решает верхний стат, нижние важны лишь при равенстве; порядок и связки настраиваются в фильтре слота. Игровая эффективность: единая встроенная оценка игры — без настройки, но грубая."/>
+        <string id="EbiMcmMethodWeights" text="Веса параметров"/>
+        <string id="EbiMcmMethodPriority" text="Приоритет статов"/>
+        <string id="EbiMcmMethodEffectiveness" text="Игровая эффективность"/>
         <string id="EbiMcmButtonColor" text="Цвет кнопок на слотах"/>
         <string id="EbiMcmButtonColorHint" text="Оттенок кнопок подбора на слотах, #RRGGBB или #RRGGBBAA. #FFFFFF — исходный вид. Применяется при следующем открытии инвентаря."/>
         <string id="EbiMcmButtonColorReset" text="Сбросить цвет кнопок"/>

@@ -32,6 +32,8 @@ public sealed class SubModule : MBSubModuleBase
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
 
+        UI.EbiSpriteSheetLoader.EnsureLoaded();
+
         if (_mcmRegistered) return;
         _mcmRegistered = true;
 

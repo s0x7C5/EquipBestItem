@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using Bannerlord.EquipBestItem.Ai;
 using Bannerlord.EquipBestItem.Domain;
+using Bannerlord.EquipBestItem.Domain.Explaining;
 using Bannerlord.EquipBestItem.Domain.Filtering;
 using Bannerlord.EquipBestItem.Domain.Scoring;
 using Bannerlord.EquipBestItem.Inventory;
@@ -35,19 +36,33 @@ internal static class ModRuntime
         // Write the file back so players can discover and edit the options.
         store.Save("settings.json", settings);
 
-        var finder = new BestItemFinder(new IItemFilter[]
+        var filters = new IItemFilter[]
         {
             new EquippableFilter(),
             new SlotFilter(),
             new WeaponMatchFilter(),
             new ShieldOncePerSetFilter(),
             new QueryConstraintFilter()
-        });
+        };
+        var finder = new BestItemFinder(filters);
+
+        var statCache = new ItemStatCache();
+        var percentiles = new ItemStatPercentiles();
+        var weightedScorer = new WeightedItemScorer(statCache, percentiles);
+        var priorityComparer = new PriorityItemComparer(statCache);
 
         Services = new ModServices(
             settings,
             new ProfileService(store),
-            new EquipBestService(finder, new WeightedItemScorer(), new EffectivenessItemScorer(), settings),
+            new EquipBestService(
+                finder,
+                weightedScorer,
+                new EffectivenessItemScorer(),
+                priorityComparer,
+                statCache,
+                percentiles,
+                settings),
+            new ItemExplainer(statCache, percentiles, weightedScorer, priorityComparer, filters),
             new LlmRequestInterpreter(settings.Ai),
             () => store.Save("settings.json", settings));
     }
@@ -60,12 +75,14 @@ internal sealed class ModServices
         ModSettings settings,
         ProfileService profiles,
         EquipBestService equipBest,
+        ItemExplainer explainer,
         IRequestInterpreter interpreter,
         Action persistSettings)
     {
         Settings = settings;
         Profiles = profiles;
         EquipBest = equipBest;
+        Explainer = explainer;
         Interpreter = interpreter;
         PersistSettings = persistSettings;
     }
@@ -75,6 +92,8 @@ internal sealed class ModServices
     internal ProfileService Profiles { get; }
 
     internal EquipBestService EquipBest { get; }
+
+    internal ItemExplainer Explainer { get; }
 
     internal IRequestInterpreter Interpreter { get; }
 

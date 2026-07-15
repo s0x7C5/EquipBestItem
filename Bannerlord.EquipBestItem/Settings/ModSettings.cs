@@ -7,7 +7,8 @@ public sealed class ModSettings
 {
     /// <summary>
     ///     "weights" — score items by the per-slot parameter weights (the mod's
-    ///     main mode). "effectiveness" — use the game's built-in aggregate score.
+    ///     main mode). "priority" — compare stat by stat in the slot's priority
+    ///     order. "effectiveness" — use the game's built-in aggregate score.
     /// </summary>
     public string SearchMethod { get; set; } = "weights";
 
@@ -31,6 +32,9 @@ public sealed class ModSettings
 
     public bool UseEffectiveness =>
         string.Equals(SearchMethod, "effectiveness", StringComparison.OrdinalIgnoreCase);
+
+    public bool UsePriority =>
+        string.Equals(SearchMethod, "priority", StringComparison.OrdinalIgnoreCase);
 }
 
 /// <summary>

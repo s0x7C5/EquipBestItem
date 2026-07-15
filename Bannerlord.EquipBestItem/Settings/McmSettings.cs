@@ -3,8 +3,10 @@ using Bannerlord.EquipBestItem.Ai;
 using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
+using MCM.Common;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 
 namespace Bannerlord.EquipBestItem.Settings;
 
@@ -81,16 +83,59 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
         if (_isLive) ModRuntime.Services.PersistSettings();
     }
 
-    [SettingPropertyBool("{=EbiMcmEffectiveness}Use game Effectiveness score", Order = 0, RequireRestart = false,
-        HintText = "{=EbiMcmEffectivenessHint}Score items with the game's built-in aggregate instead of the per-slot parameter weights. Weights explicitly requested from the AI still win.")]
+    // settings.json SearchMethod values, in the dropdown's option order.
+    private static readonly string[] SearchMethodKeys = { "weights", "priority", "effectiveness" };
+
+    private Dropdown<string>? _searchMethod;
+
+    private static int SearchMethodIndex(ModSettings settings) =>
+        settings.UsePriority ? 1 : settings.UseEffectiveness ? 2 : 0;
+
+    /// <summary>
+    ///     MCM mutates the returned Dropdown in place instead of calling the
+    ///     setter, so the selection change is observed via the dropdown's own
+    ///     PropertyChanged; the setter only runs on preset resets.
+    /// </summary>
+    [SettingPropertyDropdown("{=EbiMcmMethod}Search method", Order = 0, RequireRestart = false,
+        HintText = "{=EbiMcmMethodHint}Parameter weights: balanced choice - every weighted stat counts, one huge stat cannot outweigh the rest, and a swap is only suggested when the item is clearly better. Stat priority: strict order - the top stat decides, lower ones only break ties; reorder and link stats in the slot filter. Game Effectiveness: the game's single built-in quality score - no setup, but crude.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
-    public bool UseEffectiveness
+    public Dropdown<string> SearchMethod
     {
-        get => S.UseEffectiveness;
-        set { S.SearchMethod = value ? "effectiveness" : "weights"; Persist(); }
+        get
+        {
+            if (_searchMethod is null)
+            {
+                _searchMethod = new Dropdown<string>(new[]
+                {
+                    new TextObject("{=EbiMcmMethodWeights}Parameter weights").ToString(),
+                    new TextObject("{=EbiMcmMethodPriority}Stat priority order").ToString(),
+                    new TextObject("{=EbiMcmMethodEffectiveness}Game Effectiveness score").ToString()
+                }, SearchMethodIndex(S));
+
+                _searchMethod.PropertyChanged += (_, args) =>
+                {
+                    if (args.PropertyName != nameof(Dropdown<string>.SelectedIndex)) return;
+
+                    var index = _searchMethod.SelectedIndex;
+                    if (index < 0 || index >= SearchMethodKeys.Length) return;
+
+                    S.SearchMethod = SearchMethodKeys[index];
+                    Persist();
+                };
+            }
+
+            return _searchMethod;
+        }
+        set
+        {
+            // Preset reset: adopt the preset's selection into the live dropdown
+            // (its PropertyChanged handler persists the mapped value).
+            if (value is not null && !ReferenceEquals(value, _searchMethod))
+                SearchMethod.SelectedIndex = value.SelectedIndex;
+        }
     }
 
-    [SettingPropertyText("{=EbiMcmButtonColor}Slot button color", Order = 1, RequireRestart = false,
+    [SettingPropertyText("{=EbiMcmButtonColor}Slot button color", Order = 2, RequireRestart = false,
         HintText = "{=EbiMcmButtonColorHint}Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
     public string SlotButtonColor
@@ -100,12 +145,12 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
     }
 
     [SettingPropertyButton("{=EbiMcmButtonColorReset}Reset button color", Content = "{=ebi_default}Default",
-        Order = 2, RequireRestart = false,
+        Order = 3, RequireRestart = false,
         HintText = "{=EbiMcmButtonColorHint}Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
     public System.Action ResetSlotButtonColor { get; set; }
 
-    [SettingPropertyBool("{=EbiMcmLeftPanel}Search the left panel", Order = 3, RequireRestart = false,
+    [SettingPropertyBool("{=EbiMcmLeftPanel}Search the left panel", Order = 4, RequireRestart = false,
         HintText = "{=EbiMcmLeftPanelHint}Search the merchant/loot side too; equipping a found item buys it. Also toggled by the lock on the left plaque in the inventory.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
     public bool SearchLeftPanel
@@ -114,7 +159,7 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
         set { S.SearchLeftPanel = value; Persist(); }
     }
 
-    [SettingPropertyBool("{=EbiMcmRightPanel}Search the inventory panel", Order = 4, RequireRestart = false,
+    [SettingPropertyBool("{=EbiMcmRightPanel}Search the inventory panel", Order = 5, RequireRestart = false,
         HintText = "{=EbiMcmRightPanelHint}Search your own inventory. Also toggled by the lock on the right plaque.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
     public bool SearchRightPanel

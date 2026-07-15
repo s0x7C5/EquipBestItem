@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="日本語"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="より良い装備は見つかりませんでした。"/>
         <string id="EbiEquippedCount" text="{COUNT} 個の装備を装着しました。"/>
         <string id="EbiClassAsEquipped" text="装備中のものと同じ"/>
+        <string id="EbiEffectivenessNote" text="アイテムはゲーム内蔵の有効性スコアで順位付けされ、ステータスの重みは適用されません。"/>
+        <string id="EbiExplain" text="なぜ？"/>
+        <string id="EbiClear" text="クリア"/>
+        <string id="EbiClearHint" text="重み／順序をスロットの既定値に戻します。武器クラス・文化・重量制限は維持されます"/>
+        <string id="EbiExplainHint" text="この枠の選択をメッセージログで説明します"/>
+        <string id="EbiShortBow" text="短弓"/>
+        <string id="EbiLongBow" text="長弓"/>
         <string id="ebi_default" text="デフォルト"/>
         <string id="ebi_lock" text="ロック"/>
         <string id="ebi_hint_default" text="デフォルト値にリセット"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="一般"/>
         <string id="EbiMcmEffectiveness" text="ゲームの有効性スコアを使用"/>
         <string id="EbiMcmEffectivenessHint" text="スロットごとのパラメータ重みではなく、ゲーム内蔵の総合スコアで装備を評価します。AIに明示的に要求された重みは引き続き優先されます。"/>
+        <string id="EbiMcmPriority" text="優先度ベースの検索"/>
+        <string id="EbiMcmPriorityHint" text="加重スコアの代わりに、スロットの優先順位に従ってステータスを一つずつ比較します。最上位のステータスで決まり、同値なら次に進みます。順序はスロットのフィルターウィンドウで変更できます。"/>
+        <string id="EbiMcmMethod" text="検索方式"/>
+        <string id="EbiMcmMethodHint" text="パラメータの重み：バランス重視 - 重み付けした全ステータスが評価され、突出した単一ステータスが他を圧倒せず、明確に優れている場合のみ交換を提案します。ステータス優先度：厳格な順位 - 最上位のステータスが決定し、下位は同値の時のみ比較。順序と連結はスロットのフィルターで設定。ゲームの有効性：ゲーム内蔵の総合スコア - 設定不要ですが大まかです。"/>
+        <string id="EbiMcmMethodWeights" text="パラメータの重み"/>
+        <string id="EbiMcmMethodPriority" text="ステータス優先度"/>
+        <string id="EbiMcmMethodEffectiveness" text="ゲームの有効性スコア"/>
         <string id="EbiMcmButtonColor" text="スロットボタンの色"/>
         <string id="EbiMcmButtonColorHint" text="スロットごとの装備ボタンの色合い。#RRGGBB または #RRGGBBAA。#FFFFFF で元の見た目を保ちます。所持品を開き直すと適用されます。"/>
         <string id="EbiMcmButtonColorReset" text="ボタンの色をリセット"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="既定にする"/>
         <string id="EbiHintMakeDefault" text="このスロットのフィルターを、独自設定のない全英雄の既定値として保存します"/>
         <string id="EbiOnDefault" text="既定値"/>
+        <string id="EbiWhySlotLocked" text="このスロットは検索対象から除外されています。"/>
+        <string id="EbiWhyNothingBetter" text="{CURRENT}を明らかに上回るものはありません。"/>
+        <string id="EbiWhyNothingFound" text="このスロットには何も見つかりませんでした。"/>
+        <string id="EbiWhyFirstItem" text="空きスロットに{FOUND}。"/>
+        <string id="EbiWhyUpgrade" text="{FOUND}は{CURRENT}を上回ります"/>
+        <string id="EbiWhyAhead" text="優勢: {STATS}"/>
+        <string id="EbiWhyBehind" text="劣勢（比重は小さめ）: {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="決め手: {STATS}"/>
+        <string id="EbiWhyTiedOn" text="{STATS}で同点。それより下の優先度は確認していません"/>
+        <string id="EbiWhyEffectiveness" text="ゲームの総合評価は{FOUND}対{CURRENT}です — 独自スコアで、ステータスごとの内訳はありません。"/>
+        <string id="EbiWhyTweakWeight" text="ヒント: {STAT}の比重を上げると、より重視されます。"/>
+        <string id="EbiWhyTweakPriority" text="ヒント: {STAT}を上に移動すると優先されます。"/>
+        <string id="EbiWhyNamedNotFound" text="「{ITEM}」は検索対象のインベントリにありません。"/>
+        <string id="EbiWhyNamedIsBest" text="「{ITEM}」はまさにここで推奨されているものです。"/>
+        <string id="EbiWhyNamedFiltered" text="「{ITEM}」は条件を満たしません: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="「{ITEM}」ではなく{WINNER}が選ばれています"/>
+        <string id="EbiWhyNamedMarginal" text="「{ITEM}」のスコアは{CURRENT}よりわずかに高いものの、交換を提案できるほどの明確な差はありません。"/>
+        <string id="EbiRejectType" text="このスロットに合わないアイテム種別です"/>
+        <string id="EbiRejectWeaponClass" text="このスロットに合わない武器種です"/>
+        <string id="EbiRejectShield" text="別の武器スロットに既に盾があります"/>
+        <string id="EbiRejectEquip" text="この英雄はここに装備できません"/>
+        <string id="EbiRejectWeight" text="スロットの重量制限を超えています"/>
+        <string id="EbiRejectCulture" text="スロットのフィルターと文化が合いません"/>
+        <string id="EbiRejectOther" text="スロットのフィルターに一致しません"/>
     </strings>
 </base>

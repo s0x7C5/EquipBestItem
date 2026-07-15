@@ -33,6 +33,8 @@ public sealed class SPInventoryVMMixin : BaseViewModelMixin<SPInventoryVM>
 
     public SPInventoryVMMixin(SPInventoryVM vm) : base(vm)
     {
+        EbiSpriteSheetLoader.EnsureLoaded();
+
         _gateway = new InventoryGateway(vm);
         ModInventory = new EbiVM(ModRuntime.Services, _gateway);
 

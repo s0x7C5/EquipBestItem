@@ -356,3 +356,7 @@ MigrationBackup/
 
 # Steam Workshop upload configs and preview stay local
 /workshop/
+/*.7z
+
+# Release notes are kept local (source for Workshop/Nexus change notes)
+/CHANGELOG.md

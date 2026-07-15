@@ -44,27 +44,38 @@ public static class LlmPlanParser
                 directives.Add(new EquipDirective(slot, BuildQuery(directiveDto, slot)));
         }
 
-        if (directives.Count == 0)
+        var answer = dto.Answer?.Trim() ?? "";
+        var explainItem = dto.ExplainItem?.Trim() ?? "";
+        EquipmentIndex? explainSlot =
+            Enum.TryParse(dto.ExplainSlot, true, out EquipmentIndex parsedSlot) ? parsedSlot : null;
+
+        // A "why not X" query needs both the slot and the item.
+        if (explainItem.Length == 0 || explainSlot is null)
+        {
+            explainItem = "";
+            explainSlot = null;
+        }
+
+        // A question (answer) or a "why not X" query with no directives is a
+        // valid reply, not an error.
+        if (directives.Count == 0 && answer.Length == 0 && explainItem.Length == 0)
             throw new FormatException("The AI response contains no usable directives.");
 
-        return new InterpretedPlan(directives, dto.Explanation ?? "", dto.Target ?? "");
+        return new InterpretedPlan(
+            directives, dto.Explanation ?? "", dto.Target ?? "", answer, explainSlot, explainItem);
     }
 
     private static ItemQuery BuildQuery(DirectiveDto dto, EquipmentIndex slot)
     {
         var weights = ParamWeights.FromDictionary(dto.Weights);
 
-        WeaponClass? pinnedClass =
-            Enum.TryParse(dto.WeaponClass, true, out WeaponClass weaponClass) &&
-            weaponClass != WeaponClass.Undefined
-                ? weaponClass
-                : null;
+        var pinnedCategory = WeaponCategory.Parse(dto.WeaponClass);
 
         // A directive without weights means "just find the best": use the
         // slot (or pinned class) defaults, but let the player's search
         // method setting decide.
         var query = weights.IsEmpty
-            ? new ItemQuery(Profiles.DefaultWeights.For(slot, pinnedClass))
+            ? new ItemQuery(Profiles.DefaultWeights.For(slot, pinnedCategory?.Class))
             : new ItemQuery(weights) { HasExplicitWeights = true };
 
         if (dto.MaxItemWeight is { } maxWeight and > 0f)
@@ -73,8 +84,36 @@ public static class LlmPlanParser
         if (!string.IsNullOrEmpty(dto.Culture))
             query.CultureId = dto.Culture;
 
-        query.WeaponClass = pinnedClass;
+        query.WeaponCategory = pinnedCategory;
+        query.Priorities = ParsePriorities(dto.Priorities);
         return query;
+    }
+
+    /// <summary>
+    ///     One entry per rank, most important first; '+' joins equal-rank
+    ///     stats ("HitPoints+BodyArmor"). Unknown names are dropped, and so is
+    ///     Weight — "prefer heavy" is never the intent; lightness is expressed
+    ///     through the maxItemWeight cap.
+    /// </summary>
+    private static IReadOnlyList<IReadOnlyList<ItemParam>>? ParsePriorities(List<string>? entries)
+    {
+        if (entries is null || entries.Count == 0) return null;
+
+        var seen = new HashSet<ItemParam>();
+        var groups = new List<IReadOnlyList<ItemParam>>();
+        foreach (var entry in entries)
+        {
+            if (string.IsNullOrWhiteSpace(entry)) continue;
+
+            var group = new List<ItemParam>();
+            foreach (var part in entry.Split('+'))
+                if (Enum.TryParse(part.Trim(), true, out ItemParam param) &&
+                    param != ItemParam.Weight && seen.Add(param))
+                    group.Add(param);
+            if (group.Count > 0) groups.Add(group);
+        }
+
+        return groups.Count > 0 ? groups : null;
     }
 
     private static IEnumerable<EquipmentIndex> ExpandSlots(string slot)
@@ -113,6 +152,12 @@ public static class LlmPlanParser
     {
         [JsonProperty("explanation")] public string? Explanation { get; set; }
 
+        [JsonProperty("answer")] public string? Answer { get; set; }
+
+        [JsonProperty("explainSlot")] public string? ExplainSlot { get; set; }
+
+        [JsonProperty("explainItem")] public string? ExplainItem { get; set; }
+
         [JsonProperty("target")] public string? Target { get; set; }
 
         [JsonProperty("directives")] public List<DirectiveDto>? Directives { get; set; }
@@ -129,5 +174,7 @@ public static class LlmPlanParser
         [JsonProperty("culture")] public string? Culture { get; set; }
 
         [JsonProperty("weaponClass")] public string? WeaponClass { get; set; }
+
+        [JsonProperty("priorities")] public List<string>? Priorities { get; set; }
     }
 }

@@ -23,14 +23,14 @@
                                      HorizontalAlignment="Center" MarginTop="30" MarginBottom="30" Brush="Frame1Brush">
                             <Children>
                                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                           MarginTop="20" MarginBottom="20" MarginLeft="25" MarginRight="25"
+                                           MarginTop="14" MarginBottom="14" MarginLeft="25" MarginRight="25"
                                            StackLayout.LayoutMethod="VerticalTopToBottom">
                                     <Children>
 
                                         <!-- Header with the "default values" marker on its right,
                                              shown while the hero follows the defaults for this slot -->
                                         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
-                                                SuggestedHeight="45">
+                                                SuggestedHeight="40">
                                             <Children>
                                                 <TextWidget WidthSizePolicy="StretchToParent"
                                                             HeightSizePolicy="StretchToParent"
@@ -45,7 +45,7 @@
 
                                         <!-- Culture restriction selector; "any culture" disables it -->
                                         <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed"
-                                                   SuggestedHeight="50" MarginTop="5"
+                                                   SuggestedHeight="46" MarginTop="3"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
                                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
@@ -66,7 +66,7 @@
 
                                         <!-- Max item weight cap; 0 = off -->
                                         <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed"
-                                                   SuggestedHeight="56"
+                                                   SuggestedHeight="48"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
                                                 <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent"
@@ -123,7 +123,7 @@
 
                                         <!-- Weapon class pin (weapon slots only) -->
                                         <ListPanel IsVisible="@IsWeaponSlot" WidthSizePolicy="CoverChildren" HorizontalAlignment="Center"
-                                                   HeightSizePolicy="Fixed" SuggestedHeight="50" MarginTop="5"
+                                                   HeightSizePolicy="Fixed" SuggestedHeight="46" MarginTop="3"
                                                    StackLayout.LayoutMethod="HorizontalLeftToRight">
                                             <Children>
                                                 <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
@@ -142,12 +142,20 @@
                                             </Children>
                                         </ListPanel>
 
-                                        <!-- One template row per visible parameter -->
-                                        <ListPanel DataSource="{Rows}" WidthSizePolicy="StretchToParent"
-                                                   HeightSizePolicy="CoverChildren" MarginTop="10"
+                                        <!-- Effectiveness mode ignores weights/priorities: only the
+                                             constraints above apply, and this note says so -->
+                                        <TextWidget IsVisible="@IsEffectivenessMode" WidthSizePolicy="StretchToParent"
+                                                    HeightSizePolicy="Fixed" SuggestedHeight="80" MarginTop="10"
+                                                    MarginLeft="20" MarginRight="20"
+                                                    Brush="EquipBestItem.Label.Left"
+                                                    Text="@EffectivenessNoteText"/>
+
+                                        <!-- One template row per visible parameter (weights mode) -->
+                                        <ListPanel IsVisible="@IsWeightsMode" DataSource="{Rows}" WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="CoverChildren" MarginTop="6"
                                                    StackLayout.LayoutMethod="VerticalTopToBottom">
                                             <ItemTemplate>
-                                                <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="56" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="44" StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
                                                         <TextWidget WidthSizePolicy="Fixed"
                                                                     HeightSizePolicy="StretchToParent"
@@ -205,67 +213,203 @@
                                             </ItemTemplate>
                                         </ListPanel>
 
-                                        <!-- Actions: Default restores the (player-editable) defaults,
-                                             Make default saves the current filter as that default,
-                                             Lock zeroes the weights which excludes the slot -->
-                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                                   MarginTop="15" HorizontalAlignment="Center"
-                                                   StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                        <!-- Priority mode: draggable stat chips grouped into ranks.
+                                             Dropping a chip onto a row's center band links it into
+                                             that rank (equal stats); a drop that misses the band
+                                             lands on this list and inserts the chip as its own rank
+                                             at the computed position. DropEventHandledManually keeps
+                                             Gauntlet from physically reparenting the chip widget —
+                                             the view models rebuild the rows instead. -->
+                                        <EbiPriorityListWidget IsVisible="@IsPriorityMode" DataSource="{PriorityRows}"
+                                                   WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="CoverChildren" MarginTop="10"
+                                                   AcceptDrop="true" DropEventHandledManually="true"
+                                                   Command.Drop="..\ExecuteReorderChip"
+                                                   CommandParameter.Drop="PriorityRows"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                            <ItemTemplate>
+                                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                        SuggestedHeight="56">
+                                                    <Children>
+                                                        <!-- Soft glow while a dragged chip hovers the link
+                                                             band; toggled by the band widget every frame -->
+                                                        <Widget Id="LinkGlow" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent"
+                                                                HeightSizePolicy="StretchToParent"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF"
+                                                                AlphaFactor="0.13"/>
+                                                        <!-- Insertion lines on the row edges; the list widget
+                                                             lights the one matching the engine's drop index -->
+                                                        <Widget Id="EbiRowInsertTop" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                SuggestedHeight="4" VerticalAlignment="Top"
+                                                                MarginLeft="20" MarginRight="20"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF" AlphaFactor="0.7"/>
+                                                        <Widget Id="EbiRowInsertBottom" IsVisible="false" DoNotAcceptEvents="true"
+                                                                WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                SuggestedHeight="4" VerticalAlignment="Bottom"
+                                                                MarginLeft="20" MarginRight="20"
+                                                                Sprite="BlankWhiteSquare_9" Color="#F8E3BEFF" AlphaFactor="0.7"/>
+                                                        <!-- Center band = the "link with this rank" drop
+                                                             target; the strips above and below fall
+                                                             through to the list's insert handling. -->
+                                                        <EbiLinkDropZoneWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                                               SuggestedHeight="30" VerticalAlignment="Center"
+                                                                               AcceptDrop="true" DropEventHandledManually="true"
+                                                                               Command.Drop="ExecuteLinkChip"/>
+                                                        <ListPanel WidthSizePolicy="CoverChildren"
+                                                                   HeightSizePolicy="StretchToParent"
+                                                                   HorizontalAlignment="Center"
+                                                                   StackLayout.LayoutMethod="HorizontalLeftToRight"
+                                                                   DoNotAcceptEvents="true">
+                                                            <Children>
+                                                                <TextWidget WidthSizePolicy="Fixed"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            SuggestedWidth="45"
+                                                                            Brush="EquipBestItem.Label.Right"
+                                                                            Text="@PositionText"/>
+                                                                <ListPanel DataSource="{Chips}"
+                                                                           WidthSizePolicy="CoverChildren"
+                                                                           HeightSizePolicy="StretchToParent"
+                                                                           MarginLeft="12"
+                                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                                    <ItemTemplate>
+                                                                        <ButtonWidget DoNotPassEventsToChildren="true"
+                                                                                      WidthSizePolicy="CoverChildren"
+                                                                                      HeightSizePolicy="Fixed"
+                                                                                      SuggestedHeight="46"
+                                                                                      VerticalAlignment="Center"
+                                                                                      MarginRight="8"
+                                                                                      AcceptDrag="true"
+                                                                                      Brush="Popup.Button.Base"
+                                                                                      UpdateChildrenStates="true">
+                                                                            <Children>
+                                                                                <TextWidget WidthSizePolicy="CoverChildren"
+                                                                                            HeightSizePolicy="StretchToParent"
+                                                                                            MarginLeft="28" MarginRight="28"
+                                                                                            Brush="Popup.Button.Text"
+                                                                                            Text="@Name"/>
+                                                                            </Children>
+                                                                        </ButtonWidget>
+                                                                    </ItemTemplate>
+                                                                </ListPanel>
+                                                            </Children>
+                                                        </ListPanel>
+                                                    </Children>
+                                                </Widget>
+                                            </ItemTemplate>
+                                        </EbiPriorityListWidget>
+
+                                        <!-- Explain the current pick to the message log (all modes) -->
+                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                      HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="48"
+                                                      MarginTop="8" HorizontalAlignment="Center"
+                                                      Brush="Popup.Button.Base" Command.Click="ExecuteExplain"
+                                                      UpdateChildrenStates="true">
                                             <Children>
-                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                              HeightSizePolicy="Fixed" SuggestedWidth="130"
-                                                              SuggestedHeight="55" Brush="Popup.Button.Base"
-                                                              Command.Click="ExecuteReset" UpdateChildrenStates="true">
+                                                <HintWidget DoNotAcceptEvents="true" DataSource="{ExplainButtonHint}"
+                                                            WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                            HeightSizePolicy="StretchToParent"
+                                                            Brush="Popup.Button.Text" Text="@ExplainButtonText"/>
+                                            </Children>
+                                        </ButtonWidget>
+
+                                        <!-- Actions, two rows: Default / Set as default (drop or save
+                                             the whole override), then Clear / Lock (reset only the
+                                             stat preferences / exclude the slot). Row two hides in
+                                             Effectiveness mode where neither applies. -->
+                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                   MarginTop="10" HorizontalAlignment="Center"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                            <Children>
+                                                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                           HorizontalAlignment="Center"
+                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
-                                                        <HintWidget DoNotAcceptEvents="true"
-                                                                    DataSource="{DefaultButtonHint}"
-                                                                    WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                                    Command.HoverEnd="ExecuteEndHint"/>
-                                                        <TextWidget WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Brush="Popup.Button.Text"
-                                                                    Text="@DefaultButtonText"/>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      SuggestedHeight="50" Brush="Popup.Button.Base"
+                                                                      Command.Click="ExecuteReset" UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <HintWidget DoNotAcceptEvents="true"
+                                                                            DataSource="{DefaultButtonHint}"
+                                                                            WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@DefaultButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      SuggestedHeight="50" MarginLeft="10"
+                                                                      Brush="Popup.Button.Base"
+                                                                      Command.Click="ExecuteMakeDefault"
+                                                                      UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <HintWidget DoNotAcceptEvents="true"
+                                                                            DataSource="{MakeDefaultButtonHint}"
+                                                                            WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@MakeDefaultButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
                                                     </Children>
-                                                </ButtonWidget>
-                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                              HeightSizePolicy="Fixed" SuggestedWidth="210"
-                                                              SuggestedHeight="55" MarginLeft="10"
-                                                              Brush="Popup.Button.Base"
-                                                              Command.Click="ExecuteMakeDefault"
-                                                              UpdateChildrenStates="true">
+                                                </ListPanel>
+                                                <ListPanel IsVisible="@IsLockVisible" WidthSizePolicy="CoverChildren"
+                                                           HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
+                                                           MarginTop="8"
+                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
-                                                        <HintWidget DoNotAcceptEvents="true"
-                                                                    DataSource="{MakeDefaultButtonHint}"
-                                                                    WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                                    Command.HoverEnd="ExecuteEndHint"/>
-                                                        <TextWidget WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Brush="Popup.Button.Text"
-                                                                    Text="@MakeDefaultButtonText"/>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      SuggestedHeight="50" Brush="Popup.Button.Base"
+                                                                      Command.Click="ExecuteClear" UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <HintWidget DoNotAcceptEvents="true"
+                                                                            DataSource="{ClearButtonHint}"
+                                                                            WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@ClearButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      SuggestedHeight="50" MarginLeft="10"
+                                                                      Brush="Popup.Button.Base" Command.Click="ExecuteLock"
+                                                                      UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <HintWidget DoNotAcceptEvents="true"
+                                                                            DataSource="{LockButtonHint}"
+                                                                            WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Command.HoverBegin="ExecuteBeginHint"
+                                                                            Command.HoverEnd="ExecuteEndHint"/>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@LockButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
                                                     </Children>
-                                                </ButtonWidget>
-                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                              HeightSizePolicy="Fixed" SuggestedWidth="130"
-                                                              SuggestedHeight="55" MarginLeft="10"
-                                                              Brush="Popup.Button.Base" Command.Click="ExecuteLock"
-                                                              UpdateChildrenStates="true">
-                                                    <Children>
-                                                        <HintWidget DoNotAcceptEvents="true"
-                                                                    DataSource="{LockButtonHint}"
-                                                                    WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Command.HoverBegin="ExecuteBeginHint"
-                                                                    Command.HoverEnd="ExecuteEndHint"/>
-                                                        <TextWidget WidthSizePolicy="StretchToParent"
-                                                                    HeightSizePolicy="StretchToParent"
-                                                                    Brush="Popup.Button.Text"
-                                                                    Text="@LockButtonText"/>
-                                                    </Children>
-                                                </ButtonWidget>
+                                                </ListPanel>
                                             </Children>
                                         </ListPanel>
 
@@ -279,6 +423,93 @@
                         <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70"
                                       SuggestedHeight="70" HorizontalAlignment="Right" VerticalAlignment="Top"
                                       Command.Click="ExecuteClose" Brush="Popup.CloseButton"/>
+                            </Children>
+                        </Widget>
+                    </Children>
+                </Widget>
+
+                <!-- AI prompt dialog: a full-width input instead of the cramped
+                     native text inquiry. While the input has focus, the
+                     inventory screen skips its own hotkeys. -->
+                <Widget DataSource="{Ai}" IsVisible="@IsPromptVisible" WidthSizePolicy="StretchToParent"
+                        HeightSizePolicy="StretchToParent">
+                    <Children>
+
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.55"/>
+
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="1000"
+                                HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Children>
+                                <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="940"
+                                             HorizontalAlignment="Center" MarginTop="30" MarginBottom="30" Brush="Frame1Brush">
+                                    <Children>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   MarginTop="20" MarginBottom="25" MarginLeft="30" MarginRight="30"
+                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                            <Children>
+
+                                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                            SuggestedHeight="45" Brush="Popup.Button.Text"
+                                                            Text="@PromptTitleText"/>
+
+                                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                            SuggestedHeight="35" Brush="EquipBestItem.Label.Left"
+                                                            Text="@PromptHintText"/>
+
+                                                <!-- The input: a dark backdrop with a wide editable field -->
+                                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
+                                                        SuggestedHeight="64" MarginTop="10"
+                                                        Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.45">
+                                                    <Children>
+                                                        <EbiPromptInputWidget WidthSizePolicy="StretchToParent"
+                                                                              HeightSizePolicy="StretchToParent"
+                                                                              MarginLeft="15" MarginRight="15"
+                                                                              Brush="EquipBestItem.PromptInput"
+                                                                              Text="@PromptText"/>
+                                                    </Children>
+                                                </Widget>
+
+                                                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                           MarginTop="18" HorizontalAlignment="Center"
+                                                           StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                                    <Children>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="180"
+                                                                      SuggestedHeight="50" Brush="Popup.Button.Base"
+                                                                      Command.Click="ExecuteSubmitPrompt"
+                                                                      UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@SubmitButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
+                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="180"
+                                                                      SuggestedHeight="50" MarginLeft="15"
+                                                                      Brush="Popup.Button.Base"
+                                                                      Command.Click="ExecuteCancelPrompt"
+                                                                      UpdateChildrenStates="true">
+                                                            <Children>
+                                                                <TextWidget WidthSizePolicy="StretchToParent"
+                                                                            HeightSizePolicy="StretchToParent"
+                                                                            Brush="Popup.Button.Text"
+                                                                            Text="@CancelButtonText"/>
+                                                            </Children>
+                                                        </ButtonWidget>
+                                                    </Children>
+                                                </ListPanel>
+
+                                            </Children>
+                                        </ListPanel>
+                                    </Children>
+                                </BrushWidget>
+
+                                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="70"
+                                              SuggestedHeight="70" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                              Command.Click="ExecuteCancelPrompt" Brush="Popup.CloseButton"/>
                             </Children>
                         </Widget>
                     </Children>

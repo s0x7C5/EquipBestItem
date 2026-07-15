@@ -7,4 +7,7 @@ public sealed class EffectivenessItemScorer : IItemScorer
 {
     public float Score(EquipmentElement element, in SearchContext context) =>
         element.Item?.Effectiveness ?? 0f;
+
+    public bool BeatsCurrent(EquipmentElement candidate, EquipmentElement current, in SearchContext context) =>
+        Score(candidate, context) > Score(current, context);
 }

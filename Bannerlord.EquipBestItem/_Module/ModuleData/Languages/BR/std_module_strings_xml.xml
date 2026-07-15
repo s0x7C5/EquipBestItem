@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Português (BR)"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="Nenhum item melhor encontrado."/>
         <string id="EbiEquippedCount" text="{COUNT} item(ns) equipado(s)."/>
         <string id="EbiClassAsEquipped" text="Como equipado"/>
+        <string id="EbiEffectivenessNote" text="Os itens são classificados pela pontuação de efetividade integrada do jogo; os pesos de atributos não se aplicam."/>
+        <string id="EbiExplain" text="Por quê?"/>
+        <string id="EbiClear" text="Limpar"/>
+        <string id="EbiClearHint" text="Restaura os pesos/a ordem aos padrões do slot; classe de arma, cultura e limite de peso permanecem"/>
+        <string id="EbiExplainHint" text="Explica a escolha deste slot no registro de mensagens"/>
+        <string id="EbiShortBow" text="Arco curto"/>
+        <string id="EbiLongBow" text="Arco longo"/>
         <string id="ebi_default" text="Padrão"/>
         <string id="ebi_lock" text="Bloquear"/>
         <string id="ebi_hint_default" text="Redefinir para os valores padrão"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="Geral"/>
         <string id="EbiMcmEffectiveness" text="Usar a pontuação de Eficácia do jogo"/>
         <string id="EbiMcmEffectivenessHint" text="Pontuar os itens com o valor agregado do próprio jogo em vez dos pesos de parâmetros por espaço. Pesos solicitados explicitamente à IA ainda têm prioridade."/>
+        <string id="EbiMcmPriority" text="Busca por prioridade"/>
+        <string id="EbiMcmPriorityHint" text="Compara os itens atributo por atributo na ordem de prioridade do slot em vez da pontuação ponderada: o atributo do topo decide, em caso de empate o próximo. Reordene os atributos na janela de filtro do slot."/>
+        <string id="EbiMcmMethod" text="Método de busca"/>
+        <string id="EbiMcmMethodHint" text="Pesos de parâmetros: escolha equilibrada - todos os atributos ponderados contam, um único atributo enorme não supera o resto, a troca só é sugerida com clara vantagem. Prioridade de atributos: ordem estrita - o atributo do topo decide, os demais só em caso de empate; reordene e vincule atributos no filtro do slot. Efetividade do jogo: a pontuação geral integrada do jogo - sem ajustes, porém grosseira."/>
+        <string id="EbiMcmMethodWeights" text="Pesos de parâmetros"/>
+        <string id="EbiMcmMethodPriority" text="Prioridade de atributos"/>
+        <string id="EbiMcmMethodEffectiveness" text="Efetividade do jogo"/>
         <string id="EbiMcmButtonColor" text="Cor dos botões de espaço"/>
         <string id="EbiMcmButtonColorHint" text="Tonalidade dos botões de equipar por espaço, #RRGGBB ou #RRGGBBAA. #FFFFFF mantém a aparência original. Aplicado ao reabrir o inventário."/>
         <string id="EbiMcmButtonColorReset" text="Redefinir a cor dos botões"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="Tornar padrão"/>
         <string id="EbiHintMakeDefault" text="Salva o filtro deste espaço como padrão para todos os heróis sem configurações próprias"/>
         <string id="EbiOnDefault" text="Valores padrão"/>
+        <string id="EbiWhySlotLocked" text="Este espaço está excluído da busca."/>
+        <string id="EbiWhyNothingBetter" text="Nada claramente melhor que {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Nada encontrado para este espaço."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} para um espaço vazio."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} supera {CURRENT}"/>
+        <string id="EbiWhyAhead" text="À frente: {STATS}"/>
+        <string id="EbiWhyBehind" text="Atrás (conta menos): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Decidido por {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Empate em {STATS}; prioridades inferiores não foram verificadas"/>
+        <string id="EbiWhyEffectiveness" text="O jogo o avalia em {FOUND} contra {CURRENT} no geral — nota própria, sem detalhamento por atributo."/>
+        <string id="EbiWhyTweakWeight" text="Dica: dê mais peso a {STAT} para valorizá-lo mais."/>
+        <string id="EbiWhyTweakPriority" text="Dica: suba {STAT} para priorizá-lo."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}” não está no inventário pesquisado."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}” é exatamente o que se recomenda aqui."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}” não se qualifica: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} é escolhido no lugar de “{ITEM}”"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}” pontua um pouco mais que {CURRENT}, mas não com a margem clara necessária para sugerir a troca."/>
+        <string id="EbiRejectType" text="tipo de item errado para este espaço"/>
+        <string id="EbiRejectWeaponClass" text="tipo de arma errado para este espaço"/>
+        <string id="EbiRejectShield" text="já há um escudo em outro espaço de arma"/>
+        <string id="EbiRejectEquip" text="este herói não pode equipá-lo aqui"/>
+        <string id="EbiRejectWeight" text="acima do limite de peso do espaço"/>
+        <string id="EbiRejectCulture" text="cultura errada para o filtro do espaço"/>
+        <string id="EbiRejectOther" text="não corresponde ao filtro do espaço"/>
     </strings>
 </base>

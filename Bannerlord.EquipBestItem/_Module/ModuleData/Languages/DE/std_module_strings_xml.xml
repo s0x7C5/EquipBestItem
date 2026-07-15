@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Deutsch"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="Kein besserer Gegenstand gefunden."/>
         <string id="EbiEquippedCount" text="{COUNT} Gegenstand/Gegenstände ausgerüstet."/>
         <string id="EbiClassAsEquipped" text="Wie ausgerüstet"/>
+        <string id="EbiEffectivenessNote" text="Gegenstände werden nach der spieleigenen Effektivitätswertung sortiert; Wertegewichte gelten nicht."/>
+        <string id="EbiExplain" text="Warum?"/>
+        <string id="EbiClear" text="Leeren"/>
+        <string id="EbiClearHint" text="Setzt die Wertegewichte/Reihenfolge auf die Slot-Vorgaben zurück; Waffenklasse, Kultur und Gewichtslimit bleiben"/>
+        <string id="EbiExplainHint" text="Erklärt die Wahl für diesen Slot im Nachrichtenprotokoll"/>
+        <string id="EbiShortBow" text="Kurzbogen"/>
+        <string id="EbiLongBow" text="Langbogen"/>
         <string id="ebi_default" text="Standard"/>
         <string id="ebi_lock" text="Sperren"/>
         <string id="ebi_hint_default" text="Auf Standardwerte zurücksetzen"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="Allgemein"/>
         <string id="EbiMcmEffectiveness" text="Effektivitätswert des Spiels verwenden"/>
         <string id="EbiMcmEffectivenessHint" text="Gegenstände mit dem spieleigenen Gesamtwert bewerten statt mit den Parametergewichten pro Slot. Von der KI ausdrücklich angeforderte Gewichte haben weiterhin Vorrang."/>
+        <string id="EbiMcmPriority" text="Prioritätsbasierte Suche"/>
+        <string id="EbiMcmPriorityHint" text="Gegenstände Wert für Wert in der Prioritätsreihenfolge des Slots vergleichen statt gewichteter Bewertung: der oberste Wert entscheidet, bei Gleichstand der nächste. Die Reihenfolge wird im Filterfenster des Slots festgelegt."/>
+        <string id="EbiMcmMethod" text="Suchmethode"/>
+        <string id="EbiMcmMethodHint" text="Parametergewichte: ausgewogene Wahl - alle gewichteten Werte zählen, ein einzelner hoher Wert überwiegt nicht den Rest, ein Tausch wird nur bei klarer Verbesserung vorgeschlagen. Wertepriorität: strikte Reihenfolge - der oberste Wert entscheidet, weitere nur bei Gleichstand; Reihenfolge und Verknüpfungen im Slot-Filter. Spieleigene Effektivität: die eingebaute Gesamtwertung des Spiels - ohne Einstellung, aber grob."/>
+        <string id="EbiMcmMethodWeights" text="Parametergewichte"/>
+        <string id="EbiMcmMethodPriority" text="Wertepriorität"/>
+        <string id="EbiMcmMethodEffectiveness" text="Spieleigene Effektivität"/>
         <string id="EbiMcmButtonColor" text="Farbe der Slot-Schaltflächen"/>
         <string id="EbiMcmButtonColorHint" text="Färbung der Ausrüsten-Schaltflächen pro Slot, #RRGGBB oder #RRGGBBAA. #FFFFFF behält das Originalaussehen. Wird beim erneuten Öffnen des Inventars angewendet."/>
         <string id="EbiMcmButtonColorReset" text="Schaltflächenfarbe zurücksetzen"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="Als Standard"/>
         <string id="EbiHintMakeDefault" text="Speichert den Filter dieses Slots als Standard für alle Helden ohne eigene Einstellungen"/>
         <string id="EbiOnDefault" text="Standardwerte"/>
+        <string id="EbiWhySlotLocked" text="Dieser Slot ist von der Suche ausgeschlossen."/>
+        <string id="EbiWhyNothingBetter" text="Nichts ist deutlich besser als {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Für diesen Slot wurde nichts gefunden."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} für einen leeren Slot."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} schlägt {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Voraus: {STATS}"/>
+        <string id="EbiWhyBehind" text="Zurück (zählt weniger): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Entschieden durch {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Gleichstand bei {STATS}; niedrigere Prioritäten wurden nicht geprüft"/>
+        <string id="EbiWhyEffectiveness" text="Das Spiel bewertet ihn insgesamt mit {FOUND} gegenüber {CURRENT} — eigene Wertung, ohne Aufschlüsselung nach Werten."/>
+        <string id="EbiWhyTweakWeight" text="Tipp: Gib {STAT} mehr Gewicht, um ihn stärker zu werten."/>
+        <string id="EbiWhyTweakPriority" text="Tipp: Schiebe {STAT} nach oben, um ihn zu priorisieren."/>
+        <string id="EbiWhyNamedNotFound" text="„{ITEM}“ ist nicht im durchsuchten Inventar."/>
+        <string id="EbiWhyNamedIsBest" text="„{ITEM}“ ist genau das, was hier empfohlen wird."/>
+        <string id="EbiWhyNamedFiltered" text="„{ITEM}“ kommt nicht in Frage: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} wird „{ITEM}“ vorgezogen"/>
+        <string id="EbiWhyNamedMarginal" text="„{ITEM}“ hat eine etwas höhere Wertung als {CURRENT}, aber nicht den klaren Vorsprung, der für einen Tauschvorschlag nötig ist."/>
+        <string id="EbiRejectType" text="falscher Gegenstandstyp für diesen Slot"/>
+        <string id="EbiRejectWeaponClass" text="falscher Waffentyp für diesen Slot"/>
+        <string id="EbiRejectShield" text="ein Schild liegt bereits in einem anderen Waffenslot"/>
+        <string id="EbiRejectEquip" text="dieser Held kann es hier nicht anlegen"/>
+        <string id="EbiRejectWeight" text="über dem Gewichtslimit des Slots"/>
+        <string id="EbiRejectCulture" text="falsche Kultur für den Filter des Slots"/>
+        <string id="EbiRejectOther" text="es entspricht nicht dem Filter des Slots"/>
     </strings>
 </base>

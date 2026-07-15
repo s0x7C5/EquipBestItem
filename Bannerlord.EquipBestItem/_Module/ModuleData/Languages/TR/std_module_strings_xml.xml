@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="Türkçe"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="Daha iyi bir eşya bulunamadı."/>
         <string id="EbiEquippedCount" text="{COUNT} eşya kuşanıldı."/>
         <string id="EbiClassAsEquipped" text="Kuşanıldığı gibi"/>
+        <string id="EbiEffectivenessNote" text="Eşyalar oyunun yerleşik etkinlik puanına göre sıralanır; özellik ağırlıkları uygulanmaz."/>
+        <string id="EbiExplain" text="Neden?"/>
+        <string id="EbiClear" text="Temizle"/>
+        <string id="EbiClearHint" text="Ağırlıkları/sırayı yuvanın varsayılanına döndürür; silah sınıfı, kültür ve ağırlık limiti korunur"/>
+        <string id="EbiExplainHint" text="Bu yuvanın seçimini mesaj günlüğünde açıklar"/>
+        <string id="EbiShortBow" text="Kısa yay"/>
+        <string id="EbiLongBow" text="Uzun yay"/>
         <string id="ebi_default" text="Varsayılan"/>
         <string id="ebi_lock" text="Kilitle"/>
         <string id="ebi_hint_default" text="Varsayılan değerlere sıfırla"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="Genel"/>
         <string id="EbiMcmEffectiveness" text="Oyunun Etkililik puanını kullan"/>
         <string id="EbiMcmEffectivenessHint" text="Eşyaları yuva başına parametre ağırlıkları yerine oyunun yerleşik toplam puanıyla değerlendir. Yapay zekâdan açıkça istenen ağırlıklar yine de öncelikli olur."/>
+        <string id="EbiMcmPriority" text="Öncelik tabanlı arama"/>
+        <string id="EbiMcmPriorityHint" text="Eşyaları ağırlıklı puan yerine yuvanın öncelik sırasına göre özellik özellik karşılaştır: en üstteki özellik belirler, eşitlikte sıradaki geçerlidir. Sırayı yuvanın filtre penceresinde düzenleyin."/>
+        <string id="EbiMcmMethod" text="Arama yöntemi"/>
+        <string id="EbiMcmMethodHint" text="Parametre ağırlıkları: dengeli seçim - ağırlık verilen tüm özellikler sayılır, tek bir dev özellik gerisini bastıramaz, değişim yalnızca net üstünlükte önerilir. Özellik önceliği: katı sıralama - en üstteki özellik belirler, alttakiler yalnızca eşitlikte; sırayı ve bağları yuva filtresinde ayarlayın. Oyunun etkinliği: oyunun yerleşik genel puanı - ayarsız ama kabaca."/>
+        <string id="EbiMcmMethodWeights" text="Parametre ağırlıkları"/>
+        <string id="EbiMcmMethodPriority" text="Özellik önceliği"/>
+        <string id="EbiMcmMethodEffectiveness" text="Oyunun etkinlik puanı"/>
         <string id="EbiMcmButtonColor" text="Yuva düğmesi rengi"/>
         <string id="EbiMcmButtonColorHint" text="Yuva başına kuşanma düğmelerinin tonu, #RRGGBB veya #RRGGBBAA. #FFFFFF özgün görünümü korur. Envanter yeniden açıldığında uygulanır."/>
         <string id="EbiMcmButtonColorReset" text="Düğme rengini sıfırla"/>
@@ -55,5 +69,29 @@
         <string id="EbiMakeDefault" text="Varsayılan yap"/>
         <string id="EbiHintMakeDefault" text="Bu yuvanın filtresini kendi ayarı olmayan tüm kahramanlar için varsayılan olarak kaydeder"/>
         <string id="EbiOnDefault" text="Varsayılan değerler"/>
+        <string id="EbiWhySlotLocked" text="Bu yuva aramanın dışında tutuluyor."/>
+        <string id="EbiWhyNothingBetter" text="{CURRENT} eşyasından belirgin şekilde iyisi yok."/>
+        <string id="EbiWhyNothingFound" text="Bu yuva için bir şey bulunamadı."/>
+        <string id="EbiWhyFirstItem" text="Boş yuva için {FOUND}."/>
+        <string id="EbiWhyUpgrade" text="{FOUND}, {CURRENT} eşyasını geçiyor"/>
+        <string id="EbiWhyAhead" text="Önde: {STATS}"/>
+        <string id="EbiWhyBehind" text="Geride (daha az sayılıyor): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Kararı veren: {STATS}"/>
+        <string id="EbiWhyTiedOn" text="{STATS} üzerinde berabere; daha düşük öncelikler kontrol edilmedi"/>
+        <string id="EbiWhyEffectiveness" text="Oyun ona toplamda {CURRENT} karşısında {FOUND} veriyor — kendi puanı, değer dökümü yok."/>
+        <string id="EbiWhyTweakWeight" text="İpucu: daha çok önemsemek için {STAT} ağırlığını artır."/>
+        <string id="EbiWhyTweakPriority" text="İpucu: öncelik vermek için {STAT} değerini yukarı taşı."/>
+        <string id="EbiWhyNamedNotFound" text="“{ITEM}” aranan envanterde yok."/>
+        <string id="EbiWhyNamedIsBest" text="“{ITEM}” tam da burada önerilen şey."/>
+        <string id="EbiWhyNamedFiltered" text="“{ITEM}” uygun değil: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="“{ITEM}” yerine {WINNER} seçiliyor"/>
+        <string id="EbiWhyNamedMarginal" text="“{ITEM}”, {CURRENT} eşyasından biraz daha yüksek puan alıyor, ama takas önermek için gereken net fark yok."/>
+        <string id="EbiRejectType" text="bu yuva için yanlış eşya türü"/>
+        <string id="EbiRejectWeaponClass" text="bu yuva için yanlış silah türü"/>
+        <string id="EbiRejectShield" text="başka bir silah yuvasında zaten kalkan var"/>
+        <string id="EbiRejectEquip" text="bu kahraman bunu buraya kuşanamaz"/>
+        <string id="EbiRejectWeight" text="yuvanın ağırlık sınırının üzerinde"/>
+        <string id="EbiRejectCulture" text="yuvanın filtresi için yanlış kültür"/>
+        <string id="EbiRejectOther" text="yuvanın filtresine uymuyor"/>
     </strings>
 </base>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <base type="string">
     <tags>
         <tag language="English"/>
@@ -7,6 +7,13 @@
         <string id="EbiNothingBetter" text="No better item found."/>
         <string id="EbiEquippedCount" text="Equipped {COUNT} item(s)."/>
         <string id="EbiClassAsEquipped" text="As equipped"/>
+        <string id="EbiEffectivenessNote" text="Items are ranked by the game's built-in Effectiveness score; stat weights do not apply."/>
+        <string id="EbiExplain" text="Why this?"/>
+        <string id="EbiClear" text="Clear"/>
+        <string id="EbiClearHint" text="Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"/>
+        <string id="EbiExplainHint" text="Explain this slot's pick in the message log"/>
+        <string id="EbiShortBow" text="Short Bow"/>
+        <string id="EbiLongBow" text="Long Bow"/>
         <string id="ebi_default" text="Default"/>
         <string id="ebi_lock" text="Lock"/>
         <string id="ebi_hint_default" text="Reset to default values"/>
@@ -16,7 +23,7 @@
         <string id="EbiHintLeftLock" text="Search in the left panel (merchant, loot). Equipping buys the item."/>
         <string id="EbiHintRightLock" text="Search in your inventory"/>
         <string id="EbiAiInterpret" text="Ask AI"/>
-        <string id="EbiAiPromptHint" text="Describe the gear you want, in your own words."/>
+        <string id="EbiAiPromptHint" text="Describe the gear you want — or ask why an item was picked."/>
         <string id="EbiAiThinking" text="Interpreting request..."/>
         <string id="EbiAiTimeout" text="The AI did not respond in time."/>
         <string id="EbiAnyCulture" text="Any culture"/>
@@ -25,6 +32,13 @@
         <string id="EbiMcmGroupGeneral" text="General"/>
         <string id="EbiMcmEffectiveness" text="Use game Effectiveness score"/>
         <string id="EbiMcmEffectivenessHint" text="Score items with the game's built-in aggregate instead of the per-slot parameter weights. Weights explicitly requested from the AI still win."/>
+        <string id="EbiMcmPriority" text="Priority-based search"/>
+        <string id="EbiMcmPriorityHint" text="Compare items stat by stat in a per-slot priority order instead of weighted scoring: the top stat decides, ties fall through to the next one. Reorder the stats in each slot's filter window."/>
+        <string id="EbiMcmMethod" text="Search method"/>
+        <string id="EbiMcmMethodHint" text="Parameter weights: balanced choice - every weighted stat counts, one huge stat cannot outweigh the rest, and a swap is only suggested when the item is clearly better. Stat priority: strict order - the top stat decides, lower ones only break ties; reorder and link stats in the slot filter. Game Effectiveness: the game's single built-in quality score - no setup, but crude."/>
+        <string id="EbiMcmMethodWeights" text="Parameter weights"/>
+        <string id="EbiMcmMethodPriority" text="Stat priority order"/>
+        <string id="EbiMcmMethodEffectiveness" text="Game Effectiveness score"/>
         <string id="EbiMcmButtonColor" text="Slot button color"/>
         <string id="EbiMcmButtonColorHint" text="Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened."/>
         <string id="EbiMcmButtonColorReset" text="Reset button color"/>
@@ -52,8 +66,32 @@
         <string id="EbiAiConnectionOk" text="Connection OK: {ENDPOINT} (model: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Connection failed: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic API is configured; the key is verified on the first request."/>
-        <string id="EbiMakeDefault" text="Make default"/>
+        <string id="EbiMakeDefault" text="Set as default"/>
         <string id="EbiHintMakeDefault" text="Save this slot's filter as the default for every hero without their own settings"/>
         <string id="EbiOnDefault" text="Default values"/>
+        <string id="EbiWhySlotLocked" text="This slot is excluded from searching."/>
+        <string id="EbiWhyNothingBetter" text="Nothing clearly better than {CURRENT}."/>
+        <string id="EbiWhyNothingFound" text="Nothing found for this slot."/>
+        <string id="EbiWhyFirstItem" text="{FOUND} for an empty slot."/>
+        <string id="EbiWhyUpgrade" text="{FOUND} beats {CURRENT}"/>
+        <string id="EbiWhyAhead" text="Ahead: {STATS}"/>
+        <string id="EbiWhyBehind" text="Behind (counts less): {STATS}"/>
+        <string id="EbiWhyDecidedBy" text="Decided by {STATS}"/>
+        <string id="EbiWhyTiedOn" text="Tied on {STATS}; lower priorities were not checked"/>
+        <string id="EbiWhyEffectiveness" text="The game rates it {FOUND} vs {CURRENT} overall — its own score, with no stat breakdown."/>
+        <string id="EbiWhyTweakWeight" text="Tip: give {STAT} more weight to value it more."/>
+        <string id="EbiWhyTweakPriority" text="Tip: move {STAT} up to prioritize it."/>
+        <string id="EbiWhyNamedNotFound" text="&quot;{ITEM}&quot; is not in your searched inventory."/>
+        <string id="EbiWhyNamedIsBest" text="&quot;{ITEM}&quot; is exactly what's recommended here."/>
+        <string id="EbiWhyNamedFiltered" text="&quot;{ITEM}&quot; doesn't qualify: {REASON}"/>
+        <string id="EbiWhyNamedLoses" text="{WINNER} is picked over &quot;{ITEM}&quot;"/>
+        <string id="EbiWhyNamedMarginal" text="&quot;{ITEM}&quot; scores a bit higher than {CURRENT}, but not by the clear margin needed to suggest a swap."/>
+        <string id="EbiRejectType" text="wrong item type for this slot"/>
+        <string id="EbiRejectWeaponClass" text="wrong weapon type for this slot"/>
+        <string id="EbiRejectShield" text="a shield is already in another weapon slot"/>
+        <string id="EbiRejectEquip" text="this hero can't equip it here"/>
+        <string id="EbiRejectWeight" text="over the slot's weight limit"/>
+        <string id="EbiRejectCulture" text="wrong culture for the slot's filter"/>
+        <string id="EbiRejectOther" text="it does not match the slot's filter"/>
     </strings>
 </base>

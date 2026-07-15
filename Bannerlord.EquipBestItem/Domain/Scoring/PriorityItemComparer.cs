@@ -1,0 +1,95 @@
+using System.Collections.Generic;
+using TaleWorlds.Core;
+
+namespace Bannerlord.EquipBestItem.Domain.Scoring;
+
+/// <summary>The outcome of a priority comparison: the order used and which rank decided it.</summary>
+public readonly struct PriorityDecision
+{
+    public PriorityDecision(IReadOnlyList<IReadOnlyList<ItemParam>> order, int decidingRank, int winner)
+    {
+        Order = order;
+        DecidingRank = decidingRank;
+        Winner = winner;
+    }
+
+    /// <summary>The resolved rank order (each entry a group of equal-rank stats), most important first.</summary>
+    public IReadOnlyList<IReadOnlyList<ItemParam>> Order { get; }
+
+    /// <summary>Index into <see cref="Order" /> of the rank that broke the tie, or -1 if fully tied.</summary>
+    public int DecidingRank { get; }
+
+    /// <summary>+1 when a wins, -1 when b wins, 0 on a full tie.</summary>
+    public int Winner { get; }
+}
+
+/// <summary>
+///     Lexicographic ranking by the slot's stat-priority order: candidates are
+///     compared on the top-priority group first; only a tie falls through to
+///     the next one. A group of one stat compares that raw stat; a group of
+///     several equal-rank stats compares their combined value on the common
+///     <see cref="ParamScales" /> range, so "hit points = armor" means their
+///     sum decides, not whichever happens to use bigger numbers.
+/// </summary>
+public sealed class PriorityItemComparer : IItemComparer
+{
+    // Stats are ints at heart (armor, damage, speed); anything closer than
+    // this is the same value wearing float rounding. Scaled group sums live
+    // on a ~0..1 range where the same tolerance suits.
+    private const float Epsilon = 0.001f;
+
+    private readonly ItemStatCache _stats;
+
+    public PriorityItemComparer(ItemStatCache stats)
+    {
+        _stats = stats;
+    }
+
+    public int Compare(EquipmentElement a, EquipmentElement b, in SearchContext context) =>
+        Explain(a, b, context).Winner;
+
+    /// <summary>
+    ///     The full comparison: the resolved order and the rank that decided
+    ///     it. Sharing this with <see cref="Compare" /> keeps an explanation in
+    ///     lockstep with the ranking.
+    /// </summary>
+    public PriorityDecision Explain(EquipmentElement a, EquipmentElement b, in SearchContext context)
+    {
+        var harness = context.Equipment[EquipmentIndex.HorseHarness];
+        var statsA = _stats.GetStats(a, harness);
+        var statsB = _stats.GetStats(b, harness);
+
+        // "As equipped" slots only ever compare items of the equipped item's
+        // class, so its class-specific order applies — the generic weapon
+        // order would rank a shield by thrust damage before hit points.
+        var order = context.Query.Priorities
+                    ?? DefaultPriorities.GroupsFor(context.Slot,
+                        context.Query.WeaponCategory?.Class
+                        ?? context.Equipment[context.Slot].Item?.PrimaryWeapon?.WeaponClass);
+
+        for (var i = 0; i < order.Count; i++)
+        {
+            var group = order[i];
+            float diff;
+
+            if (group.Count == 1)
+            {
+                diff = statsA[(int)group[0]] - statsB[(int)group[0]];
+            }
+            else
+            {
+                diff = 0f;
+                for (var j = 0; j < group.Count; j++)
+                {
+                    var param = (int)group[j];
+                    diff += (statsA[param] - statsB[param]) * ParamScales.Inverse[param];
+                }
+            }
+
+            if (diff > Epsilon) return new PriorityDecision(order, i, 1);
+            if (diff < -Epsilon) return new PriorityDecision(order, i, -1);
+        }
+
+        return new PriorityDecision(order, -1, 0);
+    }
+}

@@ -39,7 +39,9 @@ public sealed class BestItemFinder
         Func<SPItemVM, bool>? exclude,
         params MBBindingList<SPItemVM>?[] candidateLists)
     {
-        var bestScore = GetCurrentSlotScore(context, scorer);
+        var hasBaseline = CurrentSetsBaseline(context);
+        var baseline = context.Equipment[context.Slot];
+        var bestScore = hasBaseline ? scorer.Score(baseline, context) : 0f;
         SPItemVM? best = null;
 
         foreach (var list in candidateLists)
@@ -52,10 +54,55 @@ public sealed class BestItemFinder
                 if (item is null || exclude?.Invoke(item) == true) continue;
                 if (!PassesAllFilters(item, context)) continue;
 
-                var score = scorer.Score(item.ItemRosterElement.EquipmentElement, context);
+                var element = item.ItemRosterElement.EquipmentElement;
+
+                // The scorer decides what counts as a worthwhile upgrade over
+                // the equipped item (margin/dominance); ranking among the
+                // candidates themselves stays a plain argmax.
+                if (hasBaseline && !scorer.BeatsCurrent(element, baseline, context)) continue;
+
+                var score = scorer.Score(element, context);
                 if (score <= bestScore) continue;
 
                 bestScore = score;
+                best = item;
+            }
+        }
+
+        return best;
+    }
+
+    /// <summary>
+    ///     Comparer-based search for modes without a scalar score: the winner
+    ///     must strictly beat the current slot item (when it sets a baseline)
+    ///     and every other candidate. An empty or dismissed slot means any
+    ///     valid candidate qualifies.
+    /// </summary>
+    public SPItemVM? FindBest(
+        in SearchContext context,
+        IItemComparer comparer,
+        Func<SPItemVM, bool>? exclude,
+        params MBBindingList<SPItemVM>?[] candidateLists)
+    {
+        var hasBaseline = CurrentSetsBaseline(context);
+        var baseline = context.Equipment[context.Slot];
+        SPItemVM? best = null;
+
+        foreach (var list in candidateLists)
+        {
+            if (list is null) continue;
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                var item = list[i];
+                if (item is null || exclude?.Invoke(item) == true) continue;
+                if (!PassesAllFilters(item, context)) continue;
+
+                var element = item.ItemRosterElement.EquipmentElement;
+                if (hasBaseline && comparer.Compare(element, baseline, context) <= 0) continue;
+                if (best is not null &&
+                    comparer.Compare(element, best.ItemRosterElement.EquipmentElement, context) <= 0) continue;
+
                 best = item;
             }
         }
@@ -71,17 +118,19 @@ public sealed class BestItemFinder
         return true;
     }
 
-    private static float GetCurrentSlotScore(in SearchContext context, IItemScorer scorer)
+    /// <summary>
+    ///     A pinned weapon category the current item does not match means the
+    ///     player wants a replacement, so the current item sets no baseline.
+    /// </summary>
+    private static bool CurrentSetsBaseline(in SearchContext context)
     {
         var current = context.Equipment[context.Slot];
-        if (current.IsEmpty || current.Item is null) return 0f;
+        if (current.IsEmpty || current.Item is null) return false;
 
-        // A pinned weapon class different from the current item means the player
-        // wants a replacement, so the current item sets no baseline.
-        if (context.Query.WeaponClass is { } pinnedClass &&
-            current.Item.PrimaryWeapon?.WeaponClass != pinnedClass)
-            return 0f;
+        if (context.Query.WeaponCategory is { } pinned &&
+            (current.Item.PrimaryWeapon is not { } currentWeapon || !pinned.Matches(currentWeapon)))
+            return false;
 
-        return scorer.Score(current, context);
+        return true;
     }
 }
