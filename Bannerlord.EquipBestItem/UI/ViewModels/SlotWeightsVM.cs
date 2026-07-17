@@ -157,7 +157,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string DefaultButtonText { get; } =
-        new TextObject("{=ebi_default}Default").ToString();
+        new TextObject("{=ebi_default}Restore template").ToString();
 
     [DataSourceProperty]
     public string LockButtonText { get; } =
@@ -165,7 +165,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string MakeDefaultButtonText { get; } =
-        new TextObject("{=EbiMakeDefault}Set as default").ToString();
+        new TextObject("{=EbiMakeDefault}Save template").ToString();
 
     [DataSourceProperty]
     public string ClearButtonText { get; } =
@@ -173,7 +173,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public HintViewModel ClearButtonHint { get; } = new(new TextObject(
-        "{=EbiClearHint}Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"));
+        "{=EbiClearHint}Reset the stat preferences to their initial values; weapon class, culture and weight limit stay"));
 
     [DataSourceProperty]
     public string ExplainButtonText { get; } =
@@ -185,9 +185,9 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string OnDefaultText { get; } =
-        new TextObject("{=EbiOnDefault}Default values").ToString();
+        new TextObject("{=EbiOnDefault}The slot follows the template").ToString();
 
-    /// <summary>True while the hero follows the defaults for this slot (no override of their own).</summary>
+    /// <summary>True while the hero follows the template for this slot (no override of their own).</summary>
     [DataSourceProperty]
     public bool IsOnDefault
     {
@@ -197,16 +197,21 @@ public sealed class SlotWeightsVM : ViewModel
             if (value == _isOnDefault) return;
             _isOnDefault = value;
             OnPropertyChangedWithValue(value);
+            OnPropertyChanged(nameof(CanSaveDefault));
         }
     }
 
+    /// <summary>The save button shows only while there is something to save.</summary>
+    [DataSourceProperty]
+    public bool CanSaveDefault => !IsOnDefault;
+
     [DataSourceProperty]
     public HintViewModel MakeDefaultButtonHint { get; } = new(new TextObject(
-        "{=EbiHintMakeDefault}Save this slot's filter as the default for every hero without their own settings"));
+        "{=EbiHintMakeDefault}Save this slot's filter as the template for every hero without their own settings"));
 
     [DataSourceProperty]
     public HintViewModel DefaultButtonHint { get; } =
-        new(new TextObject("{=ebi_hint_default}Reset to default values"));
+        new(new TextObject("{=ebi_hint_default}Return this slot to the saved template"));
 
     [DataSourceProperty]
     public HintViewModel LockButtonHint { get; } =

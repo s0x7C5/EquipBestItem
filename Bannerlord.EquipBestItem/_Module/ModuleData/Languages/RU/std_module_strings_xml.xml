@@ -10,7 +10,7 @@
         <string id="EbiEffectivenessNote" text="Предметы ранжируются встроенной оценкой эффективности игры; веса статов не применяются."/>
         <string id="EbiExplain" text="Почему?"/>
         <string id="EbiClear" text="Очистить"/>
-        <string id="EbiClearHint" text="Сбросить веса/порядок к значениям по умолчанию; класс оружия, культура и лимит веса сохраняются"/>
+        <string id="EbiClearHint" text="Сбросить веса/порядок к исходным значениям; класс оружия, культура и лимит веса сохраняются"/>
         <string id="EbiExplainHint" text="Объяснить выбор для этого слота в логе сообщений"/>
         <string id="EbiWhySlotLocked" text="Этот слот исключён из поиска."/>
         <string id="EbiWhyNothingBetter" text="Ничего заметно лучше, чем {CURRENT}."/>
@@ -38,9 +38,9 @@
         <string id="EbiRejectOther" text="не соответствует фильтру слота"/>
         <string id="EbiShortBow" text="Короткий лук"/>
         <string id="EbiLongBow" text="Длинный лук"/>
-        <string id="ebi_default" text="По умолчанию"/>
+        <string id="ebi_default" text="Вернуть шаблон"/>
         <string id="ebi_lock" text="Отключить"/>
-        <string id="ebi_hint_default" text="Сбросить к значениям по умолчанию"/>
+        <string id="ebi_hint_default" text="Вернуть слот к сохранённому шаблону"/>
         <string id="ebi_hint_lock" text="Отключить поиск для данного слота"/>
         <string id="EbiHintEquipCurrent" text="Снарядить текущего персонажа лучшими предметами"/>
         <string id="EbiHintEquipAll" text="Снарядить всех героев отряда лучшими предметами"/>
@@ -90,8 +90,8 @@
         <string id="EbiAiConnectionOk" text="Соединение установлено: {ENDPOINT} (модель: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Ошибка соединения: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Настроен Anthropic API; ключ проверяется при первом запросе."/>
-        <string id="EbiMakeDefault" text="Сделать дефолтом"/>
-        <string id="EbiHintMakeDefault" text="Сохранить фильтр слота как значение по умолчанию для всех героев без собственных настроек"/>
-        <string id="EbiOnDefault" text="Значения по умолчанию"/>
+        <string id="EbiMakeDefault" text="Сохранить шаблон"/>
+        <string id="EbiHintMakeDefault" text="Сохранить фильтр слота как шаблон для всех героев без собственных настроек"/>
+        <string id="EbiOnDefault" text="Слот выставлен по шаблону"/>
     </strings>
 </base>

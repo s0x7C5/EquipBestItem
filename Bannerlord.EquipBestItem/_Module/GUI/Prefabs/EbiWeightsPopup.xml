@@ -22,24 +22,20 @@
                         <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="540"
                                      HorizontalAlignment="Center" MarginTop="30" MarginBottom="30" Brush="Frame1Brush">
                             <Children>
-                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                           MarginTop="14" MarginBottom="14" MarginLeft="25" MarginRight="25"
-                                           StackLayout.LayoutMethod="VerticalTopToBottom">
+                                <!-- Vertical stacks use EbiVerticalStackPanel: the XML LayoutMethod
+                                     names resolve differently across game versions (see the widget). -->
+                                <EbiVerticalStackPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                           MarginTop="14" MarginBottom="14" MarginLeft="25" MarginRight="25">
                                     <Children>
 
-                                        <!-- Header with the "default values" marker on its right,
-                                             shown while the hero follows the defaults for this slot -->
+                                        <!-- Slot name header; the "using template" marker lives in the
+                                             actions block, in the save button's place -->
                                         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
                                                 SuggestedHeight="40">
                                             <Children>
                                                 <TextWidget WidthSizePolicy="StretchToParent"
                                                             HeightSizePolicy="StretchToParent"
                                                             Brush="Popup.Button.Text" Text="@HeaderText"/>
-                                                <TextWidget IsVisible="@IsOnDefault" WidthSizePolicy="CoverChildren"
-                                                            HeightSizePolicy="StretchToParent"
-                                                            HorizontalAlignment="Right"
-                                                            Brush="EquipBestItem.Label.Left"
-                                                            Text="@OnDefaultText"/>
                                             </Children>
                                         </Widget>
 
@@ -151,9 +147,8 @@
                                                     Text="@EffectivenessNoteText"/>
 
                                         <!-- One template row per visible parameter (weights mode) -->
-                                        <ListPanel IsVisible="@IsWeightsMode" DataSource="{Rows}" WidthSizePolicy="StretchToParent"
-                                                   HeightSizePolicy="CoverChildren" MarginTop="6"
-                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                        <EbiVerticalStackPanel IsVisible="@IsWeightsMode" DataSource="{Rows}" WidthSizePolicy="StretchToParent"
+                                                   HeightSizePolicy="CoverChildren" MarginTop="6">
                                             <ItemTemplate>
                                                 <ListPanel WidthSizePolicy="CoverChildren" HorizontalAlignment="Center" HeightSizePolicy="Fixed" SuggestedHeight="44" StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
@@ -211,7 +206,7 @@
                                                     </Children>
                                                 </ListPanel>
                                             </ItemTemplate>
-                                        </ListPanel>
+                                        </EbiVerticalStackPanel>
 
                                         <!-- Priority mode: draggable stat chips grouped into ranks.
                                              Dropping a chip onto a row's center band links it into
@@ -225,8 +220,7 @@
                                                    HeightSizePolicy="CoverChildren" MarginTop="10"
                                                    AcceptDrop="true" DropEventHandledManually="true"
                                                    Command.Drop="..\ExecuteReorderChip"
-                                                   CommandParameter.Drop="PriorityRows"
-                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                                   CommandParameter.Drop="PriorityRows">
                                             <ItemTemplate>
                                                 <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
                                                         SuggestedHeight="56">
@@ -322,16 +316,18 @@
                                              the whole override), then Clear / Lock (reset only the
                                              stat preferences / exclude the slot). Row two hides in
                                              Effectiveness mode where neither applies. -->
-                                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                                   MarginTop="10" HorizontalAlignment="Center"
-                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                        <EbiVerticalStackPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                   MarginTop="10" HorizontalAlignment="Center">
                                             <Children>
+                                                <!-- While the slot already follows the template both buttons
+                                                     hide and the centered marker takes the row's place -->
                                                 <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                                                            HorizontalAlignment="Center"
                                                            StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
-                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                        <ButtonWidget IsVisible="@CanSaveDefault" DoNotPassEventsToChildren="true"
+                                                                      WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="235"
                                                                       SuggestedHeight="50" Brush="Popup.Button.Base"
                                                                       Command.Click="ExecuteReset" UpdateChildrenStates="true">
                                                             <Children>
@@ -347,8 +343,9 @@
                                                                             Text="@DefaultButtonText"/>
                                                             </Children>
                                                         </ButtonWidget>
-                                                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                        <ButtonWidget IsVisible="@CanSaveDefault" DoNotPassEventsToChildren="true"
+                                                                      WidthSizePolicy="Fixed"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="235"
                                                                       SuggestedHeight="50" MarginLeft="10"
                                                                       Brush="Popup.Button.Base"
                                                                       Command.Click="ExecuteMakeDefault"
@@ -366,6 +363,11 @@
                                                                             Text="@MakeDefaultButtonText"/>
                                                             </Children>
                                                         </ButtonWidget>
+                                                        <TextWidget IsVisible="@IsOnDefault" WidthSizePolicy="CoverChildren"
+                                                                    HeightSizePolicy="Fixed" SuggestedHeight="50"
+                                                                    VerticalAlignment="Center"
+                                                                    Brush="EquipBestItem.Label.Left"
+                                                                    Text="@OnDefaultText"/>
                                                     </Children>
                                                 </ListPanel>
                                                 <ListPanel IsVisible="@IsLockVisible" WidthSizePolicy="CoverChildren"
@@ -374,7 +376,7 @@
                                                            StackLayout.LayoutMethod="HorizontalLeftToRight">
                                                     <Children>
                                                         <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="235"
                                                                       SuggestedHeight="50" Brush="Popup.Button.Base"
                                                                       Command.Click="ExecuteClear" UpdateChildrenStates="true">
                                                             <Children>
@@ -391,7 +393,7 @@
                                                             </Children>
                                                         </ButtonWidget>
                                                         <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed"
-                                                                      HeightSizePolicy="Fixed" SuggestedWidth="215"
+                                                                      HeightSizePolicy="Fixed" SuggestedWidth="235"
                                                                       SuggestedHeight="50" MarginLeft="10"
                                                                       Brush="Popup.Button.Base" Command.Click="ExecuteLock"
                                                                       UpdateChildrenStates="true">
@@ -411,10 +413,10 @@
                                                     </Children>
                                                 </ListPanel>
                                             </Children>
-                                        </ListPanel>
+                                        </EbiVerticalStackPanel>
 
                                     </Children>
-                                </ListPanel>
+                                </EbiVerticalStackPanel>
                             </Children>
                         </BrushWidget>
 
@@ -444,9 +446,8 @@
                                 <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="940"
                                              HorizontalAlignment="Center" MarginTop="30" MarginBottom="30" Brush="Frame1Brush">
                                     <Children>
-                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                                   MarginTop="20" MarginBottom="25" MarginLeft="30" MarginRight="30"
-                                                   StackLayout.LayoutMethod="VerticalTopToBottom">
+                                        <EbiVerticalStackPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                   MarginTop="20" MarginBottom="25" MarginLeft="30" MarginRight="30">
                                             <Children>
 
                                                 <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed"
@@ -503,7 +504,7 @@
                                                 </ListPanel>
 
                                             </Children>
-                                        </ListPanel>
+                                        </EbiVerticalStackPanel>
                                     </Children>
                                 </BrushWidget>
 

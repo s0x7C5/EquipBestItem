@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Os itens são classificados pela pontuação de efetividade integrada do jogo; os pesos de atributos não se aplicam."/>
         <string id="EbiExplain" text="Por quê?"/>
         <string id="EbiClear" text="Limpar"/>
-        <string id="EbiClearHint" text="Restaura os pesos/a ordem aos padrões do slot; classe de arma, cultura e limite de peso permanecem"/>
+        <string id="EbiClearHint" text="Restaura os pesos/a ordem aos valores iniciais; classe de arma, cultura e limite de peso permanecem"/>
         <string id="EbiExplainHint" text="Explica a escolha deste slot no registro de mensagens"/>
         <string id="EbiShortBow" text="Arco curto"/>
         <string id="EbiLongBow" text="Arco longo"/>
-        <string id="ebi_default" text="Padrão"/>
+        <string id="ebi_default" text="Restaurar modelo"/>
         <string id="ebi_lock" text="Bloquear"/>
-        <string id="ebi_hint_default" text="Redefinir para os valores padrão"/>
+        <string id="ebi_hint_default" text="Retornar este espaço ao modelo salvo"/>
         <string id="ebi_hint_lock" text="Desativar a busca para este espaço"/>
         <string id="EbiHintEquipCurrent" text="Equipar o personagem atual com os melhores itens"/>
         <string id="EbiHintEquipAll" text="Equipar todos os heróis do grupo com os melhores itens"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="Conexão OK: {ENDPOINT} (modelo: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Falha na conexão: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="A API da Anthropic está configurada; a chave é verificada na primeira solicitação."/>
-        <string id="EbiMakeDefault" text="Tornar padrão"/>
-        <string id="EbiHintMakeDefault" text="Salva o filtro deste espaço como padrão para todos os heróis sem configurações próprias"/>
-        <string id="EbiOnDefault" text="Valores padrão"/>
+        <string id="EbiMakeDefault" text="Salvar modelo"/>
+        <string id="EbiHintMakeDefault" text="Salva o filtro deste espaço como modelo para todos os heróis sem configurações próprias"/>
+        <string id="EbiOnDefault" text="O espaço segue o modelo"/>
         <string id="EbiWhySlotLocked" text="Este espaço está excluído da busca."/>
         <string id="EbiWhyNothingBetter" text="Nada claramente melhor que {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Nada encontrado para este espaço."/>

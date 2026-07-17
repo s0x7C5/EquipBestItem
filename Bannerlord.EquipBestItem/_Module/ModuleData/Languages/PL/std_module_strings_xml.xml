@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Przedmioty są oceniane wbudowaną oceną efektywności gry; wagi statystyk nie mają zastosowania."/>
         <string id="EbiExplain" text="Dlaczego?"/>
         <string id="EbiClear" text="Wyczyść"/>
-        <string id="EbiClearHint" text="Przywraca wagi/kolejność do domyślnych dla slotu; klasa broni, kultura i limit wagi zostają"/>
+        <string id="EbiClearHint" text="Przywraca wagi/kolejność do wartości początkowych; klasa broni, kultura i limit wagi zostają"/>
         <string id="EbiExplainHint" text="Wyjaśnia wybór dla tego slotu w dzienniku wiadomości"/>
         <string id="EbiShortBow" text="Krótki łuk"/>
         <string id="EbiLongBow" text="Długi łuk"/>
-        <string id="ebi_default" text="Domyślne"/>
+        <string id="ebi_default" text="Przywróć szablon"/>
         <string id="ebi_lock" text="Zablokuj"/>
-        <string id="ebi_hint_default" text="Przywróć wartości domyślne"/>
+        <string id="ebi_hint_default" text="Przywróć ten slot do zapisanego szablonu"/>
         <string id="ebi_hint_lock" text="Wyłącz wyszukiwanie dla tego slotu"/>
         <string id="EbiHintEquipCurrent" text="Wyposaż obecną postać w najlepsze przedmioty"/>
         <string id="EbiHintEquipAll" text="Wyposaż wszystkich bohaterów drużyny w najlepsze przedmioty"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="Połączenie OK: {ENDPOINT} (model: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Błąd połączenia: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="API Anthropic jest skonfigurowane; klucz zostanie sprawdzony przy pierwszym żądaniu."/>
-        <string id="EbiMakeDefault" text="Ustaw jako domyślne"/>
-        <string id="EbiHintMakeDefault" text="Zapisuje filtr tego slotu jako domyślny dla wszystkich bohaterów bez własnych ustawień"/>
-        <string id="EbiOnDefault" text="Wartości domyślne"/>
+        <string id="EbiMakeDefault" text="Zapisz szablon"/>
+        <string id="EbiHintMakeDefault" text="Zapisuje filtr tego slotu jako szablon dla wszystkich bohaterów bez własnych ustawień"/>
+        <string id="EbiOnDefault" text="Slot ustawiony według szablonu"/>
         <string id="EbiWhySlotLocked" text="Ten slot jest wyłączony z wyszukiwania."/>
         <string id="EbiWhyNothingBetter" text="Nic wyraźnie lepszego niż {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Nic nie znaleziono dla tego slotu."/>

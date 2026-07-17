@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="物品按游戏内置的效能评分排序；属性权重不生效。"/>
         <string id="EbiExplain" text="为什么？"/>
         <string id="EbiClear" text="清除"/>
-        <string id="EbiClearHint" text="将权重/顺序重置为该槽位的默认值；武器类别、文化和重量限制保持不变"/>
+        <string id="EbiClearHint" text="将权重/顺序重置为初始值；武器类别、文化和重量限制保持不变"/>
         <string id="EbiExplainHint" text="在消息日志中解释此槽位的选择"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="长弓"/>
-        <string id="ebi_default" text="默认"/>
+        <string id="ebi_default" text="恢复模板"/>
         <string id="ebi_lock" text="锁定"/>
-        <string id="ebi_hint_default" text="重置为默认值"/>
+        <string id="ebi_hint_default" text="将该槽位恢复为已保存的模板"/>
         <string id="ebi_hint_lock" text="禁用该槽位的搜索"/>
         <string id="EbiHintEquipCurrent" text="为当前角色装备最佳物品"/>
         <string id="EbiHintEquipAll" text="为队伍中所有英雄装备最佳物品"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="连接正常：{ENDPOINT}（模型：{MODEL}）。"/>
         <string id="EbiAiConnectionFail" text="连接失败：{ERROR}"/>
         <string id="EbiAiAnthropicNote" text="已配置 Anthropic API；密钥将在首次请求时验证。"/>
-        <string id="EbiMakeDefault" text="设为默认"/>
-        <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为所有未自定义英雄的默认值"/>
-        <string id="EbiOnDefault" text="默认值"/>
+        <string id="EbiMakeDefault" text="保存模板"/>
+        <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为模板，应用于所有未自定义的英雄"/>
+        <string id="EbiOnDefault" text="该槽位按模板设置"/>
         <string id="EbiWhySlotLocked" text="该槽位已被排除在搜索之外。"/>
         <string id="EbiWhyNothingBetter" text="没有明显优于{CURRENT}的物品。"/>
         <string id="EbiWhyNothingFound" text="该槽位没有找到任何物品。"/>

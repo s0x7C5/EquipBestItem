@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Les objets sont classés selon le score d'efficacité intégré du jeu ; les poids des stats ne s'appliquent pas."/>
         <string id="EbiExplain" text="Pourquoi ?"/>
         <string id="EbiClear" text="Effacer"/>
-        <string id="EbiClearHint" text="Réinitialise les poids/l'ordre aux valeurs par défaut ; classe d'arme, culture et limite de poids conservées"/>
+        <string id="EbiClearHint" text="Réinitialise les poids/l'ordre aux valeurs initiales ; classe d'arme, culture et limite de poids conservées"/>
         <string id="EbiExplainHint" text="Explique le choix de cet emplacement dans le journal des messages"/>
         <string id="EbiShortBow" text="Arc court"/>
         <string id="EbiLongBow" text="Arc long"/>
-        <string id="ebi_default" text="Défaut"/>
+        <string id="ebi_default" text="Rétablir le modèle"/>
         <string id="ebi_lock" text="Verrouiller"/>
-        <string id="ebi_hint_default" text="Réinitialiser aux valeurs par défaut"/>
+        <string id="ebi_hint_default" text="Ramener cet emplacement au modèle enregistré"/>
         <string id="ebi_hint_lock" text="Désactiver la recherche pour cet emplacement"/>
         <string id="EbiHintEquipCurrent" text="Équiper le personnage actuel avec les meilleurs objets"/>
         <string id="EbiHintEquipAll" text="Équiper tous les héros du groupe avec les meilleurs objets"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="Connexion OK : {ENDPOINT} (modèle : {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Échec de la connexion : {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="L'API Anthropic est configurée ; la clé sera vérifiée à la première requête."/>
-        <string id="EbiMakeDefault" text="Définir par défaut"/>
-        <string id="EbiHintMakeDefault" text="Enregistre le filtre de cet emplacement comme valeur par défaut pour tous les héros sans réglages propres"/>
-        <string id="EbiOnDefault" text="Valeurs par défaut"/>
+        <string id="EbiMakeDefault" text="Enregistrer le modèle"/>
+        <string id="EbiHintMakeDefault" text="Enregistre le filtre de cet emplacement comme modèle pour tous les héros sans réglages propres"/>
+        <string id="EbiOnDefault" text="L'emplacement suit le modèle"/>
         <string id="EbiWhySlotLocked" text="Cet emplacement est exclu de la recherche."/>
         <string id="EbiWhyNothingBetter" text="Rien de nettement meilleur que {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Rien trouvé pour cet emplacement."/>

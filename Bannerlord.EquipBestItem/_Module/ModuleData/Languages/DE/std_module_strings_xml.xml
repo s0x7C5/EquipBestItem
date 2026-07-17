@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Gegenstände werden nach der spieleigenen Effektivitätswertung sortiert; Wertegewichte gelten nicht."/>
         <string id="EbiExplain" text="Warum?"/>
         <string id="EbiClear" text="Leeren"/>
-        <string id="EbiClearHint" text="Setzt die Wertegewichte/Reihenfolge auf die Slot-Vorgaben zurück; Waffenklasse, Kultur und Gewichtslimit bleiben"/>
+        <string id="EbiClearHint" text="Setzt die Wertegewichte/Reihenfolge auf die Ausgangswerte zurück; Waffenklasse, Kultur und Gewichtslimit bleiben"/>
         <string id="EbiExplainHint" text="Erklärt die Wahl für diesen Slot im Nachrichtenprotokoll"/>
         <string id="EbiShortBow" text="Kurzbogen"/>
         <string id="EbiLongBow" text="Langbogen"/>
-        <string id="ebi_default" text="Standard"/>
+        <string id="ebi_default" text="Vorlage laden"/>
         <string id="ebi_lock" text="Sperren"/>
-        <string id="ebi_hint_default" text="Auf Standardwerte zurücksetzen"/>
+        <string id="ebi_hint_default" text="Diesen Slot auf die gespeicherte Vorlage zurücksetzen"/>
         <string id="ebi_hint_lock" text="Suche für diesen Slot deaktivieren"/>
         <string id="EbiHintEquipCurrent" text="Aktuellen Charakter mit den besten Gegenständen ausrüsten"/>
         <string id="EbiHintEquipAll" text="Alle Helden der Gruppe mit den besten Gegenständen ausrüsten"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="Verbindung OK: {ENDPOINT} (Modell: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Verbindung fehlgeschlagen: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic-API ist konfiguriert; der Schlüssel wird bei der ersten Anfrage geprüft."/>
-        <string id="EbiMakeDefault" text="Als Standard"/>
-        <string id="EbiHintMakeDefault" text="Speichert den Filter dieses Slots als Standard für alle Helden ohne eigene Einstellungen"/>
-        <string id="EbiOnDefault" text="Standardwerte"/>
+        <string id="EbiMakeDefault" text="Vorlage speichern"/>
+        <string id="EbiHintMakeDefault" text="Speichert den Filter dieses Slots als Vorlage für alle Helden ohne eigene Einstellungen"/>
+        <string id="EbiOnDefault" text="Slot folgt der Vorlage"/>
         <string id="EbiWhySlotLocked" text="Dieser Slot ist von der Suche ausgeschlossen."/>
         <string id="EbiWhyNothingBetter" text="Nichts ist deutlich besser als {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Für diesen Slot wurde nichts gefunden."/>

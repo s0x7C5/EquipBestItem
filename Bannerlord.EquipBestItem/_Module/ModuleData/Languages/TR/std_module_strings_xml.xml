@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Eşyalar oyunun yerleşik etkinlik puanına göre sıralanır; özellik ağırlıkları uygulanmaz."/>
         <string id="EbiExplain" text="Neden?"/>
         <string id="EbiClear" text="Temizle"/>
-        <string id="EbiClearHint" text="Ağırlıkları/sırayı yuvanın varsayılanına döndürür; silah sınıfı, kültür ve ağırlık limiti korunur"/>
+        <string id="EbiClearHint" text="Ağırlıkları/sırayı başlangıç değerlerine döndürür; silah sınıfı, kültür ve ağırlık limiti korunur"/>
         <string id="EbiExplainHint" text="Bu yuvanın seçimini mesaj günlüğünde açıklar"/>
         <string id="EbiShortBow" text="Kısa yay"/>
         <string id="EbiLongBow" text="Uzun yay"/>
-        <string id="ebi_default" text="Varsayılan"/>
+        <string id="ebi_default" text="Şablonu geri yükle"/>
         <string id="ebi_lock" text="Kilitle"/>
-        <string id="ebi_hint_default" text="Varsayılan değerlere sıfırla"/>
+        <string id="ebi_hint_default" text="Bu yuvayı kayıtlı şablona döndürür"/>
         <string id="ebi_hint_lock" text="Bu yuva için aramayı devre dışı bırak"/>
         <string id="EbiHintEquipCurrent" text="Mevcut karakteri en iyi eşyalarla kuşandır"/>
         <string id="EbiHintEquipAll" text="Gruptaki tüm kahramanları en iyi eşyalarla kuşandır"/>
@@ -66,9 +66,9 @@
         <string id="EbiAiConnectionOk" text="Bağlantı tamam: {ENDPOINT} (model: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Bağlantı başarısız: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic API'si yapılandırıldı; anahtar ilk istekte doğrulanır."/>
-        <string id="EbiMakeDefault" text="Varsayılan yap"/>
-        <string id="EbiHintMakeDefault" text="Bu yuvanın filtresini kendi ayarı olmayan tüm kahramanlar için varsayılan olarak kaydeder"/>
-        <string id="EbiOnDefault" text="Varsayılan değerler"/>
+        <string id="EbiMakeDefault" text="Şablonu kaydet"/>
+        <string id="EbiHintMakeDefault" text="Bu yuvanın filtresini kendi ayarı olmayan tüm kahramanlar için şablon olarak kaydeder"/>
+        <string id="EbiOnDefault" text="Yuva şablona göre ayarlı"/>
         <string id="EbiWhySlotLocked" text="Bu yuva aramanın dışında tutuluyor."/>
         <string id="EbiWhyNothingBetter" text="{CURRENT} eşyasından belirgin şekilde iyisi yok."/>
         <string id="EbiWhyNothingFound" text="Bu yuva için bir şey bulunamadı."/>
