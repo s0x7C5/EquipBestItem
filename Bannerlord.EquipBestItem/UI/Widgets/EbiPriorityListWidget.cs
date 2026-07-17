@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Bannerlord.EquipBestItem.Compat;
 using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
 
@@ -24,7 +25,7 @@ namespace Bannerlord.EquipBestItem.UI.Widgets;
 ///     Vector2 is a different type identity than the game's — static member
 ///     references throw Missing(Method|Field)Exception at runtime.
 /// </summary>
-public sealed class EbiPriorityListWidget : ListPanel
+public sealed class EbiPriorityListWidget : EbiVerticalStackPanel
 {
     private const string TopLineId = "EbiRowInsertTop";
     private const string BottomLineId = "EbiRowInsertBottom";
@@ -138,7 +139,7 @@ public sealed class EbiPriorityListWidget : ListPanel
         // The engine drag-hovers this list whenever a chip is dragged over it
         // but not over a row's link band — exactly when a drop would insert.
         var show = EventManager.DraggedWidget is not null &&
-                   ReferenceEquals(EventManager.DragHoveredWidget, this);
+                   ReferenceEquals(GameCompat.GetDragHoveredWidget(EventManager), this);
 
         var index = show ? ComputeInsertIndex() : -1;
 

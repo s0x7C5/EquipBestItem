@@ -1,4 +1,5 @@
 using System;
+using Bannerlord.EquipBestItem.Compat;
 using TaleWorlds.GauntletUI;
 using TaleWorlds.GauntletUI.BaseTypes;
 
@@ -49,7 +50,7 @@ public sealed class EbiLinkDropZoneWidget : ListPanel
             if (_glow is null) return;
 
             _glow.IsVisible = EventManager.DraggedWidget is not null &&
-                              ReferenceEquals(EventManager.DragHoveredWidget, this);
+                              ReferenceEquals(GameCompat.GetDragHoveredWidget(EventManager), this);
         }
         catch (Exception exception)
         {
