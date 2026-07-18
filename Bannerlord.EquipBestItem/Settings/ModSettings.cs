@@ -34,7 +34,7 @@ public sealed class ModSettings
     ///     by this many percent before a swap is suggested. Candidates not
     ///     worse in any weighted stat always pass. 0 disables the threshold.
     /// </summary>
-    public int UpgradeMarginPercent { get; set; } = 5;
+    public int UpgradeMarginPercent { get; set; } = 1;
 
     public AiSettings Ai { get; set; } = new();
 

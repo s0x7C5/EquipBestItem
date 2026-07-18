@@ -21,8 +21,8 @@ public sealed class WeightedItemScorer : IItemScorer
     // (player-configurable, 0 = off) before it is suggested; stat-dominant
     // candidates pass without it. Kills both the "swapped two near-identical
     // shields" churn and lopsided trades. Scores near zero use the floor
-    // instead, so the margin stays meaningful there (at the default 5% this
-    // reproduces the old fixed 0.01 step).
+    // instead, so the margin stays meaningful there (at 5% this reproduces
+    // the historical fixed 0.01 step).
     private const float MarginScoreFloor = 0.2f;
     private const float StatEpsilon = 0.001f;
 
