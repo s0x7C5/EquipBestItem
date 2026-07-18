@@ -134,19 +134,23 @@ public sealed class ItemExplainer
         }
 
         // Nothing was recommended: the equipped item held its place.
-        explanation.CurrentItemName = ItemName(candidateElement);
         if (mode == SearchMode.Weights &&
             _weighted.Score(candidateElement, context) > _weighted.Score(current, context))
         {
             // Scores higher, but not by the margin the upgrade guard demands.
+            // CurrentItemName stays the equipped item: the message reads
+            // "<named> scores a bit higher than <equipped>".
             explanation.Kind = ExplanationKind.NamedMarginal;
             explanation.FoundItemName = ItemName(candidateElement);
             CompareInto(explanation, context, mode, candidateElement, current);
         }
         else
         {
+            // Here the named item takes the "loser" seat of the template:
+            // "<equipped> is picked over <named>".
             explanation.Kind = ExplanationKind.NamedLoses;
             explanation.FoundItemName = ItemName(current);
+            explanation.CurrentItemName = ItemName(candidateElement);
             CompareInto(explanation, context, mode, current, candidateElement);
         }
 
