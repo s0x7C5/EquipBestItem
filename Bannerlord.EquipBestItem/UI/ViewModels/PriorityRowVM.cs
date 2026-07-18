@@ -55,8 +55,6 @@ public sealed class PriorityRowVM : ViewModel
     public MBBindingList<PriorityChipVM> Chips { get; }
 
     /// <summary>Gauntlet drop handler: a chip was dropped onto this row — make it equal-rank.</summary>
-    public void ExecuteLinkChip(PriorityChipVM chip, int index)
-    {
-        _linkChip(chip, this);
-    }
+    public void ExecuteLinkChip(PriorityChipVM chip, int index) =>
+        GameLog.Guard("priority link", () => _linkChip(chip, this));
 }

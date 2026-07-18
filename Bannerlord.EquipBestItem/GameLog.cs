@@ -1,3 +1,4 @@
+using System;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 
@@ -6,6 +7,24 @@ namespace Bannerlord.EquipBestItem;
 /// <summary>In-game message log.</summary>
 internal static class GameLog
 {
+    /// <summary>
+    ///     Runs a mod entry point so a failure — including a JIT-time
+    ///     MissingMethodException after a game update — is logged instead of
+    ///     crashing the game. The body must stay a delegate: its code is
+    ///     compiled only when invoked, inside the try.
+    /// </summary>
+    internal static void Guard(string action, Action body)
+    {
+        try
+        {
+            body();
+        }
+        catch (Exception exception)
+        {
+            Error($"{action} failed: {exception.Message}");
+        }
+    }
+
     internal static void Info(string text) =>
         InformationManager.DisplayMessage(new InformationMessage(text));
 
