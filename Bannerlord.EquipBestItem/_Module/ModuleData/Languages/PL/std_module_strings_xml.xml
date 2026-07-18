@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Wagi parametrów"/>
         <string id="EbiMcmMethodPriority" text="Priorytet statystyk"/>
         <string id="EbiMcmMethodEffectiveness" text="Ocena efektywności gry"/>
+        <string id="EbiMcmUpgradeMargin" text="Próg wymiany, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Tylko dla metody wag: kandydat kompromisowy (ogólnie lepszy, ale gorszy w niektórych statystykach) musi przewyższyć wynik założonego przedmiotu o ten margines, zanim zamiana zostanie zaproponowana. Przedmioty nie gorsze w żadnej ważonej statystyce są proponowane zawsze. 0 proponuje przy każdej przewadze; wyższe wartości dają spokojniejsze, pewniejsze propozycje."/>
         <string id="EbiMcmButtonColor" text="Kolor przycisków slotów"/>
         <string id="EbiMcmButtonColorHint" text="Odcień przycisków wyposażania dla slotów, #RRGGBB lub #RRGGBBAA. #FFFFFF zachowuje oryginalny wygląd. Stosowane po ponownym otwarciu ekwipunku."/>
         <string id="EbiMcmButtonColorReset" text="Przywróć kolor przycisków"/>

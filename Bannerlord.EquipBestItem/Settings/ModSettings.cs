@@ -28,6 +28,14 @@ public sealed class ModSettings
     /// </summary>
     public string SlotButtonColor { get; set; } = "#FFFFFF";
 
+    /// <summary>
+    ///     Weights method only: a trade-off candidate (better overall but
+    ///     worse in some weighted stat) must beat the equipped item's score
+    ///     by this many percent before a swap is suggested. Candidates not
+    ///     worse in any weighted stat always pass. 0 disables the threshold.
+    /// </summary>
+    public int UpgradeMarginPercent { get; set; } = 5;
+
     public AiSettings Ai { get; set; } = new();
 
     public bool UseEffectiveness =>

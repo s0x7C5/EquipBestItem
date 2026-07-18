@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Pesos de parâmetros"/>
         <string id="EbiMcmMethodPriority" text="Prioridade de atributos"/>
         <string id="EbiMcmMethodEffectiveness" text="Efetividade do jogo"/>
+        <string id="EbiMcmUpgradeMargin" text="Margem de troca, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Somente para o método de pesos: um candidato de compromisso (melhor no geral, mas pior em alguma estatística) precisa superar a pontuação do item equipado por essa margem antes que a troca seja sugerida. Itens que não são piores em nenhuma estatística ponderada são sugeridos sempre. 0 sugere com qualquer vantagem; valores mais altos dão sugestões mais calmas e confiáveis."/>
         <string id="EbiMcmButtonColor" text="Cor dos botões de espaço"/>
         <string id="EbiMcmButtonColorHint" text="Tonalidade dos botões de equipar por espaço, #RRGGBB ou #RRGGBBAA. #FFFFFF mantém a aparência original. Aplicado ao reabrir o inventário."/>
         <string id="EbiMcmButtonColorReset" text="Redefinir a cor dos botões"/>

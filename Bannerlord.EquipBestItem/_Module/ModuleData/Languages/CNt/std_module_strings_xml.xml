@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="參數權重"/>
         <string id="EbiMcmMethodPriority" text="屬性優先級"/>
         <string id="EbiMcmMethodEffectiveness" text="遊戲效能評分"/>
+        <string id="EbiMcmUpgradeMargin" text="替換閾值（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="僅用於權重方法：有取捨的候選（整體更好但某些屬性較差）必須以該幅度超過當前裝備的評分，才會建議更換。在所有加權屬性上都不較差的物品始終會被建議。0 表示只要評分領先即建議；數值越高，建議越穩健。"/>
         <string id="EbiMcmButtonColor" text="欄位按鈕顏色"/>
         <string id="EbiMcmButtonColorHint" text="各欄位裝備按鈕的色調，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外觀。重新開啟物品欄時生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按鈕顏色"/>

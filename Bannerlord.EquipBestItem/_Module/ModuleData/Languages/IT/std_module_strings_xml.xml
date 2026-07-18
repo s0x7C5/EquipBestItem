@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Pesi dei parametri"/>
         <string id="EbiMcmMethodPriority" text="Priorità delle statistiche"/>
         <string id="EbiMcmMethodEffectiveness" text="Efficacia del gioco"/>
+        <string id="EbiMcmUpgradeMargin" text="Margine di sostituzione, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Solo per il metodo dei pesi: un candidato di compromesso (migliore nel complesso ma peggiore in qualche statistica) deve superare il punteggio dell'oggetto equipaggiato di questo margine prima che venga proposto lo scambio. Gli oggetti non peggiori in nessuna statistica pesata vengono proposti comunque. 0 propone a qualsiasi vantaggio; valori più alti danno suggerimenti più calmi e sicuri."/>
         <string id="EbiMcmButtonColor" text="Colore dei pulsanti degli slot"/>
         <string id="EbiMcmButtonColorHint" text="Tinta dei pulsanti di equipaggiamento per slot, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene l'aspetto originale. Applicato alla riapertura dell'inventario."/>
         <string id="EbiMcmButtonColorReset" text="Ripristina il colore dei pulsanti"/>

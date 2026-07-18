@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Poids des paramètres"/>
         <string id="EbiMcmMethodPriority" text="Priorité des stats"/>
         <string id="EbiMcmMethodEffectiveness" text="Score d'efficacité du jeu"/>
+        <string id="EbiMcmUpgradeMargin" text="Marge de remplacement, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Méthode des poids uniquement : un candidat de compromis (meilleur dans l'ensemble mais inférieur sur certaines caractéristiques) doit dépasser la note de l'objet équipé de cette marge avant qu'un échange soit proposé. Les objets inférieurs sur aucune caractéristique pondérée sont toujours proposés. 0 propose au moindre avantage ; des valeurs plus élevées donnent des suggestions plus calmes et plus sûres."/>
         <string id="EbiMcmButtonColor" text="Couleur des boutons d'emplacement"/>
         <string id="EbiMcmButtonColorHint" text="Teinte des boutons d'équipement par emplacement, #RRGGBB ou #RRGGBBAA. #FFFFFF conserve l'apparence d'origine. Appliqué à la réouverture de l'inventaire."/>
         <string id="EbiMcmButtonColorReset" text="Réinitialiser la couleur des boutons"/>

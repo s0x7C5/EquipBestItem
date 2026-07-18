@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="参数权重"/>
         <string id="EbiMcmMethodPriority" text="属性优先级"/>
         <string id="EbiMcmMethodEffectiveness" text="游戏效能评分"/>
+        <string id="EbiMcmUpgradeMargin" text="替换阈值（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="仅用于权重方法：有取舍的候选（总体更好但某些属性更差）必须以该幅度超过当前装备的评分，才会建议更换。在所有加权属性上都不更差的物品始终会被建议。0 表示只要评分领先即建议；数值越高，建议越稳健。"/>
         <string id="EbiMcmButtonColor" text="槽位按钮颜色"/>
         <string id="EbiMcmButtonColorHint" text="各槽位装备按钮的色调，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外观。重新打开物品栏时生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按钮颜色"/>

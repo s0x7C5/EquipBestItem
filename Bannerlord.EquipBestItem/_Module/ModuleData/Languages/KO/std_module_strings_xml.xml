@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="능력치 가중치"/>
         <string id="EbiMcmMethodPriority" text="능력치 우선순위"/>
         <string id="EbiMcmMethodEffectiveness" text="게임 효율 점수"/>
+        <string id="EbiMcmUpgradeMargin" text="교체 문턱값, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="가중치 방식 전용: 절충형 후보(전체적으로 더 좋지만 일부 능력치는 더 낮음)는 장착 중인 아이템의 점수를 이 비율만큼 넘어야 교체가 제안됩니다. 가중치가 있는 어떤 능력치에서도 뒤지지 않는 아이템은 항상 제안됩니다. 0은 점수가 조금이라도 높으면 제안하며, 값이 높을수록 더 신중하고 확실한 제안을 합니다."/>
         <string id="EbiMcmButtonColor" text="슬롯 버튼 색상"/>
         <string id="EbiMcmButtonColorHint" text="슬롯별 장착 버튼의 색조, #RRGGBB 또는 #RRGGBBAA. #FFFFFF는 원래 모습을 유지합니다. 인벤토리를 다시 열면 적용됩니다."/>
         <string id="EbiMcmButtonColorReset" text="버튼 색상 초기화"/>

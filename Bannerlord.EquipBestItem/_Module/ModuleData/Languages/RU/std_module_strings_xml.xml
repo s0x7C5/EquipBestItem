@@ -18,7 +18,7 @@
         <string id="EbiWhyFirstItem" text="{FOUND} в пустой слот."/>
         <string id="EbiWhyUpgrade" text="{FOUND} лучше, чем {CURRENT}"/>
         <string id="EbiWhyAhead" text="Впереди: {STATS}"/>
-        <string id="EbiWhyBehind" text="Уступает (весит меньше): {STATS}"/>
+        <string id="EbiWhyBehind" text="Уступает (влияет меньше): {STATS}"/>
         <string id="EbiWhyDecidedBy" text="Решил параметр: {STATS}"/>
         <string id="EbiWhyTiedOn" text="Поровну по: {STATS}; ниже по приоритету не проверялось"/>
         <string id="EbiWhyEffectiveness" text="Игра оценивает его в {FOUND} против {CURRENT} в целом — своя оценка, без разбивки по статам."/>
@@ -63,6 +63,8 @@
         <string id="EbiMcmMethodWeights" text="Веса параметров"/>
         <string id="EbiMcmMethodPriority" text="Приоритет статов"/>
         <string id="EbiMcmMethodEffectiveness" text="Игровая эффективность"/>
+        <string id="EbiMcmUpgradeMargin" text="Порог замены, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Только для метода весов: компромиссный кандидат (в целом лучше, но в чём-то уступает) должен превзойти надетое по счёту на этот процент, чтобы мод предложил замену. Предметы, не уступающие ни по одному весомому стату, предлагаются без порога. 0 — предлагать при любом перевесе; чем выше значение, тем спокойнее и увереннее рекомендации."/>
         <string id="EbiMcmButtonColor" text="Цвет кнопок на слотах"/>
         <string id="EbiMcmButtonColorHint" text="Оттенок кнопок подбора на слотах, #RRGGBB или #RRGGBBAA. #FFFFFF — исходный вид. Применяется при следующем открытии инвентаря."/>
         <string id="EbiMcmButtonColorReset" text="Сбросить цвет кнопок"/>

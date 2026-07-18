@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Parametergewichte"/>
         <string id="EbiMcmMethodPriority" text="Wertepriorität"/>
         <string id="EbiMcmMethodEffectiveness" text="Spieleigene Effektivität"/>
+        <string id="EbiMcmUpgradeMargin" text="Tauschschwelle, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Nur für die Gewichte-Methode: ein Kompromiss-Kandidat (insgesamt besser, aber in manchem Wert schlechter) muss die Wertung des angelegten Gegenstands um diesen Prozentsatz übertreffen, bevor ein Tausch vorgeschlagen wird. Gegenstände, die in keinem gewichteten Wert schlechter sind, werden immer vorgeschlagen. 0 schlägt bei jedem Vorsprung vor; höhere Werte bedeuten ruhigere, sicherere Empfehlungen."/>
         <string id="EbiMcmButtonColor" text="Farbe der Slot-Schaltflächen"/>
         <string id="EbiMcmButtonColorHint" text="Färbung der Ausrüsten-Schaltflächen pro Slot, #RRGGBB oder #RRGGBBAA. #FFFFFF behält das Originalaussehen. Wird beim erneuten Öffnen des Inventars angewendet."/>
         <string id="EbiMcmButtonColorReset" text="Schaltflächenfarbe zurücksetzen"/>

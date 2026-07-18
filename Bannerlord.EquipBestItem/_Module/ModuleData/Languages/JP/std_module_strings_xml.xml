@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="パラメータの重み"/>
         <string id="EbiMcmMethodPriority" text="ステータス優先度"/>
         <string id="EbiMcmMethodEffectiveness" text="ゲームの有効性スコア"/>
+        <string id="EbiMcmUpgradeMargin" text="交換しきい値（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="重み方式のみ：トレードオフのある候補（総合では上だが一部のステータスで劣る）は、装備中のアイテムのスコアをこの割合だけ上回らないと交換が提案されません。重み付きステータスのどれでも劣らないアイテムは常に提案されます。0 はわずかな差でも提案します。値を上げるほど提案は控えめで確実になります。"/>
         <string id="EbiMcmButtonColor" text="スロットボタンの色"/>
         <string id="EbiMcmButtonColorHint" text="スロットごとの装備ボタンの色合い。#RRGGBB または #RRGGBBAA。#FFFFFF で元の見た目を保ちます。所持品を開き直すと適用されます。"/>
         <string id="EbiMcmButtonColorReset" text="ボタンの色をリセット"/>

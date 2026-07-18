@@ -48,7 +48,8 @@ internal static class ModRuntime
 
         var statCache = new ItemStatCache();
         var percentiles = new ItemStatPercentiles();
-        var weightedScorer = new WeightedItemScorer(statCache, percentiles);
+        var weightedScorer = new WeightedItemScorer(statCache, percentiles,
+            () => settings.UpgradeMarginPercent / 100f);
         var priorityComparer = new PriorityItemComparer(statCache);
 
         Services = new ModServices(

@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Parametre ağırlıkları"/>
         <string id="EbiMcmMethodPriority" text="Özellik önceliği"/>
         <string id="EbiMcmMethodEffectiveness" text="Oyunun etkinlik puanı"/>
+        <string id="EbiMcmUpgradeMargin" text="Değişim eşiği, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Yalnızca ağırlık yöntemi için: ödünlü bir aday (genelde daha iyi ama bazı değerlerde daha kötü) takas önerilmeden önce kuşanılmış eşyanın puanını bu oranda geçmelidir. Ağırlıklı hiçbir değerde daha kötü olmayan eşyalar her zaman önerilir. 0, her puan üstünlüğünde önerir; daha yüksek değerler daha sakin ve emin öneriler demektir."/>
         <string id="EbiMcmButtonColor" text="Yuva düğmesi rengi"/>
         <string id="EbiMcmButtonColorHint" text="Yuva başına kuşanma düğmelerinin tonu, #RRGGBB veya #RRGGBBAA. #FFFFFF özgün görünümü korur. Envanter yeniden açıldığında uygulanır."/>
         <string id="EbiMcmButtonColorReset" text="Düğme rengini sıfırla"/>
