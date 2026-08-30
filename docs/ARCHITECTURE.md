@@ -30,26 +30,6 @@ replays the scoring to describe a pick rather than make one.
 | UI | `UI.*` | everything above | UIExtenderEx mixin, view models, prefab patches, explanation formatting, runtime sprite loading. Thin. |
 | Composition | `ModRuntime` | everything | The single static seam; builds the object graph once. |
 
-### SOLID mapping
-
-- **S** — each filter is one rule (`SlotFilter`, `WeaponMatchFilter`, …); each
-  scorer is one strategy; `InventoryGateway` is the only class that knows how
-  to issue a `TransferCommand`.
-- **O** — new search rules are added by appending an `IItemFilter` to the list
-  in `ModRuntime`; a weighted/effectiveness strategy implements `IItemScorer`,
-  an ordering strategy implements `IItemComparer`; new request sources (e.g. a
-  local model) implement `IRequestInterpreter`. Nothing else changes.
-- **L** — all interfaces are behavioral contracts with no hidden preconditions.
-- **I** — interfaces stay small and focused: `IItemFilter` (one predicate),
-  `IItemComparer` (one comparison), `IRequestInterpreter` (one call);
-  `IItemScorer` pairs `Score` with `BeatsCurrent`, the upgrade guard that
-  belongs with the score it is computed from.
-- **D** — the UI depends on abstractions (`IRequestInterpreter`), wiring
-  happens only in the composition root. Two documented static exceptions:
-  `ModRuntime` (UIExtenderEx creates the mixin reflectively) and the
-  `MainThread` queue (drained from the engine's per-frame tick, which only
-  exists as a `SubModule` override).
-
 ## Search performance
 
 - One pass, no LINQ, no allocations per candidate (`BestItemFinder`).
