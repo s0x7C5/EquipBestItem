@@ -12,12 +12,27 @@ namespace Bannerlord.EquipBestItem.Domain;
 /// </summary>
 public static class DefaultPriorities
 {
-    private static readonly ItemParam[] Head = { ItemParam.HeadArmor };
-    private static readonly ItemParam[] Body = { ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor };
-    private static readonly ItemParam[] Leg = { ItemParam.LegArmor };
-    private static readonly ItemParam[] Gloves = { ItemParam.ArmArmor };
-    private static readonly ItemParam[] Cape = { ItemParam.BodyArmor, ItemParam.ArmArmor };
+    private static readonly ItemParam[] Head = Armor(ItemParam.HeadArmor);
+    private static readonly ItemParam[] Body = Armor(ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor);
+    private static readonly ItemParam[] Leg = Armor(ItemParam.LegArmor);
+    private static readonly ItemParam[] Gloves = Armor(ItemParam.ArmArmor);
+    private static readonly ItemParam[] Cape = Armor(ItemParam.BodyArmor, ItemParam.ArmArmor);
     private static readonly ItemParam[] Harness = { ItemParam.MountArmor };
+
+    /// <summary>
+    ///     A worn-armor order with stealth ranked last where the game has that
+    ///     stat: protection is what an armor slot is for, but the stat still
+    ///     needs a chip the player can drag up in the stealth set.
+    /// </summary>
+    private static ItemParam[] Armor(params ItemParam[] protection)
+    {
+        if (!Compat.GameCompat.SupportsStealth) return protection;
+
+        var order = new ItemParam[protection.Length + 1];
+        protection.CopyTo(order, 0);
+        order[protection.Length] = ItemParam.Stealth;
+        return order;
+    }
 
     private static readonly ItemParam[] Horse =
         { ItemParam.Speed, ItemParam.Maneuver, ItemParam.ChargeDamage, ItemParam.HitPoints };
@@ -50,10 +65,16 @@ public static class DefaultPriorities
 
     private static readonly ItemParam[] Ammo = { ItemParam.MissileDamage, ItemParam.MaxAmmo };
 
+    // Throwing stats first (a thrown weapon's main role); the melee-usage stats
+    // follow as low-priority tie-breakers the player can drag up — available in
+    // priority mode the way they are in the weights popup, without changing the
+    // default pick (they only decide when every throwing stat above ties).
     private static readonly ItemParam[] Thrown =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.WeaponLength, ItemParam.MaxAmmo
+        ItemParam.WeaponLength, ItemParam.MaxAmmo,
+        ItemParam.ThrustDamage, ItemParam.SwingDamage, ItemParam.ThrustSpeed, ItemParam.SwingSpeed,
+        ItemParam.Handling
     };
 
     private static readonly ItemParam[] Shield =

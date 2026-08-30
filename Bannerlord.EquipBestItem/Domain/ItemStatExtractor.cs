@@ -1,3 +1,4 @@
+using Bannerlord.EquipBestItem.Compat;
 using TaleWorlds.Core;
 
 namespace Bannerlord.EquipBestItem.Domain;
@@ -33,6 +34,7 @@ public static class ItemStatExtractor
                 stats[(int)ItemParam.BodyArmor] = element.GetModifiedBodyArmor();
                 stats[(int)ItemParam.ArmArmor] = element.GetModifiedArmArmor();
                 stats[(int)ItemParam.LegArmor] = element.GetModifiedLegArmor();
+                stats[(int)ItemParam.Stealth] = GameCompat.GetStealthFactor(element);
             }
             return;
         }
@@ -49,16 +51,40 @@ public static class ItemStatExtractor
         var weapon = item.PrimaryWeapon;
         if (weapon is null) return;
 
-        stats[(int)ItemParam.MaxAmmo] = element.GetModifiedStackCountForUsage(0);
-        stats[(int)ItemParam.ThrustSpeed] = element.GetModifiedThrustSpeedForUsage(0);
-        stats[(int)ItemParam.SwingSpeed] = element.GetModifiedSwingSpeedForUsage(0);
-        stats[(int)ItemParam.MissileSpeed] = element.GetModifiedMissileSpeedForUsage(0);
-        stats[(int)ItemParam.MissileDamage] = element.GetModifiedMissileDamageForUsage(0);
-        stats[(int)ItemParam.ThrustDamage] = element.GetModifiedThrustDamageForUsage(0);
-        stats[(int)ItemParam.SwingDamage] = element.GetModifiedSwingDamageForUsage(0);
-        stats[(int)ItemParam.Handling] = element.GetModifiedHandlingForUsage(0);
+        // A weapon can carry two usages: a melee mode and a ranged one (thrown
+        // javelins/axes/knives have both). Each stat must be read from the usage
+        // that legitimately owns it — missile stats are only valid on the ranged
+        // usage (they read 0 on a melee usage), melee stats on the melee usage.
+        // Reading everything from usage 0 loses the thrown mode entirely. Pure
+        // melee weapons have no ranged usage and pure ranged weapons (bows) no
+        // melee usage, so each falls back to usage 0 — unchanged behavior.
+        var weapons = item.Weapons;
+        var meleeUsage = -1;
+        var rangedUsage = -1;
+        for (var i = 0; weapons is not null && i < weapons.Count; i++)
+        {
+            var usage = weapons[i];
+            if (meleeUsage < 0 && usage.IsMeleeWeapon) meleeUsage = i;
+            if (rangedUsage < 0 && (usage.IsRangedWeapon || usage.IsConsumable)) rangedUsage = i;
+        }
+
+        if (meleeUsage < 0) meleeUsage = 0;
+
+        stats[(int)ItemParam.ThrustSpeed] = element.GetModifiedThrustSpeedForUsage(meleeUsage);
+        stats[(int)ItemParam.SwingSpeed] = element.GetModifiedSwingSpeedForUsage(meleeUsage);
+        stats[(int)ItemParam.ThrustDamage] = element.GetModifiedThrustDamageForUsage(meleeUsage);
+        stats[(int)ItemParam.SwingDamage] = element.GetModifiedSwingDamageForUsage(meleeUsage);
+        stats[(int)ItemParam.Handling] = element.GetModifiedHandlingForUsage(meleeUsage);
         stats[(int)ItemParam.WeaponLength] = weapon.WeaponLength;
-        stats[(int)ItemParam.Accuracy] = weapon.Accuracy;
+
+        // Missile stats stay 0 when the weapon has no ranged mode.
+        if (rangedUsage >= 0)
+        {
+            stats[(int)ItemParam.MaxAmmo] = element.GetModifiedStackCountForUsage(rangedUsage);
+            stats[(int)ItemParam.MissileSpeed] = element.GetModifiedMissileSpeedForUsage(rangedUsage);
+            stats[(int)ItemParam.MissileDamage] = element.GetModifiedMissileDamageForUsage(rangedUsage);
+            stats[(int)ItemParam.Accuracy] = weapons![rangedUsage].Accuracy;
+        }
 
         if (weapon.IsShield)
         {

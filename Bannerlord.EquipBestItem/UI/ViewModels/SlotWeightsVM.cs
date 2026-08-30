@@ -15,8 +15,16 @@ namespace Bannerlord.EquipBestItem.UI.ViewModels;
 /// <summary>Popup for tuning per-slot search weights and pinning a weapon class.</summary>
 public sealed class SlotWeightsVM : ViewModel
 {
-    private static readonly ItemParam[] ArmorParams =
-        { ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor, ItemParam.Weight };
+    // Stealth only exists on games that have the stealth equipment set; on
+    // older ones the row would be a slider that moves nothing.
+    private static readonly ItemParam[] ArmorParams = Compat.GameCompat.SupportsStealth
+        ? new[]
+        {
+            ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor,
+            ItemParam.Stealth, ItemParam.Weight
+        }
+        : new[]
+            { ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor, ItemParam.Weight };
 
     private static readonly ItemParam[] HorseParams =
         { ItemParam.ChargeDamage, ItemParam.HitPoints, ItemParam.Maneuver, ItemParam.Speed };
@@ -55,10 +63,18 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.MaxAmmo, ItemParam.Weight
     };
 
+    // Thrown weapons have a melee usage too (javelins/knives thrust, throwing
+    // axes swing); ItemStatExtractor reads those stats from the second usage, so
+    // they are tunable here. They default to weight 0 (not in DefaultWeights'
+    // Thrown set), so the out-of-the-box pick stays throwing-only until the
+    // player opts in.
     private static readonly ItemParam[] ThrownParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.WeaponLength, ItemParam.MaxAmmo, ItemParam.Weight
+        ItemParam.WeaponLength, ItemParam.MaxAmmo,
+        ItemParam.ThrustDamage, ItemParam.SwingDamage, ItemParam.ThrustSpeed, ItemParam.SwingSpeed,
+        ItemParam.Handling,
+        ItemParam.Weight
     };
 
     private static readonly ItemParam[] AmmoParams =
@@ -687,6 +703,7 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.Accuracy => new TextObject("{=xEWwbGVK}Accuracy: "),
         ItemParam.Handling => new TextObject("{=YOSEIvyf}Handling: "),
         ItemParam.Weight => new TextObject("{=YvwQL9aa}Weight: "),
+        ItemParam.Stealth => new TextObject("{=YJkAqExw}Stealth Bonus: "),
         _ => new TextObject(param.ToString())
     }).ToString().TrimEnd(':', ' ');
 

@@ -52,6 +52,7 @@ public static class ParamScales
         scale[(int)ItemParam.Accuracy] = 100f;
         scale[(int)ItemParam.Handling] = 100f;
         scale[(int)ItemParam.Weight] = 30f;
+        scale[(int)ItemParam.Stealth] = 30f;
 
         return scale;
     }

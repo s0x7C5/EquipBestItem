@@ -23,12 +23,20 @@ public sealed class ParamRowVM : ViewModel
     [DataSourceProperty]
     public string Name { get; }
 
+    // The continuous slider can't be landed exactly on centre by hand, so a
+    // value dragged "to zero" settles a hair off — and since the row shows an
+    // influence SHARE (value / Σ|values|), a residual ±0.01 reads as a jarring
+    // ±50%. Snap the dead-zone around centre to a true zero, which also locks
+    // the parameter out of scoring as the player intended.
+    private const float ZeroSnap = 0.03f;
+
     [DataSourceProperty]
     public float Value
     {
         get => _value;
         set
         {
+            if (Math.Abs(value) < ZeroSnap) value = 0f;
             if (Math.Abs(value - _value) < 0.001f) return;
 
             _value = value;

@@ -32,6 +32,16 @@ internal static class GameCompat
     private static readonly Func<EventManager, Widget?>? DragHoveredWidgetGetter =
         ResolveGetter<EventManager, Widget?>("DragHoveredWidget");
 
+    // GetModifiedStealthFactor arrived with the stealth equipment set. Where
+    // it is missing the stat reads 0 and the popup drops its row, so nothing
+    // offers a slider that could not move anything.
+    private static readonly StealthFactorGetter? StealthFactorImpl = ResolveStealthFactor();
+
+    /// <summary>An open instance delegate: a struct receiver is passed by reference.</summary>
+    private delegate int StealthFactorGetter(ref EquipmentElement element);
+
+    internal static bool SupportsStealth => StealthFactorImpl is not null;
+
     internal static bool CanUseItem(BasicCharacterObject character, EquipmentElement element) =>
         CanUseItemImpl(character, element);
 
@@ -40,6 +50,19 @@ internal static class GameCompat
 
     internal static Widget? GetDragHoveredWidget(EventManager eventManager) =>
         DragHoveredWidgetGetter?.Invoke(eventManager);
+
+    /// <summary>The item's stealth bonus with its modifier applied, or 0 where the game has no such stat.</summary>
+    internal static int GetStealthFactor(EquipmentElement element) =>
+        StealthFactorImpl is null ? 0 : StealthFactorImpl(ref element);
+
+    private static StealthFactorGetter? ResolveStealthFactor()
+    {
+        var method = typeof(EquipmentElement).GetMethod(
+            "GetModifiedStealthFactor", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
+        return method is null
+            ? null
+            : Delegate.CreateDelegate(typeof(StealthFactorGetter), method, false) as StealthFactorGetter;
+    }
 
     private static TDelegate? ResolveStatic<TDelegate>(Type type, string name) where TDelegate : class
     {
