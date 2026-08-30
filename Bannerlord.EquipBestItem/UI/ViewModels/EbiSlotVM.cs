@@ -98,11 +98,11 @@ public sealed class EbiSlotVM : ViewModel
         HasTooltipItem = tooltipItem is not null;
     }
 
-    public void ExecuteEquip()
+    public void ExecuteEquip() => GameLog.Guard("equip", () =>
     {
         if (_foundItem is not null)
             _equip(this);
-    }
+    });
 
-    public void ExecuteOpenSettings() => _openSettings(Slot);
+    public void ExecuteOpenSettings() => GameLog.Guard("slot settings", () => _openSettings(Slot));
 }

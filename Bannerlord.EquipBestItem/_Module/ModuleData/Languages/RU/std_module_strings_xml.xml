@@ -10,7 +10,7 @@
         <string id="EbiEffectivenessNote" text="Предметы ранжируются встроенной оценкой эффективности игры; веса статов не применяются."/>
         <string id="EbiExplain" text="Почему?"/>
         <string id="EbiClear" text="Очистить"/>
-        <string id="EbiClearHint" text="Сбросить веса/порядок к значениям по умолчанию; класс оружия, культура и лимит веса сохраняются"/>
+        <string id="EbiClearHint" text="Сбросить веса/порядок к исходным значениям; класс оружия, культура и лимит веса сохраняются"/>
         <string id="EbiExplainHint" text="Объяснить выбор для этого слота в логе сообщений"/>
         <string id="EbiWhySlotLocked" text="Этот слот исключён из поиска."/>
         <string id="EbiWhyNothingBetter" text="Ничего заметно лучше, чем {CURRENT}."/>
@@ -18,7 +18,7 @@
         <string id="EbiWhyFirstItem" text="{FOUND} в пустой слот."/>
         <string id="EbiWhyUpgrade" text="{FOUND} лучше, чем {CURRENT}"/>
         <string id="EbiWhyAhead" text="Впереди: {STATS}"/>
-        <string id="EbiWhyBehind" text="Уступает (весит меньше): {STATS}"/>
+        <string id="EbiWhyBehind" text="Уступает (влияет меньше): {STATS}"/>
         <string id="EbiWhyDecidedBy" text="Решил параметр: {STATS}"/>
         <string id="EbiWhyTiedOn" text="Поровну по: {STATS}; ниже по приоритету не проверялось"/>
         <string id="EbiWhyEffectiveness" text="Игра оценивает его в {FOUND} против {CURRENT} в целом — своя оценка, без разбивки по статам."/>
@@ -38,9 +38,9 @@
         <string id="EbiRejectOther" text="не соответствует фильтру слота"/>
         <string id="EbiShortBow" text="Короткий лук"/>
         <string id="EbiLongBow" text="Длинный лук"/>
-        <string id="ebi_default" text="По умолчанию"/>
+        <string id="ebi_default" text="Вернуть шаблон"/>
         <string id="ebi_lock" text="Отключить"/>
-        <string id="ebi_hint_default" text="Сбросить к значениям по умолчанию"/>
+        <string id="ebi_hint_default" text="Вернуть слот к сохранённому шаблону"/>
         <string id="ebi_hint_lock" text="Отключить поиск для данного слота"/>
         <string id="EbiHintEquipCurrent" text="Снарядить текущего персонажа лучшими предметами"/>
         <string id="EbiHintEquipAll" text="Снарядить всех героев отряда лучшими предметами"/>
@@ -63,6 +63,8 @@
         <string id="EbiMcmMethodWeights" text="Веса параметров"/>
         <string id="EbiMcmMethodPriority" text="Приоритет статов"/>
         <string id="EbiMcmMethodEffectiveness" text="Игровая эффективность"/>
+        <string id="EbiMcmUpgradeMargin" text="Порог замены, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Только для метода весов: компромиссный кандидат (в целом лучше, но в чём-то уступает) должен превзойти надетое по счёту на этот процент, чтобы мод предложил замену. Предметы, не уступающие ни по одному весомому стату, предлагаются без порога. 0 — предлагать при любом перевесе; чем выше значение, тем спокойнее и увереннее рекомендации."/>
         <string id="EbiMcmButtonColor" text="Цвет кнопок на слотах"/>
         <string id="EbiMcmButtonColorHint" text="Оттенок кнопок подбора на слотах, #RRGGBB или #RRGGBBAA. #FFFFFF — исходный вид. Применяется при следующем открытии инвентаря."/>
         <string id="EbiMcmButtonColorReset" text="Сбросить цвет кнопок"/>
@@ -90,8 +92,8 @@
         <string id="EbiAiConnectionOk" text="Соединение установлено: {ENDPOINT} (модель: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Ошибка соединения: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Настроен Anthropic API; ключ проверяется при первом запросе."/>
-        <string id="EbiMakeDefault" text="Сделать дефолтом"/>
-        <string id="EbiHintMakeDefault" text="Сохранить фильтр слота как значение по умолчанию для всех героев без собственных настроек"/>
-        <string id="EbiOnDefault" text="Значения по умолчанию"/>
+        <string id="EbiMakeDefault" text="Сохранить шаблон"/>
+        <string id="EbiHintMakeDefault" text="Сохранить фильтр слота как шаблон для всех героев без собственных настроек"/>
+        <string id="EbiOnDefault" text="Слот выставлен по шаблону"/>
     </strings>
 </base>

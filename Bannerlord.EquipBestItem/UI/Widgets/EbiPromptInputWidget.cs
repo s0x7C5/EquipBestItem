@@ -7,16 +7,18 @@ namespace Bannerlord.EquipBestItem.UI.Widgets;
 ///     The AI prompt input. Grabs keyboard focus once each time it becomes
 ///     visible, so the player can type immediately — and while it has focus
 ///     the inventory screen skips its own hotkeys (the same guard the native
-///     inventory search relies on). "Just became visible" is detected both by
-///     the visibility flag and by a gap in update time, since hidden widgets
-///     may or may not keep receiving updates.
+///     inventory search relies on).
+///
+///     Visibility must be checked recursively: the prefab toggles an ancestor
+///     container, so this widget's own IsVisible stays true forever — and the
+///     engine keeps calling custom OnLateUpdate overrides regardless of
+///     visibility. Checking the own flag here once made the hidden field grab
+///     focus the moment the inventory opened, which silenced every screen
+///     hotkey (including the Alt compare cycle) until the next click.
 /// </summary>
 public sealed class EbiPromptInputWidget : EditableTextWidget
 {
-    private const float ReopenGapSeconds = 0.25f;
-
     private bool _focusRequested;
-    private float _lastUpdateTime;
 
     public EbiPromptInputWidget(UIContext context) : base(context)
     {
@@ -26,15 +28,16 @@ public sealed class EbiPromptInputWidget : EditableTextWidget
     {
         base.OnLateUpdate(dt);
 
-        if (!IsVisible)
+        if (!IsRecursivelyVisible())
         {
             _focusRequested = false;
+            // A hidden widget keeping keyboard focus would silence the
+            // inventory hotkeys indefinitely (the screen skips them while
+            // any text widget in the layer is focused).
+            if (ReferenceEquals(EventManager.FocusedWidget, this))
+                EventManager.FocusedWidget = null;
             return;
         }
-
-        var now = EventManager.Time;
-        if (now - _lastUpdateTime > ReopenGapSeconds) _focusRequested = false;
-        _lastUpdateTime = now;
 
         if (_focusRequested) return;
 

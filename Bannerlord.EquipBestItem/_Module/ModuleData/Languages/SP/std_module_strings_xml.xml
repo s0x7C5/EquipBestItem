@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Los objetos se clasifican con la puntuación de efectividad integrada del juego; los pesos de estadísticas no se aplican."/>
         <string id="EbiExplain" text="¿Por qué?"/>
         <string id="EbiClear" text="Limpiar"/>
-        <string id="EbiClearHint" text="Restablece los pesos/el orden a los valores predeterminados; clase de arma, cultura y límite de peso se conservan"/>
+        <string id="EbiClearHint" text="Restablece los pesos/el orden a los valores iniciales; clase de arma, cultura y límite de peso se conservan"/>
         <string id="EbiExplainHint" text="Explica la elección de esta ranura en el registro de mensajes"/>
         <string id="EbiShortBow" text="Arco corto"/>
         <string id="EbiLongBow" text="Arco largo"/>
-        <string id="ebi_default" text="Predeterminado"/>
+        <string id="ebi_default" text="Restaurar plantilla"/>
         <string id="ebi_lock" text="Bloquear"/>
-        <string id="ebi_hint_default" text="Restablecer a los valores predeterminados"/>
+        <string id="ebi_hint_default" text="Devolver esta ranura a la plantilla guardada"/>
         <string id="ebi_hint_lock" text="Desactivar la búsqueda para esta ranura"/>
         <string id="EbiHintEquipCurrent" text="Equipar al personaje actual con los mejores objetos"/>
         <string id="EbiHintEquipAll" text="Equipar a todos los héroes del grupo con los mejores objetos"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Pesos de parámetros"/>
         <string id="EbiMcmMethodPriority" text="Prioridad de estadísticas"/>
         <string id="EbiMcmMethodEffectiveness" text="Efectividad del juego"/>
+        <string id="EbiMcmUpgradeMargin" text="Margen de reemplazo, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Solo para el método de pesos: un candidato de compromiso (mejor en conjunto pero peor en alguna estadística) debe superar la puntuación del objeto equipado por este margen antes de sugerir el cambio. Los objetos que no son peores en ninguna estadística ponderada se sugieren siempre. 0 sugiere con cualquier ventaja; valores más altos dan sugerencias más tranquilas y seguras."/>
         <string id="EbiMcmButtonColor" text="Color de los botones de ranura"/>
         <string id="EbiMcmButtonColorHint" text="Tinte de los botones de equipar por ranura, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene el aspecto original. Se aplica al reabrir el inventario."/>
         <string id="EbiMcmButtonColorReset" text="Restablecer el color de los botones"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="Conexión correcta: {ENDPOINT} (modelo: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Error de conexión: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="La API de Anthropic está configurada; la clave se verifica en la primera solicitud."/>
-        <string id="EbiMakeDefault" text="Hacer predeterminado"/>
-        <string id="EbiHintMakeDefault" text="Guarda el filtro de esta ranura como predeterminado para todos los héroes sin ajustes propios"/>
-        <string id="EbiOnDefault" text="Valores predeterminados"/>
+        <string id="EbiMakeDefault" text="Guardar plantilla"/>
+        <string id="EbiHintMakeDefault" text="Guarda el filtro de esta ranura como plantilla para todos los héroes sin ajustes propios"/>
+        <string id="EbiOnDefault" text="La ranura sigue la plantilla"/>
         <string id="EbiWhySlotLocked" text="Esta ranura está excluida de la búsqueda."/>
         <string id="EbiWhyNothingBetter" text="Nada claramente mejor que {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="No se encontró nada para esta ranura."/>

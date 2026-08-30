@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Les objets sont classés selon le score d'efficacité intégré du jeu ; les poids des stats ne s'appliquent pas."/>
         <string id="EbiExplain" text="Pourquoi ?"/>
         <string id="EbiClear" text="Effacer"/>
-        <string id="EbiClearHint" text="Réinitialise les poids/l'ordre aux valeurs par défaut ; classe d'arme, culture et limite de poids conservées"/>
+        <string id="EbiClearHint" text="Réinitialise les poids/l'ordre aux valeurs initiales ; classe d'arme, culture et limite de poids conservées"/>
         <string id="EbiExplainHint" text="Explique le choix de cet emplacement dans le journal des messages"/>
         <string id="EbiShortBow" text="Arc court"/>
         <string id="EbiLongBow" text="Arc long"/>
-        <string id="ebi_default" text="Défaut"/>
+        <string id="ebi_default" text="Rétablir le modèle"/>
         <string id="ebi_lock" text="Verrouiller"/>
-        <string id="ebi_hint_default" text="Réinitialiser aux valeurs par défaut"/>
+        <string id="ebi_hint_default" text="Ramener cet emplacement au modèle enregistré"/>
         <string id="ebi_hint_lock" text="Désactiver la recherche pour cet emplacement"/>
         <string id="EbiHintEquipCurrent" text="Équiper le personnage actuel avec les meilleurs objets"/>
         <string id="EbiHintEquipAll" text="Équiper tous les héros du groupe avec les meilleurs objets"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Poids des paramètres"/>
         <string id="EbiMcmMethodPriority" text="Priorité des stats"/>
         <string id="EbiMcmMethodEffectiveness" text="Score d'efficacité du jeu"/>
+        <string id="EbiMcmUpgradeMargin" text="Marge de remplacement, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Méthode des poids uniquement : un candidat de compromis (meilleur dans l'ensemble mais inférieur sur certaines caractéristiques) doit dépasser la note de l'objet équipé de cette marge avant qu'un échange soit proposé. Les objets inférieurs sur aucune caractéristique pondérée sont toujours proposés. 0 propose au moindre avantage ; des valeurs plus élevées donnent des suggestions plus calmes et plus sûres."/>
         <string id="EbiMcmButtonColor" text="Couleur des boutons d'emplacement"/>
         <string id="EbiMcmButtonColorHint" text="Teinte des boutons d'équipement par emplacement, #RRGGBB ou #RRGGBBAA. #FFFFFF conserve l'apparence d'origine. Appliqué à la réouverture de l'inventaire."/>
         <string id="EbiMcmButtonColorReset" text="Réinitialiser la couleur des boutons"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="Connexion OK : {ENDPOINT} (modèle : {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Échec de la connexion : {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="L'API Anthropic est configurée ; la clé sera vérifiée à la première requête."/>
-        <string id="EbiMakeDefault" text="Définir par défaut"/>
-        <string id="EbiHintMakeDefault" text="Enregistre le filtre de cet emplacement comme valeur par défaut pour tous les héros sans réglages propres"/>
-        <string id="EbiOnDefault" text="Valeurs par défaut"/>
+        <string id="EbiMakeDefault" text="Enregistrer le modèle"/>
+        <string id="EbiHintMakeDefault" text="Enregistre le filtre de cet emplacement comme modèle pour tous les héros sans réglages propres"/>
+        <string id="EbiOnDefault" text="L'emplacement suit le modèle"/>
         <string id="EbiWhySlotLocked" text="Cet emplacement est exclu de la recherche."/>
         <string id="EbiWhyNothingBetter" text="Rien de nettement meilleur que {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Rien trouvé pour cet emplacement."/>

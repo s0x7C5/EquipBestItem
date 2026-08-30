@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>3.2.1</Version>
+        <Version>3.4.0</Version>
         <TargetFramework>net472</TargetFramework>
         <Platforms>x64</Platforms>
         <LangVersion>11.0</LangVersion>
@@ -13,6 +13,15 @@
         <ModuleUrl>https://www.nexusmods.com/mountandblade2bannerlord/mods/369</ModuleUrl>
         <GameVersion>v1.4.6</GameVersion>
 
+        <!-- Game reference assemblies to compile against. Override from the command line
+             (dotnet build /p:BannerlordRefsVersion=1.3.5.102453) to check compatibility
+             with an older game version; the default is the release target. -->
+        <BannerlordRefsVersion Condition="'$(BannerlordRefsVersion)' == ''">1.4.6.115628</BannerlordRefsVersion>
+
+        <!-- Keep stale generated sources out of the compile glob even when a compat-matrix
+             build redirects BaseOutputPath/BaseIntermediateOutputPath elsewhere. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+
         <AssemblyName>Bannerlord.EquipBestItem</AssemblyName>
         <RootNamespace>Bannerlord.EquipBestItem</RootNamespace>
     </PropertyGroup>
@@ -22,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bannerlord.ReferenceAssemblies" Version="1.4.6.115628" PrivateAssets="all" />
+        <PackageReference Include="Bannerlord.ReferenceAssemblies" Version="$(BannerlordRefsVersion)" PrivateAssets="all" />
         <!-- Compile-only: at runtime these come from the separately installed
              Bannerlord.Harmony and Bannerlord.UIExtenderEx modules (see SubModule.xml) -->
         <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all" />

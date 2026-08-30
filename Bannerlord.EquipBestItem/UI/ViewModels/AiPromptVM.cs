@@ -122,27 +122,27 @@ public sealed class AiPromptVM : ViewModel
     ///     it is easy to iterate on. Typing is safe: the inventory screen
     ///     skips its hotkeys while any text widget of the layer has focus.
     /// </summary>
-    public void ExecuteOpenPrompt()
+    public void ExecuteOpenPrompt() => GameLog.Guard("AI prompt", () =>
     {
         if (_isBusy) return;
 
         PromptText = _lastRequest;
         IsPromptVisible = true;
-    }
+    });
 
-    public void ExecuteSubmitPrompt()
+    public void ExecuteSubmitPrompt() => GameLog.Guard("AI request", () =>
     {
         var request = _promptText?.Trim() ?? "";
         if (request.Length == 0) return;
 
         IsPromptVisible = false;
         Interpret(request);
-    }
+    });
 
-    public void ExecuteCancelPrompt()
+    public void ExecuteCancelPrompt() => GameLog.Guard("AI prompt", () =>
     {
         IsPromptVisible = false;
-    }
+    });
 
     private void Interpret(string requestText)
     {

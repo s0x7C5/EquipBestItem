@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Gli oggetti sono classificati con il punteggio di efficacia integrato del gioco; i pesi delle statistiche non si applicano."/>
         <string id="EbiExplain" text="Perché?"/>
         <string id="EbiClear" text="Pulisci"/>
-        <string id="EbiClearHint" text="Riporta i pesi/l'ordine ai valori predefiniti dello slot; classe d'arma, cultura e limite di peso restano"/>
+        <string id="EbiClearHint" text="Riporta i pesi/l'ordine ai valori iniziali; classe d'arma, cultura e limite di peso restano"/>
         <string id="EbiExplainHint" text="Spiega la scelta di questo slot nel registro dei messaggi"/>
         <string id="EbiShortBow" text="Arco corto"/>
         <string id="EbiLongBow" text="Arco lungo"/>
-        <string id="ebi_default" text="Predefinito"/>
+        <string id="ebi_default" text="Ripristina modello"/>
         <string id="ebi_lock" text="Blocca"/>
-        <string id="ebi_hint_default" text="Ripristina i valori predefiniti"/>
+        <string id="ebi_hint_default" text="Riporta questo slot al modello salvato"/>
         <string id="ebi_hint_lock" text="Disabilita la ricerca per questo slot"/>
         <string id="EbiHintEquipCurrent" text="Equipaggia il personaggio attuale con gli oggetti migliori"/>
         <string id="EbiHintEquipAll" text="Equipaggia tutti gli eroi del gruppo con gli oggetti migliori"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Pesi dei parametri"/>
         <string id="EbiMcmMethodPriority" text="Priorità delle statistiche"/>
         <string id="EbiMcmMethodEffectiveness" text="Efficacia del gioco"/>
+        <string id="EbiMcmUpgradeMargin" text="Margine di sostituzione, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Solo per il metodo dei pesi: un candidato di compromesso (migliore nel complesso ma peggiore in qualche statistica) deve superare il punteggio dell'oggetto equipaggiato di questo margine prima che venga proposto lo scambio. Gli oggetti non peggiori in nessuna statistica pesata vengono proposti comunque. 0 propone a qualsiasi vantaggio; valori più alti danno suggerimenti più calmi e sicuri."/>
         <string id="EbiMcmButtonColor" text="Colore dei pulsanti degli slot"/>
         <string id="EbiMcmButtonColorHint" text="Tinta dei pulsanti di equipaggiamento per slot, #RRGGBB o #RRGGBBAA. #FFFFFF mantiene l'aspetto originale. Applicato alla riapertura dell'inventario."/>
         <string id="EbiMcmButtonColorReset" text="Ripristina il colore dei pulsanti"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="Connessione OK: {ENDPOINT} (modello: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Connessione non riuscita: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="L'API Anthropic è configurata; la chiave viene verificata alla prima richiesta."/>
-        <string id="EbiMakeDefault" text="Imposta predefinito"/>
-        <string id="EbiHintMakeDefault" text="Salva il filtro di questo slot come predefinito per tutti gli eroi senza impostazioni proprie"/>
-        <string id="EbiOnDefault" text="Valori predefiniti"/>
+        <string id="EbiMakeDefault" text="Salva modello"/>
+        <string id="EbiHintMakeDefault" text="Salva il filtro di questo slot come modello per tutti gli eroi senza impostazioni proprie"/>
+        <string id="EbiOnDefault" text="Lo slot segue il modello"/>
         <string id="EbiWhySlotLocked" text="Questo slot è escluso dalla ricerca."/>
         <string id="EbiWhyNothingBetter" text="Niente di chiaramente migliore di {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Nessun risultato per questo slot."/>

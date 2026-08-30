@@ -87,9 +87,10 @@ public sealed class ItemExplainer
     /// <summary>
     ///     A "why not this named item" account: whether the candidate was
     ///     filtered out (and by what), is itself the pick, or qualifies but is
-    ///     beaten — with the same breakdown as the positive case. The winner
-    ///     is the recommended item, or the equipped one when nothing was
-    ///     recommended.
+    ///     beaten — with the same breakdown as the positive case. The named
+    ///     item is always weighed against the equipped one: the player asked
+    ///     about those two, and answering with some third item the search
+    ///     happens to prefer only reads as a non sequitur.
     /// </summary>
     public SearchExplanation ExplainRejection(
         CharacterObject character, Equipment equipment, EquipmentIndex slot,
@@ -122,9 +123,9 @@ public sealed class ItemExplainer
             return explanation;
         }
 
-        // The item qualifies. Compare the winner (the pick, or the equipped
-        // item when nothing was picked) against it.
-        if (found is not null)
+        // An empty slot has nothing to weigh the named item against; the pick
+        // is the only comparison left to make.
+        if ((current.IsEmpty || current.Item is null) && found is not null)
         {
             explanation.Kind = ExplanationKind.NamedLoses;
             explanation.FoundItemName = ItemName(found.ItemRosterElement.EquipmentElement);
@@ -133,25 +134,52 @@ public sealed class ItemExplainer
             return explanation;
         }
 
-        // Nothing was recommended: the equipped item held its place.
-        explanation.CurrentItemName = ItemName(candidateElement);
-        if (mode == SearchMode.Weights &&
-            _weighted.Score(candidateElement, context) > _weighted.Score(current, context))
+        // The item qualifies: weigh it against the equipped item, whatever the
+        // search recommends for the slot.
+        if (Wins(candidateElement, current, context, mode))
+        {
+            // "<named> beats <equipped>" — it just isn't the top pick.
+            explanation.Kind = ExplanationKind.Upgrade;
+            explanation.FoundItemName = ItemName(candidateElement);
+            explanation.CurrentItemName = ItemName(current);
+            CompareInto(explanation, context, mode, candidateElement, current);
+        }
+        else if (mode == SearchMode.Weights &&
+                 _weighted.Score(candidateElement, context) > _weighted.Score(current, context))
         {
             // Scores higher, but not by the margin the upgrade guard demands.
+            // CurrentItemName stays the equipped item: the message reads
+            // "<named> scores a bit higher than <equipped>".
             explanation.Kind = ExplanationKind.NamedMarginal;
             explanation.FoundItemName = ItemName(candidateElement);
             CompareInto(explanation, context, mode, candidateElement, current);
         }
         else
         {
+            // Here the named item takes the "loser" seat of the template:
+            // "<equipped> is picked over <named>".
             explanation.Kind = ExplanationKind.NamedLoses;
             explanation.FoundItemName = ItemName(current);
+            explanation.CurrentItemName = ItemName(candidateElement);
             CompareInto(explanation, context, mode, current, candidateElement);
         }
 
         return explanation;
     }
+
+    /// <summary>
+    ///     Does the candidate beat the equipped item under the active method?
+    ///     The same verdicts the search itself uses — including the weights
+    ///     method's upgrade-margin guard, so "beats" here means "would be
+    ///     suggested as a swap".
+    /// </summary>
+    private bool Wins(
+        EquipmentElement candidate, EquipmentElement current, in SearchContext context, SearchMode mode) => mode switch
+    {
+        SearchMode.Priority => _priority.Compare(candidate, current, context) > 0,
+        SearchMode.Effectiveness => (candidate.Item?.Effectiveness ?? 0f) > (current.Item?.Effectiveness ?? 0f),
+        _ => _weighted.BeatsCurrent(candidate, current, context)
+    };
 
     private void CompareInto(
         SearchExplanation explanation, in SearchContext context, SearchMode mode,

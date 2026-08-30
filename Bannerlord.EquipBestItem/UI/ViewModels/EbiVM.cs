@@ -136,36 +136,34 @@ public sealed class EbiVM : ViewModel
     [DataSourceProperty]
     public bool IsRightPanelLocked => !_services.Settings.SearchRightPanel;
 
-    public void ExecuteToggleLeftPanelSearch()
+    public void ExecuteToggleLeftPanelSearch() => GameLog.Guard("panel toggle", () =>
     {
         _services.Settings.SearchLeftPanel = !_services.Settings.SearchLeftPanel;
         _services.PersistSettings();
         OnPropertyChanged(nameof(IsLeftPanelSearched));
         OnPropertyChanged(nameof(IsLeftPanelLocked));
         RecomputeBestItems();
-    }
+    });
 
-    public void ExecuteToggleRightPanelSearch()
+    public void ExecuteToggleRightPanelSearch() => GameLog.Guard("panel toggle", () =>
     {
         _services.Settings.SearchRightPanel = !_services.Settings.SearchRightPanel;
         _services.PersistSettings();
         OnPropertyChanged(nameof(IsRightPanelSearched));
         OnPropertyChanged(nameof(IsRightPanelLocked));
         RecomputeBestItems();
-    }
+    });
 
-    public void ExecuteEquipAllBest()
+    public void ExecuteEquipAllBest() => GameLog.Guard("equip all", () =>
     {
         var character = _gateway.CurrentCharacter;
         if (character is null) return;
 
         EquipAllFor(new[] { character });
-    }
+    });
 
-    public void ExecuteEquipAllCharacters()
-    {
-        EquipAllFor(_gateway.GetEquippableHeroes());
-    }
+    public void ExecuteEquipAllCharacters() => GameLog.Guard("equip all", () =>
+        EquipAllFor(_gateway.GetEquippableHeroes()));
 
     /// <summary>
     ///     Plans every equip up front and executes them as ONE transfer batch —
@@ -214,7 +212,7 @@ public sealed class EbiVM : ViewModel
     }
 
     /// <summary>Called when inventory contents or the shown character change.</summary>
-    internal void OnInventoryChanged()
+    internal void OnInventoryChanged() => GameLog.Guard("search", () =>
     {
         _services.EquipBest.InvalidateCaches();
 
@@ -222,7 +220,7 @@ public sealed class EbiVM : ViewModel
             SlotSettings.ExecuteClose();
 
         RecomputeBestItems();
-    }
+    });
 
     public override void OnFinalize()
     {

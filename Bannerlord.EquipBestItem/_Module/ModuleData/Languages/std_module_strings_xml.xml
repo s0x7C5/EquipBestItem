@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="Items are ranked by the game's built-in Effectiveness score; stat weights do not apply."/>
         <string id="EbiExplain" text="Why this?"/>
         <string id="EbiClear" text="Clear"/>
-        <string id="EbiClearHint" text="Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"/>
+        <string id="EbiClearHint" text="Reset the stat preferences to their initial values; weapon class, culture and weight limit stay"/>
         <string id="EbiExplainHint" text="Explain this slot's pick in the message log"/>
         <string id="EbiShortBow" text="Short Bow"/>
         <string id="EbiLongBow" text="Long Bow"/>
-        <string id="ebi_default" text="Default"/>
+        <string id="ebi_default" text="Restore template"/>
         <string id="ebi_lock" text="Lock"/>
-        <string id="ebi_hint_default" text="Reset to default values"/>
+        <string id="ebi_hint_default" text="Return this slot to the saved template"/>
         <string id="ebi_hint_lock" text="Disable search for this slot"/>
         <string id="EbiHintEquipCurrent" text="Equip the current character with the best items"/>
         <string id="EbiHintEquipAll" text="Equip all party heroes with the best items"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="Parameter weights"/>
         <string id="EbiMcmMethodPriority" text="Stat priority order"/>
         <string id="EbiMcmMethodEffectiveness" text="Game Effectiveness score"/>
+        <string id="EbiMcmUpgradeMargin" text="Upgrade margin, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="Weights method only: a trade-off candidate (better overall but worse in some stat) must beat the equipped item's score by this margin before a swap is suggested. Items not worse in any weighted stat are suggested regardless. 0 suggests on any score edge; higher values mean calmer, more confident suggestions."/>
         <string id="EbiMcmButtonColor" text="Slot button color"/>
         <string id="EbiMcmButtonColorHint" text="Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened."/>
         <string id="EbiMcmButtonColorReset" text="Reset button color"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="Connection OK: {ENDPOINT} (model: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="Connection failed: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic API is configured; the key is verified on the first request."/>
-        <string id="EbiMakeDefault" text="Set as default"/>
-        <string id="EbiHintMakeDefault" text="Save this slot's filter as the default for every hero without their own settings"/>
-        <string id="EbiOnDefault" text="Default values"/>
+        <string id="EbiMakeDefault" text="Save template"/>
+        <string id="EbiHintMakeDefault" text="Save this slot's filter as the template for every hero without their own settings"/>
+        <string id="EbiOnDefault" text="The slot follows the template"/>
         <string id="EbiWhySlotLocked" text="This slot is excluded from searching."/>
         <string id="EbiWhyNothingBetter" text="Nothing clearly better than {CURRENT}."/>
         <string id="EbiWhyNothingFound" text="Nothing found for this slot."/>

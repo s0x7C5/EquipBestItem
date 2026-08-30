@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="アイテムはゲーム内蔵の有効性スコアで順位付けされ、ステータスの重みは適用されません。"/>
         <string id="EbiExplain" text="なぜ？"/>
         <string id="EbiClear" text="クリア"/>
-        <string id="EbiClearHint" text="重み／順序をスロットの既定値に戻します。武器クラス・文化・重量制限は維持されます"/>
+        <string id="EbiClearHint" text="重み／順序を初期値に戻します。武器クラス・文化・重量制限は維持されます"/>
         <string id="EbiExplainHint" text="この枠の選択をメッセージログで説明します"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="長弓"/>
-        <string id="ebi_default" text="デフォルト"/>
+        <string id="ebi_default" text="テンプレートに戻す"/>
         <string id="ebi_lock" text="ロック"/>
-        <string id="ebi_hint_default" text="デフォルト値にリセット"/>
+        <string id="ebi_hint_default" text="このスロットを保存済みテンプレートに戻します"/>
         <string id="ebi_hint_lock" text="このスロットの検索を無効化"/>
         <string id="EbiHintEquipCurrent" text="現在のキャラクターに最良の装備を装着する"/>
         <string id="EbiHintEquipAll" text="部隊のすべての英雄に最良の装備を装着する"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="パラメータの重み"/>
         <string id="EbiMcmMethodPriority" text="ステータス優先度"/>
         <string id="EbiMcmMethodEffectiveness" text="ゲームの有効性スコア"/>
+        <string id="EbiMcmUpgradeMargin" text="交換しきい値（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="重み方式のみ：トレードオフのある候補（総合では上だが一部のステータスで劣る）は、装備中のアイテムのスコアをこの割合だけ上回らないと交換が提案されません。重み付きステータスのどれでも劣らないアイテムは常に提案されます。0 はわずかな差でも提案します。値を上げるほど提案は控えめで確実になります。"/>
         <string id="EbiMcmButtonColor" text="スロットボタンの色"/>
         <string id="EbiMcmButtonColorHint" text="スロットごとの装備ボタンの色合い。#RRGGBB または #RRGGBBAA。#FFFFFF で元の見た目を保ちます。所持品を開き直すと適用されます。"/>
         <string id="EbiMcmButtonColorReset" text="ボタンの色をリセット"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="接続OK: {ENDPOINT}（モデル: {MODEL}）。"/>
         <string id="EbiAiConnectionFail" text="接続に失敗しました: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic APIが設定されています。キーは最初のリクエスト時に確認されます。"/>
-        <string id="EbiMakeDefault" text="既定にする"/>
-        <string id="EbiHintMakeDefault" text="このスロットのフィルターを、独自設定のない全英雄の既定値として保存します"/>
-        <string id="EbiOnDefault" text="既定値"/>
+        <string id="EbiMakeDefault" text="テンプレートを保存"/>
+        <string id="EbiHintMakeDefault" text="このスロットのフィルターを、独自設定のない全英雄のテンプレートとして保存します"/>
+        <string id="EbiOnDefault" text="スロットはテンプレートに従っています"/>
         <string id="EbiWhySlotLocked" text="このスロットは検索対象から除外されています。"/>
         <string id="EbiWhyNothingBetter" text="{CURRENT}を明らかに上回るものはありません。"/>
         <string id="EbiWhyNothingFound" text="このスロットには何も見つかりませんでした。"/>

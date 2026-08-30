@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="아이템은 게임 내장 효율 점수로 순위가 매겨지며, 능력치 가중치는 적용되지 않습니다."/>
         <string id="EbiExplain" text="왜?"/>
         <string id="EbiClear" text="지우기"/>
-        <string id="EbiClearHint" text="가중치/순서를 슬롯 기본값으로 되돌립니다. 무기 종류, 문화, 무게 제한은 유지됩니다"/>
+        <string id="EbiClearHint" text="가중치/순서를 초기값으로 되돌립니다. 무기 종류, 문화, 무게 제한은 유지됩니다"/>
         <string id="EbiExplainHint" text="메시지 로그에서 이 슬롯의 선택을 설명합니다"/>
         <string id="EbiShortBow" text="단궁"/>
         <string id="EbiLongBow" text="장궁"/>
-        <string id="ebi_default" text="기본값"/>
+        <string id="ebi_default" text="템플릿 복원"/>
         <string id="ebi_lock" text="잠금"/>
-        <string id="ebi_hint_default" text="기본값으로 초기화"/>
+        <string id="ebi_hint_default" text="이 슬롯을 저장된 템플릿으로 되돌립니다"/>
         <string id="ebi_hint_lock" text="이 슬롯의 검색 비활성화"/>
         <string id="EbiHintEquipCurrent" text="현재 캐릭터에게 최고의 아이템을 장착"/>
         <string id="EbiHintEquipAll" text="부대의 모든 영웅에게 최고의 아이템을 장착"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="능력치 가중치"/>
         <string id="EbiMcmMethodPriority" text="능력치 우선순위"/>
         <string id="EbiMcmMethodEffectiveness" text="게임 효율 점수"/>
+        <string id="EbiMcmUpgradeMargin" text="교체 문턱값, %"/>
+        <string id="EbiMcmUpgradeMarginHint" text="가중치 방식 전용: 절충형 후보(전체적으로 더 좋지만 일부 능력치는 더 낮음)는 장착 중인 아이템의 점수를 이 비율만큼 넘어야 교체가 제안됩니다. 가중치가 있는 어떤 능력치에서도 뒤지지 않는 아이템은 항상 제안됩니다. 0은 점수가 조금이라도 높으면 제안하며, 값이 높을수록 더 신중하고 확실한 제안을 합니다."/>
         <string id="EbiMcmButtonColor" text="슬롯 버튼 색상"/>
         <string id="EbiMcmButtonColorHint" text="슬롯별 장착 버튼의 색조, #RRGGBB 또는 #RRGGBBAA. #FFFFFF는 원래 모습을 유지합니다. 인벤토리를 다시 열면 적용됩니다."/>
         <string id="EbiMcmButtonColorReset" text="버튼 색상 초기화"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="연결 정상: {ENDPOINT} (모델: {MODEL})."/>
         <string id="EbiAiConnectionFail" text="연결 실패: {ERROR}"/>
         <string id="EbiAiAnthropicNote" text="Anthropic API가 구성되었습니다. 키는 첫 요청 시 확인됩니다."/>
-        <string id="EbiMakeDefault" text="기본값으로"/>
-        <string id="EbiHintMakeDefault" text="이 슬롯의 필터를 자체 설정이 없는 모든 영웅의 기본값으로 저장합니다"/>
-        <string id="EbiOnDefault" text="기본값"/>
+        <string id="EbiMakeDefault" text="템플릿 저장"/>
+        <string id="EbiHintMakeDefault" text="이 슬롯의 필터를 자체 설정이 없는 모든 영웅의 템플릿으로 저장합니다"/>
+        <string id="EbiOnDefault" text="슬롯이 템플릿에 따라 설정됨"/>
         <string id="EbiWhySlotLocked" text="이 슬롯은 검색에서 제외되어 있습니다."/>
         <string id="EbiWhyNothingBetter" text="{CURRENT}보다 확실히 나은 것이 없습니다."/>
         <string id="EbiWhyNothingFound" text="이 슬롯에 맞는 것을 찾지 못했습니다."/>

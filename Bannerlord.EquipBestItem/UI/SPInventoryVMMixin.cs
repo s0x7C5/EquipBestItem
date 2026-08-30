@@ -33,46 +33,55 @@ public sealed class SPInventoryVMMixin : BaseViewModelMixin<SPInventoryVM>
 
     public SPInventoryVMMixin(SPInventoryVM vm) : base(vm)
     {
-        EbiSpriteSheetLoader.EnsureLoaded();
-
         _gateway = new InventoryGateway(vm);
         ModInventory = new EbiVM(ModRuntime.Services, _gateway);
 
-        vm.PropertyChangedWithBoolValue += OnPropertyChangedWithBoolValue;
-        vm.PropertyChangedWithValue += OnPropertyChangedWithValue;
-        Game.Current.EventManager.RegisterEvent(
-            new Action<InventoryEquipmentTypeChangedEvent>(OnEquipmentTypeChanged));
+        GameLog.Guard("inventory hookup", () =>
+        {
+            EbiSpriteSheetLoader.EnsureLoaded();
 
-        TrySubscribeInventoryLogic();
+            vm.PropertyChangedWithBoolValue += OnPropertyChangedWithBoolValue;
+            vm.PropertyChangedWithValue += OnPropertyChangedWithValue;
+            Game.Current.EventManager.RegisterEvent(
+                new Action<InventoryEquipmentTypeChangedEvent>(OnEquipmentTypeChanged));
+
+            TrySubscribeInventoryLogic();
+        });
     }
 
     public override void OnRefresh()
     {
         base.OnRefresh();
-        // The inventory state may not have been active yet during construction.
-        TrySubscribeInventoryLogic();
-        ModInventory.OnInventoryChanged();
+        GameLog.Guard("inventory refresh", () =>
+        {
+            // The inventory state may not have been active yet during construction.
+            TrySubscribeInventoryLogic();
+            ModInventory.OnInventoryChanged();
+        });
     }
 
     public override void OnFinalize()
     {
-        if (ViewModel is not null)
+        GameLog.Guard("inventory teardown", () =>
         {
-            ViewModel.PropertyChangedWithBoolValue -= OnPropertyChangedWithBoolValue;
-            ViewModel.PropertyChangedWithValue -= OnPropertyChangedWithValue;
-        }
+            if (ViewModel is not null)
+            {
+                ViewModel.PropertyChangedWithBoolValue -= OnPropertyChangedWithBoolValue;
+                ViewModel.PropertyChangedWithValue -= OnPropertyChangedWithValue;
+            }
 
-        if (_subscribedLogic is not null)
-        {
-            _subscribedLogic.AfterTransfer -= OnAfterTransfer;
-            _subscribedLogic.AfterReset -= OnAfterReset;
-            _subscribedLogic = null;
-        }
+            if (_subscribedLogic is not null)
+            {
+                _subscribedLogic.AfterTransfer -= OnAfterTransfer;
+                _subscribedLogic.AfterReset -= OnAfterReset;
+                _subscribedLogic = null;
+            }
 
-        Game.Current.EventManager.UnregisterEvent(
-            new Action<InventoryEquipmentTypeChangedEvent>(OnEquipmentTypeChanged));
+            Game.Current.EventManager.UnregisterEvent(
+                new Action<InventoryEquipmentTypeChangedEvent>(OnEquipmentTypeChanged));
 
-        ModInventory.OnFinalize();
+            ModInventory.OnFinalize();
+        });
         base.OnFinalize();
     }
 
@@ -99,14 +108,20 @@ public sealed class SPInventoryVMMixin : BaseViewModelMixin<SPInventoryVM>
 
     private void OnPropertyChangedWithBoolValue(object? sender, PropertyChangedWithBoolValueEventArgs e)
     {
-        if (e.PropertyName == "IsRefreshed" && e.Value)
-            ModInventory.OnInventoryChanged();
+        GameLog.Guard("inventory event", () =>
+        {
+            if (e.PropertyName == "IsRefreshed" && e.Value)
+                ModInventory.OnInventoryChanged();
+        });
     }
 
     private void OnPropertyChangedWithValue(object? sender, PropertyChangedWithValueEventArgs e)
     {
-        if (e.PropertyName == "CurrentCharacterName")
-            ModInventory.OnInventoryChanged();
+        GameLog.Guard("inventory event", () =>
+        {
+            if (e.PropertyName == "CurrentCharacterName")
+                ModInventory.OnInventoryChanged();
+        });
     }
 
     private void OnEquipmentTypeChanged(InventoryEquipmentTypeChangedEvent _)

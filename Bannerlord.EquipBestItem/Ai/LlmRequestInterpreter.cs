@@ -244,7 +244,8 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Scoring params: HeadArmor, BodyArmor, ArmArmor, LegArmor, MountArmor, ChargeDamage, HitPoints, " +
             "Maneuver, Speed, MaxAmmo, ThrustSpeed, SwingSpeed, MissileSpeed, MissileDamage, WeaponLength, " +
             "ThrustDamage, SwingDamage, Accuracy, Handling, Weight (the item's physical mass in kg — " +
-            "heaviness, NOT protection).");
+            "heaviness, NOT protection), Stealth (armor's stealth bonus — only worn armor has it, and it " +
+            "only matters in the stealth equipment set).");
         builder.AppendLine(
             "Positive weight = maximize, negative = minimize (e.g. Weight: -1 prefers light items). " +
             "Only spell out weights when the player expressed a preference; an empty weights object " +

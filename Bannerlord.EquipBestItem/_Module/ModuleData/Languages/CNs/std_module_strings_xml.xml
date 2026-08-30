@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="物品按游戏内置的效能评分排序；属性权重不生效。"/>
         <string id="EbiExplain" text="为什么？"/>
         <string id="EbiClear" text="清除"/>
-        <string id="EbiClearHint" text="将权重/顺序重置为该槽位的默认值；武器类别、文化和重量限制保持不变"/>
+        <string id="EbiClearHint" text="将权重/顺序重置为初始值；武器类别、文化和重量限制保持不变"/>
         <string id="EbiExplainHint" text="在消息日志中解释此槽位的选择"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="长弓"/>
-        <string id="ebi_default" text="默认"/>
+        <string id="ebi_default" text="恢复模板"/>
         <string id="ebi_lock" text="锁定"/>
-        <string id="ebi_hint_default" text="重置为默认值"/>
+        <string id="ebi_hint_default" text="将该槽位恢复为已保存的模板"/>
         <string id="ebi_hint_lock" text="禁用该槽位的搜索"/>
         <string id="EbiHintEquipCurrent" text="为当前角色装备最佳物品"/>
         <string id="EbiHintEquipAll" text="为队伍中所有英雄装备最佳物品"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="参数权重"/>
         <string id="EbiMcmMethodPriority" text="属性优先级"/>
         <string id="EbiMcmMethodEffectiveness" text="游戏效能评分"/>
+        <string id="EbiMcmUpgradeMargin" text="替换阈值（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="仅用于权重方法：有取舍的候选（总体更好但某些属性更差）必须以该幅度超过当前装备的评分，才会建议更换。在所有加权属性上都不更差的物品始终会被建议。0 表示只要评分领先即建议；数值越高，建议越稳健。"/>
         <string id="EbiMcmButtonColor" text="槽位按钮颜色"/>
         <string id="EbiMcmButtonColorHint" text="各槽位装备按钮的色调，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外观。重新打开物品栏时生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按钮颜色"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="连接正常：{ENDPOINT}（模型：{MODEL}）。"/>
         <string id="EbiAiConnectionFail" text="连接失败：{ERROR}"/>
         <string id="EbiAiAnthropicNote" text="已配置 Anthropic API；密钥将在首次请求时验证。"/>
-        <string id="EbiMakeDefault" text="设为默认"/>
-        <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为所有未自定义英雄的默认值"/>
-        <string id="EbiOnDefault" text="默认值"/>
+        <string id="EbiMakeDefault" text="保存模板"/>
+        <string id="EbiHintMakeDefault" text="将此槽位的筛选保存为模板，应用于所有未自定义的英雄"/>
+        <string id="EbiOnDefault" text="该槽位按模板设置"/>
         <string id="EbiWhySlotLocked" text="该槽位已被排除在搜索之外。"/>
         <string id="EbiWhyNothingBetter" text="没有明显优于{CURRENT}的物品。"/>
         <string id="EbiWhyNothingFound" text="该槽位没有找到任何物品。"/>

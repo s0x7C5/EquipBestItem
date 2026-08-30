@@ -25,10 +25,13 @@ public enum ItemParam
     SwingDamage,
     Accuracy,
     Handling,
-    Weight
+    Weight,
+
+    /// <summary>Armor's stealth bonus, for the stealth equipment set.</summary>
+    Stealth
 }
 
 public static class ItemParams
 {
-    public const int Count = 20;
+    public const int Count = 21;
 }

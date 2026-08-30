@@ -17,21 +17,24 @@ namespace Bannerlord.EquipBestItem.Domain.Scoring;
 /// </summary>
 public sealed class WeightedItemScorer : IItemScorer
 {
-    // A trade-off candidate must clear the current item by this relative
-    // margin (with a small absolute floor near zero scores) before it is
-    // suggested; stat-dominant candidates pass without it. Kills both the
-    // "swapped two near-identical shields" churn and lopsided trades.
-    private const float UpgradeMargin = 0.05f;
-    private const float MinUpgradeStep = 0.01f;
+    // A trade-off candidate must clear the current item by a relative margin
+    // (player-configurable, 0 = off) before it is suggested; stat-dominant
+    // candidates pass without it. Kills both the "swapped two near-identical
+    // shields" churn and lopsided trades. Scores near zero use the floor
+    // instead, so the margin stays meaningful there (at 5% this reproduces
+    // the historical fixed 0.01 step).
+    private const float MarginScoreFloor = 0.2f;
     private const float StatEpsilon = 0.001f;
 
     private readonly ItemStatCache _stats;
     private readonly ItemStatPercentiles _percentiles;
+    private readonly Func<float> _upgradeMargin;
 
-    public WeightedItemScorer(ItemStatCache stats, ItemStatPercentiles percentiles)
+    public WeightedItemScorer(ItemStatCache stats, ItemStatPercentiles percentiles, Func<float> upgradeMargin)
     {
         _stats = stats;
         _percentiles = percentiles;
+        _upgradeMargin = upgradeMargin;
     }
 
     public float Score(EquipmentElement element, in SearchContext context)
@@ -90,7 +93,10 @@ public sealed class WeightedItemScorer : IItemScorer
         var currentScore = Score(current, context);
         if (candidateScore <= currentScore) return false;
 
-        if (candidateScore >= currentScore + Math.Max(Math.Abs(currentScore) * UpgradeMargin, MinUpgradeStep))
+        var margin = _upgradeMargin();
+        if (margin <= 0f) return true; // guard disabled: any score win counts
+
+        if (candidateScore >= currentScore + Math.Max(Math.Abs(currentScore), MarginScoreFloor) * margin)
             return true;
 
         // Within the margin: only a dominating candidate (no downside on any

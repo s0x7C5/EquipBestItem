@@ -1,4 +1,4 @@
-using Helpers;
+using Bannerlord.EquipBestItem.Compat;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Inventory;
 
 namespace Bannerlord.EquipBestItem.Domain.Filtering;
@@ -15,6 +15,6 @@ public sealed class EquippableFilter : IItemFilter
         if (context.Equipment.IsCivilian && !item.IsCivilianItem) return false;
         if (context.Equipment.IsStealth && !item.IsStealthItem) return false;
 
-        return CharacterHelper.CanUseItem(context.Character, item.ItemRosterElement.EquipmentElement);
+        return GameCompat.CanUseItem(context.Character, item.ItemRosterElement.EquipmentElement);
     }
 }

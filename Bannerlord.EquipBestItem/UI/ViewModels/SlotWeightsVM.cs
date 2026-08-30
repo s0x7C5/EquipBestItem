@@ -15,8 +15,16 @@ namespace Bannerlord.EquipBestItem.UI.ViewModels;
 /// <summary>Popup for tuning per-slot search weights and pinning a weapon class.</summary>
 public sealed class SlotWeightsVM : ViewModel
 {
-    private static readonly ItemParam[] ArmorParams =
-        { ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor, ItemParam.Weight };
+    // Stealth only exists on games that have the stealth equipment set; on
+    // older ones the row would be a slider that moves nothing.
+    private static readonly ItemParam[] ArmorParams = Compat.GameCompat.SupportsStealth
+        ? new[]
+        {
+            ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor,
+            ItemParam.Stealth, ItemParam.Weight
+        }
+        : new[]
+            { ItemParam.HeadArmor, ItemParam.BodyArmor, ItemParam.ArmArmor, ItemParam.LegArmor, ItemParam.Weight };
 
     private static readonly ItemParam[] HorseParams =
         { ItemParam.ChargeDamage, ItemParam.HitPoints, ItemParam.Maneuver, ItemParam.Speed };
@@ -55,10 +63,18 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.MaxAmmo, ItemParam.Weight
     };
 
+    // Thrown weapons have a melee usage too (javelins/knives thrust, throwing
+    // axes swing); ItemStatExtractor reads those stats from the second usage, so
+    // they are tunable here. They default to weight 0 (not in DefaultWeights'
+    // Thrown set), so the out-of-the-box pick stays throwing-only until the
+    // player opts in.
     private static readonly ItemParam[] ThrownParams =
     {
         ItemParam.MissileDamage, ItemParam.MissileSpeed, ItemParam.Accuracy,
-        ItemParam.WeaponLength, ItemParam.MaxAmmo, ItemParam.Weight
+        ItemParam.WeaponLength, ItemParam.MaxAmmo,
+        ItemParam.ThrustDamage, ItemParam.SwingDamage, ItemParam.ThrustSpeed, ItemParam.SwingSpeed,
+        ItemParam.Handling,
+        ItemParam.Weight
     };
 
     private static readonly ItemParam[] AmmoParams =
@@ -157,7 +173,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string DefaultButtonText { get; } =
-        new TextObject("{=ebi_default}Default").ToString();
+        new TextObject("{=ebi_default}Restore template").ToString();
 
     [DataSourceProperty]
     public string LockButtonText { get; } =
@@ -165,7 +181,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string MakeDefaultButtonText { get; } =
-        new TextObject("{=EbiMakeDefault}Set as default").ToString();
+        new TextObject("{=EbiMakeDefault}Save template").ToString();
 
     [DataSourceProperty]
     public string ClearButtonText { get; } =
@@ -173,7 +189,7 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public HintViewModel ClearButtonHint { get; } = new(new TextObject(
-        "{=EbiClearHint}Reset the stat preferences to this slot's defaults; weapon class, culture and weight limit stay"));
+        "{=EbiClearHint}Reset the stat preferences to their initial values; weapon class, culture and weight limit stay"));
 
     [DataSourceProperty]
     public string ExplainButtonText { get; } =
@@ -185,9 +201,9 @@ public sealed class SlotWeightsVM : ViewModel
 
     [DataSourceProperty]
     public string OnDefaultText { get; } =
-        new TextObject("{=EbiOnDefault}Default values").ToString();
+        new TextObject("{=EbiOnDefault}The slot follows the template").ToString();
 
-    /// <summary>True while the hero follows the defaults for this slot (no override of their own).</summary>
+    /// <summary>True while the hero follows the template for this slot (no override of their own).</summary>
     [DataSourceProperty]
     public bool IsOnDefault
     {
@@ -197,16 +213,21 @@ public sealed class SlotWeightsVM : ViewModel
             if (value == _isOnDefault) return;
             _isOnDefault = value;
             OnPropertyChangedWithValue(value);
+            OnPropertyChanged(nameof(CanSaveDefault));
         }
     }
 
+    /// <summary>The save button shows only while there is something to save.</summary>
+    [DataSourceProperty]
+    public bool CanSaveDefault => !IsOnDefault;
+
     [DataSourceProperty]
     public HintViewModel MakeDefaultButtonHint { get; } = new(new TextObject(
-        "{=EbiHintMakeDefault}Save this slot's filter as the default for every hero without their own settings"));
+        "{=EbiHintMakeDefault}Save this slot's filter as the template for every hero without their own settings"));
 
     [DataSourceProperty]
     public HintViewModel DefaultButtonHint { get; } =
-        new(new TextObject("{=ebi_hint_default}Reset to default values"));
+        new(new TextObject("{=ebi_hint_default}Return this slot to the saved template"));
 
     [DataSourceProperty]
     public HintViewModel LockButtonHint { get; } =
@@ -356,29 +377,29 @@ public sealed class SlotWeightsVM : ViewModel
         IsOnDefault = !_profiles.HasOverride(_character, _equipment, _slot);
     }
 
-    public void ExecuteClose()
+    public void ExecuteClose() => GameLog.Guard("filter close", () =>
     {
         IsVisible = false;
         _profiles.Save();
-    }
+    });
 
-    public void ExecuteReset()
+    public void ExecuteReset() => GameLog.Guard("restore template", () =>
     {
         if (_character is null || _equipment is null) return;
 
         _profiles.ResetSlot(_character, _equipment, _slot);
         Open(_character, _equipment, _slot);
         _onChanged();
-    }
+    });
 
-    public void ExecuteMakeDefault()
+    public void ExecuteMakeDefault() => GameLog.Guard("save template", () =>
     {
         if (_character is null || _equipment is null) return;
 
         _profiles.SaveAsDefault(_character, _equipment, _slot);
         Open(_character, _equipment, _slot);
         _onChanged();
-    }
+    });
 
     /// <summary>
     ///     Resets only the stat preferences — weights (or the priority order)
@@ -386,7 +407,7 @@ public sealed class SlotWeightsVM : ViewModel
     ///     weapon class, culture and weight limit are untouched, unlike
     ///     Default, which drops the whole override.
     /// </summary>
-    public void ExecuteClear()
+    public void ExecuteClear() => GameLog.Guard("filter clear", () =>
     {
         if (_character is null || _equipment is null) return;
 
@@ -399,13 +420,13 @@ public sealed class SlotWeightsVM : ViewModel
         RebuildRows();
         RefreshDefaultMarker();
         _onChanged();
-    }
+    });
 
     /// <summary>
     ///     Excludes the slot from searching: zeroes every weight (weights
     ///     mode) or empties the priority order (priority mode).
     /// </summary>
-    public void ExecuteLock()
+    public void ExecuteLock() => GameLog.Guard("slot lock", () =>
     {
         if (_character is null || _equipment is null) return;
 
@@ -416,16 +437,16 @@ public sealed class SlotWeightsVM : ViewModel
         RebuildRows();
         RefreshDefaultMarker();
         _onChanged();
-    }
+    });
 
     /// <summary>Prints a deterministic account of this slot's pick to the message log, then closes.</summary>
-    public void ExecuteExplain()
+    public void ExecuteExplain() => GameLog.Guard("explain", () =>
     {
         if (_character is null || _equipment is null) return;
 
         _explain(_character, _equipment, _slot);
         ExecuteClose();
-    }
+    });
 
     public void ExecutePreviousWeaponClass() => CycleWeaponClass(-1);
 
@@ -435,13 +456,13 @@ public sealed class SlotWeightsVM : ViewModel
 
     public void ExecuteNextCulture() => CycleCulture(1);
 
-    private void CycleCulture(int step)
+    private void CycleCulture(int step) => GameLog.Guard("culture filter", () =>
     {
         var count = CultureChoices.Length;
         _cultureIndex = (_cultureIndex + step + count) % count;
         OnPropertyChanged(nameof(CultureText));
         PersistConstraints();
-    }
+    });
 
     private void PersistConstraints()
     {
@@ -454,7 +475,7 @@ public sealed class SlotWeightsVM : ViewModel
         _onChanged();
     }
 
-    private void CycleWeaponClass(int step)
+    private void CycleWeaponClass(int step) => GameLog.Guard("weapon class filter", () =>
     {
         if (_character is null || _equipment is null) return;
 
@@ -468,7 +489,7 @@ public sealed class SlotWeightsVM : ViewModel
         // Each weapon class exposes its own parameter set.
         RebuildRows();
         _onChanged();
-    }
+    });
 
     private void RebuildRows()
     {
@@ -536,14 +557,15 @@ public sealed class SlotWeightsVM : ViewModel
     ///     Gauntlet drop handler on the rows list: a chip dropped between rows
     ///     becomes its own rank at that position.
     /// </summary>
-    public void ExecuteReorderChip(PriorityChipVM chip, int index, string tag)
-    {
-        var insertAt = Math.Max(0, Math.Min(index, _priorityGroups.Count));
-        insertAt -= RemoveChip(chip.Param, insertAt);
+    public void ExecuteReorderChip(PriorityChipVM chip, int index, string tag) =>
+        GameLog.Guard("priority reorder", () =>
+        {
+            var insertAt = Math.Max(0, Math.Min(index, _priorityGroups.Count));
+            insertAt -= RemoveChip(chip.Param, insertAt);
 
-        _priorityGroups.Insert(insertAt, new List<ItemParam> { chip.Param });
-        PersistPriorities();
-    }
+            _priorityGroups.Insert(insertAt, new List<ItemParam> { chip.Param });
+            PersistPriorities();
+        });
 
     private void LinkChip(PriorityChipVM chip, PriorityRowVM row)
     {
@@ -681,6 +703,7 @@ public sealed class SlotWeightsVM : ViewModel
         ItemParam.Accuracy => new TextObject("{=xEWwbGVK}Accuracy: "),
         ItemParam.Handling => new TextObject("{=YOSEIvyf}Handling: "),
         ItemParam.Weight => new TextObject("{=YvwQL9aa}Weight: "),
+        ItemParam.Stealth => new TextObject("{=YJkAqExw}Stealth Bonus: "),
         _ => new TextObject(param.ToString())
     }).ToString().TrimEnd(':', ' ');
 

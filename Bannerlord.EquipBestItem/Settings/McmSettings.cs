@@ -135,6 +135,15 @@ internal sealed class McmSettings : AttributeGlobalSettings<McmSettings>
         }
     }
 
+    [SettingPropertyInteger("{=EbiMcmUpgradeMargin}Upgrade margin, %", 0, 10, Order = 1, RequireRestart = false,
+        HintText = "{=EbiMcmUpgradeMarginHint}Weights method only: a trade-off candidate (better overall but worse in some stat) must beat the equipped item's score by this margin before a swap is suggested. Items not worse in any weighted stat are suggested regardless. 0 suggests on any score edge; higher values mean calmer, more confident suggestions.")]
+    [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]
+    public int UpgradeMarginPercent
+    {
+        get => S.UpgradeMarginPercent;
+        set { S.UpgradeMarginPercent = value; Persist(); }
+    }
+
     [SettingPropertyText("{=EbiMcmButtonColor}Slot button color", Order = 2, RequireRestart = false,
         HintText = "{=EbiMcmButtonColorHint}Tint of the per-slot equip buttons, #RRGGBB or #RRGGBBAA. #FFFFFF keeps the original look. Applied when the inventory is reopened.")]
     [SettingPropertyGroup("{=EbiMcmGroupGeneral}General", GroupOrder = 0)]

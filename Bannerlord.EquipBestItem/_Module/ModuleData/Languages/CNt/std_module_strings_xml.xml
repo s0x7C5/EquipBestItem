@@ -10,13 +10,13 @@
         <string id="EbiEffectivenessNote" text="物品按遊戲內建的效能評分排序；屬性權重不生效。"/>
         <string id="EbiExplain" text="為什麼？"/>
         <string id="EbiClear" text="清除"/>
-        <string id="EbiClearHint" text="將權重/順序重設為該槽位的預設值；武器類別、文化和重量限制保持不變"/>
+        <string id="EbiClearHint" text="將權重/順序重設為初始值；武器類別、文化和重量限制保持不變"/>
         <string id="EbiExplainHint" text="在訊息日誌中解釋此槽位的選擇"/>
         <string id="EbiShortBow" text="短弓"/>
         <string id="EbiLongBow" text="長弓"/>
-        <string id="ebi_default" text="預設"/>
+        <string id="ebi_default" text="恢復範本"/>
         <string id="ebi_lock" text="鎖定"/>
-        <string id="ebi_hint_default" text="重設為預設值"/>
+        <string id="ebi_hint_default" text="將該欄位恢復為已儲存的範本"/>
         <string id="ebi_hint_lock" text="停用此欄位的搜尋"/>
         <string id="EbiHintEquipCurrent" text="為目前角色裝備最佳物品"/>
         <string id="EbiHintEquipAll" text="為隊伍中所有英雄裝備最佳物品"/>
@@ -39,6 +39,8 @@
         <string id="EbiMcmMethodWeights" text="參數權重"/>
         <string id="EbiMcmMethodPriority" text="屬性優先級"/>
         <string id="EbiMcmMethodEffectiveness" text="遊戲效能評分"/>
+        <string id="EbiMcmUpgradeMargin" text="替換閾值（%）"/>
+        <string id="EbiMcmUpgradeMarginHint" text="僅用於權重方法：有取捨的候選（整體更好但某些屬性較差）必須以該幅度超過當前裝備的評分，才會建議更換。在所有加權屬性上都不較差的物品始終會被建議。0 表示只要評分領先即建議；數值越高，建議越穩健。"/>
         <string id="EbiMcmButtonColor" text="欄位按鈕顏色"/>
         <string id="EbiMcmButtonColorHint" text="各欄位裝備按鈕的色調，#RRGGBB 或 #RRGGBBAA。#FFFFFF 保持原始外觀。重新開啟物品欄時生效。"/>
         <string id="EbiMcmButtonColorReset" text="重置按鈕顏色"/>
@@ -66,9 +68,9 @@
         <string id="EbiAiConnectionOk" text="連線正常：{ENDPOINT}（模型：{MODEL}）。"/>
         <string id="EbiAiConnectionFail" text="連線失敗：{ERROR}"/>
         <string id="EbiAiAnthropicNote" text="已設定 Anthropic API；金鑰將在首次請求時驗證。"/>
-        <string id="EbiMakeDefault" text="設為預設"/>
-        <string id="EbiHintMakeDefault" text="將此欄位的篩選儲存為所有未自訂英雄的預設值"/>
-        <string id="EbiOnDefault" text="預設值"/>
+        <string id="EbiMakeDefault" text="儲存範本"/>
+        <string id="EbiHintMakeDefault" text="將此欄位的篩選儲存為範本，套用於所有未自訂的英雄"/>
+        <string id="EbiOnDefault" text="該欄位依範本設定"/>
         <string id="EbiWhySlotLocked" text="該欄位已被排除在搜尋之外。"/>
         <string id="EbiWhyNothingBetter" text="沒有明顯優於{CURRENT}的物品。"/>
         <string id="EbiWhyNothingFound" text="該欄位沒有找到任何物品。"/>
