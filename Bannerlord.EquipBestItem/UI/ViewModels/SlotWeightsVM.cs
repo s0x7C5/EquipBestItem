@@ -142,9 +142,26 @@ public sealed class SlotWeightsVM : ViewModel
     private readonly Action _onChanged;
     private readonly Action<CharacterObject, Equipment, EquipmentIndex> _explain;
 
-    /// <summary>Selectable culture restrictions; null = any culture.</summary>
-    private static readonly string?[] CultureChoices =
-        { null, "empire", "sturgia", "aserai", "vlandia", "battania", "khuzait" };
+    private static string?[]? _cultureChoices;
+
+    /// <summary>
+    ///     Selectable culture restrictions; null = any culture. Built from the
+    ///     cultures that actually tag items (DLC and mods included, not just the
+    ///     base six), cached once the catalog is loaded.
+    /// </summary>
+    private static string?[] CultureChoices
+    {
+        get
+        {
+            if (_cultureChoices is { Length: > 1 }) return _cultureChoices;
+
+            var ids = ItemCultures.WithItems();
+            var choices = new string?[ids.Count + 1]; // [0] stays null = "any culture"
+            for (var i = 0; i < ids.Count; i++) choices[i + 1] = ids[i];
+            if (ids.Count > 0) _cultureChoices = choices;
+            return choices;
+        }
+    }
 
     private const float MaxItemWeightCap = 40f;
 

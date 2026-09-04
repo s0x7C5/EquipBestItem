@@ -232,7 +232,7 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
       "slot": "Head|Cape|Body|Gloves|Leg|Horse|HorseHarness|Weapon0|Weapon1|Weapon2|Weapon3|AllArmor|AllWeapons|AllMount|All",
       "weights": { "<param>": <float -1..1> },
       "maxItemWeight": <optional float, kg>,
-      "culture": "<optional: empire|sturgia|aserai|vlandia|battania|khuzait>",
+      "culture": "<optional: one of the culture ids listed below>",
       "weaponClass": "<optional, one of: OneHandedSword, TwoHandedSword, OneHandedAxe, TwoHandedAxe, Mace, TwoHandedMace, Dagger, OneHandedPolearm, TwoHandedPolearm, ShortBow, LongBow, Crossbow, Arrow, Bolt, Javelin, ThrowingAxe, ThrowingKnife, SmallShield, LargeShield>",
       "priorities": ["<optional: ranked stat groups, most important first; join equal-rank stats with +, e.g. \"HeadArmor\", \"HitPoints+BodyArmor\">"]
     }
@@ -263,6 +263,13 @@ public sealed class LlmRequestInterpreter : IRequestInterpreter
             "Words meaning protection/armor (in any language) map to the matching *Armor param for that " +
             "body area: head->HeadArmor, body/torso->BodyArmor, arms/hands->ArmArmor, legs/feet->LegArmor, " +
             "mount->MountArmor. Never use Weight to express protection.");
+
+        var cultures = context.AvailableCultures.Count > 0
+            ? context.AvailableCultures
+            : new[] { "empire", "sturgia", "aserai", "vlandia", "battania", "khuzait" };
+        builder.AppendLine(
+            $"Culture ids for the \"culture\" field (use one of these exactly, or omit it): {string.Join(", ", cultures)}.");
+
         builder.AppendLine(
             "target: only set it when the player names other heroes (\"everyone\", \"everyone except me\", " +
             "a companion's name); requests about \"me\" or with no one named mean current.");
