@@ -163,7 +163,8 @@ public sealed class AiPromptVM : ViewModel
             CollectPartyHeroes(),
             MBTextManager.ActiveTextLanguage,
             _settings.UsePriority ? "priority" : _settings.UseEffectiveness ? "effectiveness" : "weights",
-            _collectSlotExplanations());
+            _collectSlotExplanations(),
+            Domain.ItemCultures.WithItems());
 
         _pendingRequest?.Cancel();
         var cancellation = _pendingRequest = new CancellationTokenSource();

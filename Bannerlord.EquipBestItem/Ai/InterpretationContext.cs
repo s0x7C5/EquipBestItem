@@ -11,7 +11,8 @@ public sealed class InterpretationContext
     public InterpretationContext(
         string characterName, string equipmentSetKey, IReadOnlyList<string> notableSkills,
         string languageGlossary = "", IReadOnlyList<string>? partyHeroes = null,
-        string gameLanguage = "English", string searchMethod = "weights", string slotExplanations = "")
+        string gameLanguage = "English", string searchMethod = "weights", string slotExplanations = "",
+        IReadOnlyList<string>? availableCultures = null)
     {
         CharacterName = characterName;
         EquipmentSetKey = equipmentSetKey;
@@ -21,7 +22,15 @@ public sealed class InterpretationContext
         GameLanguage = gameLanguage;
         SearchMethod = searchMethod;
         SlotExplanations = slotExplanations;
+        AvailableCultures = availableCultures ?? System.Array.Empty<string>();
     }
+
+    /// <summary>
+    ///     Culture ids that tag items in this playthrough (DLC/mods included),
+    ///     captured on the main thread so the request thread never touches game
+    ///     objects. The model may put one into a directive's "culture" field.
+    /// </summary>
+    public IReadOnlyList<string> AvailableCultures { get; }
 
     public string CharacterName { get; }
 
